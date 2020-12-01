@@ -11,8 +11,6 @@ import {
   Typography,
   makeStyles
 } from '@material-ui/core';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import GetAppIcon from '@material-ui/icons/GetApp';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,8 +42,8 @@ const ProductCard = ({ className, product, ...rest }) => {
         >
           <Avatar
             alt="Product"
+            style={{ height: '75px', width: '75px' }}
             src={product.media}
-            variant="square"
           />
         </Box>
         <Typography
@@ -76,34 +74,26 @@ const ProductCard = ({ className, product, ...rest }) => {
             className={classes.statsItem}
             item
           >
-            <AccessTimeIcon
-              className={classes.statsIcon}
-              color="action"
-            />
             <Typography
               color="textSecondary"
               display="inline"
               variant="body2"
             >
-              Updated 2hr ago
+              {product.category}
             </Typography>
           </Grid>
           <Grid
             className={classes.statsItem}
             item
           >
-            <GetAppIcon
-              className={classes.statsIcon}
-              color="action"
-            />
             <Typography
               color="textSecondary"
               display="inline"
               variant="body2"
             >
-              {product.totalDownloads}
+              {product.stock}
               {' '}
-              Downloads
+              in Stock
             </Typography>
           </Grid>
         </Grid>
