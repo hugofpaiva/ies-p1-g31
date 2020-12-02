@@ -13,21 +13,6 @@ import {
   makeStyles
 } from '@material-ui/core';
 
-const states = [
-  {
-    value: 'alabama',
-    label: 'Alabama'
-  },
-  {
-    value: 'new-york',
-    label: 'New York'
-  },
-  {
-    value: 'san-francisco',
-    label: 'San Francisco'
-  }
-];
-
 const useStyles = makeStyles(() => ({
   root: {}
 }));
@@ -109,21 +94,6 @@ const ProfileDetails = ({ className, ...rest }) => {
                 onChange={handleChange}
                 required
                 value={values.email}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Phone Number"
-                name="phone"
-                onChange={handleChange}
-                type="number"
-                value={values.phone}
                 variant="outlined"
               />
             </Grid>

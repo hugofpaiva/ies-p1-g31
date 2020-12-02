@@ -4,6 +4,7 @@ export default [
   {
     id: uuid(),
     store: 'Aveiro Lourenço Peixinho',
+    customer: 'Kwak Seong-Min',
     address: {
       country: 'Portugal',
       state: 'Aveiro',
@@ -46,6 +47,7 @@ export default [
   {
     id: uuid(),
     store: 'Aveiro Lourenço Peixinho',
+    customer: 'Emilee Simchenko',
     address: {
       country: 'Portugal',
       state: 'Aveiro',

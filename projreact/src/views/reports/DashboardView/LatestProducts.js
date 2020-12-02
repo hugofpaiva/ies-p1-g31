@@ -9,14 +9,12 @@ import {
   Card,
   CardHeader,
   Divider,
-  IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
   makeStyles
 } from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 

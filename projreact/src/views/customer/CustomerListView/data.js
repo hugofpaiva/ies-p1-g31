@@ -9,6 +9,7 @@ export default [
       city: 'Parkersburg',
       street: '2849 Fulton Street'
     },
+    nif: '143658473',
     avatarUrl: '/static/images/avatars/avatar_3.png',
     createdAt: 1555016400000,
     email: 'ekaterina.tankova@storego.pt',
@@ -23,6 +24,7 @@ export default [
       city: 'Iowa',
       street: '1865  Pleasant Hill Road'
     },
+    nif:'232174592',
     avatarUrl: '/static/images/avatars/avatar_4.png',
     createdAt: 1555016400000,
     email: 'cao.yu@storego.pt',
@@ -37,6 +39,7 @@ export default [
       city: 'Atlanta',
       street: '4894  Lakeland Park Drive'
     },
+    nif:'175324582',
     avatarUrl: '/static/images/avatars/avatar_2.png',
     createdAt: 1555016400000,
     email: 'alexa.richardson@storego.pt',
@@ -51,6 +54,7 @@ export default [
       city: 'Dover',
       street: '4158  Hedge Street'
     },
+    nif:'212347823',
     avatarUrl: '/static/images/avatars/avatar_5.png',
     createdAt: 1554930000000,
     email: 'anje.keizer@storego.pt',
@@ -65,6 +69,7 @@ export default [
       city: 'Dallas',
       street: '75247'
     },
+    nif:'294316472',
     avatarUrl: '/static/images/avatars/avatar_6.png',
     createdAt: 1554757200000,
     email: 'clarke.gillebert@storego.pt',
@@ -79,6 +84,7 @@ export default [
       city: 'Bakerfield',
       street: '317 Angus Road'
     },
+    nif:'164830243',
     avatarUrl: '/static/images/avatars/avatar_1.png',
     createdAt: 1554670800000,
     email: 'adam.denisov@storego.pt',
@@ -93,6 +99,7 @@ export default [
       city: 'Redondo Beach',
       street: '2188  Armbrester Drive'
     },
+    nif:'194564738',
     avatarUrl: '/static/images/avatars/avatar_7.png',
     createdAt: 1554325200000,
     email: 'ava.gregoraci@storego.pt',
@@ -107,6 +114,7 @@ export default [
       city: 'Las Vegas',
       street: '1798  Hickory Ridge Drive'
     },
+    nif:'203754839',
     avatarUrl: '/static/images/avatars/avatar_8.png',
     createdAt: 1523048400000,
     email: 'emilee.simchenko@storego.pt',
@@ -121,6 +129,7 @@ export default [
       city: 'Detroit',
       street: '3934  Wildrose Lane'
     },
+    nif:'164583924',
     avatarUrl: '/static/images/avatars/avatar_9.png',
     createdAt: 1554702800000,
     email: 'kwak.seong.min@storego.pt',
@@ -135,6 +144,7 @@ export default [
       city: 'Salt Lake City',
       street: '368 Lamberts Branch Road'
     },
+    nif:'218453628',
     avatarUrl: '/static/images/avatars/avatar_10.png',
     createdAt: 1522702800000,
     email: 'merrile.burgett@storego.pt',

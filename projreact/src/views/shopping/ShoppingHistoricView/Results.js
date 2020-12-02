@@ -7,7 +7,6 @@ import {
   Avatar,
   Box,
   Card,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -61,10 +60,7 @@ const Results = ({ className, shoppings, ...rest }) => {
                   Date
                 </TableCell>
                 <TableCell>
-                  Store
-                </TableCell>
-                <TableCell>
-                  Location
+                  Customer
                 </TableCell>
                 <TableCell>
                   Operations
@@ -84,7 +80,7 @@ const Results = ({ className, shoppings, ...rest }) => {
                     {shopping.bill.products.length}
                   </TableCell>
                   <TableCell>
-                    {moment(shopping.createdAt).format('DD/MM/YYYY')}
+                    {moment(shopping.createdAt).format('DD/MM/YYYY, h:mm:ss')}
                   </TableCell>
                   <TableCell>
                     <Box
@@ -93,19 +89,17 @@ const Results = ({ className, shoppings, ...rest }) => {
                     >
                       <Avatar
                         className={classes.avatar}
-                        src={shopping.avatarUrl}
+                        
                       >
+                        {getInitials(shopping.customer)}
                       </Avatar>
                       <Typography
                         color="textPrimary"
                         variant="body1"
                       >
-                        {shopping.store}
+                        {shopping.customer}
                       </Typography>
                     </Box>
-                  </TableCell>
-                  <TableCell>
-                    {`${shopping.address.city}, ${shopping.address.state}, ${shopping.address.country}`}
                   </TableCell>
                   <TableCell>
                     <Bill shopping={shopping} />

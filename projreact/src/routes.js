@@ -7,6 +7,7 @@ import CustomerListView from "src/views/customer/CustomerListView";
 import CustomerInListView from "src/views/customer/CustomerInListView";
 import DashboardView from "src/views/reports/DashboardView";
 import NotificationView from "src/views/reports/NotificationView";
+import ShoppingHistoricView from 'src/views/shopping/ShoppingHistoricView';
 import LoginView from "src/views/auth/LoginView";
 import NotFoundView from "src/views/errors/NotFoundView";
 import ProductListView from "src/views/product/ProductListView";
@@ -21,6 +22,7 @@ const routes = [
 			{ path: "account", element: <AccountView /> },
 			{ path: "customers", element: <CustomerListView /> },
 			{ path: "customers/in_store", element: <CustomerInListView /> },
+			{ path: "orders", element: <ShoppingHistoricView /> },
 			{ path: "/", element: <DashboardView /> },
 			{ path: "products", element: <ProductListView /> },
 			{ path: "settings", element: <SettingsView /> },

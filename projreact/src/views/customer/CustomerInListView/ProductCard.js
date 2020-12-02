@@ -10,7 +10,6 @@ import {
   Grid,
   Typography,
   makeStyles,
-  Button,
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({

@@ -13,7 +13,6 @@ import Dialog from "@material-ui/core/Dialog";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import Typography from "@material-ui/core/Typography";
-import PerfectScrollbar from "react-perfect-scrollbar";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
