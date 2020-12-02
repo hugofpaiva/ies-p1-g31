@@ -37,17 +37,17 @@ const TopBar = ({
   const classes = useStyles();
   const [notifications] = useState([
     {
-      "update":"Assistance needed 'Row 3'",
+      "update":"Low Stock on Milk",
       "timestamp":1606905012000,
       "icon": <ShoppingBasketIcon/>
       },
       {
-      "update":"Assistance needed at coffee machine",
+      "update":"Store is Full",
       "timestamp":1606905192000,
       "icon": <ShoppingBasketIcon/>
       },
       {
-      "update":"New task: restore shelf 26B",
+      "update":"Help needed by João",
       "timestamp":1606905312000,
       "icon": <AssignmentIcon/>
       }
