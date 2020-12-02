@@ -13,6 +13,7 @@ import NotFoundView from "src/views/errors/NotFoundView";
 import ProductListView from "src/views/product/ProductListView";
 import RegisterView from "src/views/auth/RegisterView";
 import SettingsView from "src/views/settings/SettingsView";
+import ManagerView from 'src/views/reports/ManagerView'
 
 const routes = [
 	{
@@ -23,7 +24,7 @@ const routes = [
 			{ path: "customers", element: <CustomerListView /> },
 			{ path: "customers/in_store", element: <CustomerInListView /> },
 			{ path: "orders", element: <ShoppingHistoricView /> },
-			{ path: "/", element: <DashboardView /> },
+			{ path: "/", element: <ManagerView /> },
 			{ path: "products", element: <ProductListView /> },
 			{ path: "settings", element: <SettingsView /> },
 			{ path: "notifications", element: <NotificationView /> },
