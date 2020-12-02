@@ -9,10 +9,16 @@ import {
   Hidden,
   IconButton,
   Toolbar,
-  makeStyles
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  Typography,
+  makeStyles,
+  MenuList
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import InputIcon from '@material-ui/icons/Input';
 
 const useStyles = makeStyles(() => ({
@@ -29,7 +35,38 @@ const TopBar = ({
   ...rest
 }) => {
   const classes = useStyles();
-  const [notifications] = useState([]);
+  const [notifications] = useState([
+    {
+      "update":"Assistance needed 'Row 3'",
+      "timestamp":1606905012000,
+      "icon": <ShoppingBasketIcon/>
+      },
+      {
+      "update":"Assistance needed at coffee machine",
+      "timestamp":1606905192000,
+      "icon": <ShoppingBasketIcon/>
+      },
+      {
+      "update":"New task: restore shelf 26B",
+      "timestamp":1606905312000,
+      "icon": <AssignmentIcon/>
+      }
+  ]);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const openTasks = (event) => {
+    handleClose();
+    
+  };
 
   return (
     <AppBar
@@ -43,34 +80,52 @@ const TopBar = ({
   </RouterLink>*/}
         <Box flexGrow={1} />
         <Hidden mdDown>
-          <IconButton color="inherit">
-            <Badge
-              badgeContent={notifications.length}
-              color="primary"
-              variant="dot"
-            >
+            <IconButton color="inherit" onClick={handleClick}>
+              <Badge
+                badgeContent={notifications.length}
+                color="error"
+              >
               <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <IconButton 
-          color="inherit"
-          component={RouterLink}
-          to='/login'>
-            <InputIcon />
-          </IconButton>
+              </Badge>
+            </IconButton>
+            <IconButton color="inherit">
+              <InputIcon />
+            </IconButton>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              menuAlign={{ lg: 'right' }}
+            >
+              <MenuList>
+                {notifications.map((n) => (
+                  <MenuItem onClick={handleClose}>
+                  <ListItemIcon fontSize="small">
+                    {n.icon}
+                  </ListItemIcon>
+                  <Typography>{n.update}</Typography>
+                  </MenuItem>
+                ))}
+                <MenuItem onClick={openTasks} style={{color:"blue", fontSize:"small", align: "center"}}>
+                  See All Notifications
+                </MenuItem>
+              </MenuList>
+            </Menu>
         </Hidden>
         <Hidden lgUp>
           <IconButton
             color="inherit"
             onClick={onMobileNavOpen}
           >
-            <MenuIcon />
           </IconButton>
         </Hidden>
       </Toolbar>
     </AppBar>
   );
 };
+  
 
 TopBar.propTypes = {
   className: PropTypes.string,
