@@ -39,8 +39,6 @@ const ProfileDetails = ({ className, ...rest }) => {
     lastName: 'Smith',
     email: 'demo@storego.pt',
     phone: '',
-    state: 'Alabama',
-    country: 'USA'
   });
 
   const handleChange = (event) => {
@@ -128,47 +126,6 @@ const ProfileDetails = ({ className, ...rest }) => {
                 value={values.phone}
                 variant="outlined"
               />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Country"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Select State"
-                name="state"
-                onChange={handleChange}
-                required
-                select
-                SelectProps={{ native: true }}
-                value={values.state}
-                variant="outlined"
-              >
-                {states.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
             </Grid>
           </Grid>
         </CardContent>

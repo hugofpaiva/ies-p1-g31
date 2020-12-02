@@ -8,6 +8,7 @@ export default [
     media: 'https://images-na.ssl-images-amazon.com/images/I/81hRExAE9OL._SX679_PIbundle-18,TopRight,0,0_SX679SY385SH20_.jpg',
     title: 'Horizon Organic 1 % Low Fat Milk',
     stock: 7,
+    price: 5.00,
     category: 'Dairy'
   },
   {
@@ -17,6 +18,7 @@ export default [
     media: 'https://images-na.ssl-images-amazon.com/images/I/91GOVhS2uVL._SX679_.jpg',
     title: 'Silk Unsweetened Organic Soymilk',
     stock: 10,
+    price: 7.00,
     category: 'Dairy'
   },
   {
@@ -25,7 +27,8 @@ export default [
     description: 'The perfect point-and-shoot camera for travelers, the Panasonic LUMIX Digital Camera DC-FZ80K combines exclusive 4K Photo with 4K video capture performance that everyone can enjoy. This 18.1 megapixel digital camera features a super-long 20-1200mm (60X) LUMIX DC VARIO lens with a super bright F2.8-5.9 aperture range that is optically stabilized with Panasonic’s POWER O.I.S. technology. High-resolution 4K video technology enables you to capture fast-paced action in stunning quality and create printable photos with 4K Photo ’s blistering 30 fps burst feature.',
     media: 'https://images-na.ssl-images-amazon.com/images/I/917LEZ%2Bit3L._AC_SX679_.jpg',
     title: 'Panasonic LUMIX FZ80 4K Digital Camera',
-    stock: 857,
+    stock: 5,
+    price: 500.00,
     category: 'Technology'
   },
   {
@@ -35,6 +38,7 @@ export default [
     media: 'https://m.media-amazon.com/images/I/913KMH1cDKL._AC_UL320_.jpg',
     title: 'Monster Energy Zero Ultra, Sugar Free Energy Drink',
     stock: 4,
+    price: 2.00,
     category: 'Drinks'
   },
   {
@@ -44,6 +48,7 @@ export default [
     media: 'https://m.media-amazon.com/images/I/81xADoTxjFL._AC_UL320_.jpg',
     title: 'Reign Total Body Fuel, Sour Apple, Fitness & Performance ',
     stock: 12,
+    price: 6.00,
     category: 'Drinks'
   },
   {
@@ -53,6 +58,7 @@ export default [
     media: 'https://images-na.ssl-images-amazon.com/images/I/61z5oOk5fzL._AC_SY879_.jpg',
     title: 'NETGEAR Wi-Fi Range Extender EX3700 ',
     stock: 1,
+    price: 30.00,
     category: 'Technology'
   },
   {
@@ -62,6 +68,7 @@ export default [
     media: 'https://images-na.ssl-images-amazon.com/images/I/41GGPRqTZtL._AC_.jpg',
     title: 'PlayStation 4 Pro 1TB',
     stock: 2,
+    price: 400.00,
     category: 'Technology'
   },
   {
@@ -71,6 +78,7 @@ export default [
     media: 'https://images-na.ssl-images-amazon.com/images/I/81ufrbnPx-L._AC_SY879_.jpg',
     title: 'Sonos Play:1',
     stock: 5,
+    price: 200.00,
     category: 'Technology'
   },
   

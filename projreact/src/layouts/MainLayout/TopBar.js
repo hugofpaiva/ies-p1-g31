@@ -26,9 +26,10 @@ const TopBar = ({ className, ...rest }) => {
       {...rest}
     >
       <Toolbar className={classes.toolbar}>
-        <RouterLink to="/">
+       {/* <RouterLink to="/">
           <Logo />
         </RouterLink>
+        */} 
       </Toolbar>
     </AppBar>
   );

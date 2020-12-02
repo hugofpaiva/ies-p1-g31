@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { colors } from '@material-ui/core';
 import {
   Avatar,
   Box,
@@ -9,8 +10,14 @@ import {
   Divider,
   Grid,
   Typography,
-  makeStyles
+  makeStyles,
+  Button
 } from '@material-ui/core';
+import {
+  Edit,
+  XCircle,
+  RefreshCcw 
+} from "react-feather";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,6 +30,16 @@ const useStyles = makeStyles((theme) => ({
   },
   statsIcon: {
     marginRight: theme.spacing(1)
+  },
+  icon: {
+    marginRight: theme.spacing(1)
+  },
+  title: {
+    marginRight: 'auto'
+  },
+  description:{
+    height:'100px',
+    overflow: 'hidden',
   }
 }));
 
@@ -58,9 +75,29 @@ const ProductCard = ({ className, product, ...rest }) => {
           align="center"
           color="textPrimary"
           variant="body1"
+          className={classes.description}
         >
           {product.description}
         </Typography>
+        <br></br>
+        <Box
+        display="flex"
+        justifyContent="space-around"
+        mb={1}>
+          <Button color={colors.common.yellow} variant="contained">
+						<Edit className={classes.icon}  size="20" />
+						<span className={classes.title}>Edit</span>
+					</Button>
+          <Button color={colors.common.yellow} variant="contained">
+						<RefreshCcw className={classes.icon}  size="20" />
+						<span className={classes.title}>Restock</span>
+					</Button>
+          <Button color={colors.common.red} variant="contained">
+						<XCircle className={classes.icon} size="20" />
+						<span className={classes.title}>Delete</span>
+					</Button>
+
+        </Box>
       </CardContent>
       <Box flexGrow={1} />
       <Divider />

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { v4 as uuid } from 'uuid';
-import moment from 'moment';
+import data from 'src/views/product/ProductListView/data';
+import { NavLink as RouterLink } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -19,38 +19,6 @@ import {
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
-const data = [
-  {
-    id: uuid(),
-    name: 'Dropbox',
-    imageUrl: '/static/images/products/product_1.png',
-    updatedAt: moment().subtract(2, 'hours')
-  },
-  {
-    id: uuid(),
-    name: 'Medium Corporation',
-    imageUrl: '/static/images/products/product_2.png',
-    updatedAt: moment().subtract(2, 'hours')
-  },
-  {
-    id: uuid(),
-    name: 'Slack',
-    imageUrl: '/static/images/products/product_3.png',
-    updatedAt: moment().subtract(3, 'hours')
-  },
-  {
-    id: uuid(),
-    name: 'Lyft',
-    imageUrl: '/static/images/products/product_4.png',
-    updatedAt: moment().subtract(5, 'hours')
-  },
-  {
-    id: uuid(),
-    name: 'GitHub',
-    imageUrl: '/static/images/products/product_5.png',
-    updatedAt: moment().subtract(9, 'hours')
-  }
-];
 
 const useStyles = makeStyles(({
   root: {
@@ -77,7 +45,7 @@ const LatestProducts = ({ className, ...rest }) => {
       />
       <Divider />
       <List>
-        {products.map((product, i) => (
+        {products.slice(0,5).map((product, i) => (
           <ListItem
             divider={i < products.length - 1}
             key={product.id}
@@ -86,19 +54,20 @@ const LatestProducts = ({ className, ...rest }) => {
               <img
                 alt="Product"
                 className={classes.image}
-                src={product.imageUrl}
+                src={product.media}
               />
             </ListItemAvatar>
             <ListItemText
-              primary={product.name}
-              secondary={`Updated ${product.updatedAt.fromNow()}`}
+              primary={product.title}
+              secondary={`${product.stock} in stock`}
             />
-            <IconButton
+            {/*<IconButton
               edge="end"
               size="small"
+
             >
               <MoreVertIcon />
-            </IconButton>
+            </IconButton>*/}
           </ListItem>
         ))}
       </List>
@@ -113,6 +82,8 @@ const LatestProducts = ({ className, ...rest }) => {
           endIcon={<ArrowRightIcon />}
           size="small"
           variant="text"
+          component={RouterLink}
+          to='/app/client/products'
         >
           View all
         </Button>
