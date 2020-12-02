@@ -9,6 +9,7 @@ import DashboardView from 'src/views/reports/DashboardView';
 import LoginView from 'src/views/auth/LoginView';
 import NotFoundView from 'src/views/errors/NotFoundView';
 import ProductListView from 'src/views/product/ProductListView';
+import ShoppingHistoricView from 'src/views/shopping/ShoppingHistoricView';
 import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/views/settings/SettingsView';
 
@@ -28,6 +29,7 @@ const routes = [
       { path: 'customers', element: <CustomerListView /> },
       { path: 'dashboard', element: <DashboardView /> },
       { path: 'products', element: <ProductListView /> },
+      { path: 'historic', element: <ShoppingHistoricView /> },
       { path: 'settings', element: <SettingsView /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
