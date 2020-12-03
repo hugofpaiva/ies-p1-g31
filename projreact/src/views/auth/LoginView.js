@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik } from "formik";
@@ -27,6 +27,21 @@ const LoginView = () => {
 	const classes = useStyles();
 	const navigate = useNavigate();
 
+	const [email, setEmail] = useState("");
+	const [loginError, setLoginError] = useState(false);
+
+	const login = () => {
+		setLoginError(false);
+		console.log("LOGGING")
+		if (email=="amelia.rodrigues@gostore.com")
+			navigate("/admin", { replace: true });
+		else if (email=="pedro.paulo@gostore.com")
+			navigate("/employee", { replace: true });
+		else
+			setLoginError(true);
+		return true;
+	}
+
 	return (
 		<Page className={classes.root} title="Login">
 			<Box
@@ -51,7 +66,7 @@ const LoginView = () => {
 								.required("Password is required"),
 						})}
 						onSubmit={() => {
-							navigate("/admin", { replace: true });
+							return login();
 						}}
 					>
 						{({
@@ -71,6 +86,22 @@ const LoginView = () => {
 									>
 										Sign in
 									</Typography>
+									<Typography
+										color="textSecondary"
+										variant="caption"
+									>
+										Use amelia.rodrigues@gostore.com for Manager and pedro.paulo@gostore.com for Employee.
+									</Typography>
+									<br />
+									{ 
+										loginError && 
+										<Typography
+											color="error"
+											variant="caption"
+										>
+											Wrong credentials! Please, try again.
+										</Typography>
+									}
 								</Box>
 
 								<TextField
@@ -83,9 +114,9 @@ const LoginView = () => {
 									margin="normal"
 									name="email"
 									onBlur={handleBlur}
-									onChange={handleChange}
+									onChange={(event) => setEmail(event.target.value)}
 									type="email"
-									value={values.email}
+									value={email}
 									variant="outlined"
 								/>
 								<TextField
@@ -117,19 +148,6 @@ const LoginView = () => {
 										Sign in now
 									</Button>
 								</Box>
-								<Typography
-									color="textSecondary"
-									variant="body1"
-								>
-									Don&apos;t have an account?{" "}
-									<Link
-										component={RouterLink}
-										to="/register"
-										variant="h6"
-									>
-										Sign up
-									</Link>
-								</Typography>
 							</form>
 						)}
 					</Formik>

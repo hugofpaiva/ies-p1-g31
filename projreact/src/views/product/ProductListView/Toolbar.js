@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Toolbar = ({ className, ...rest }) => {
+const Toolbar = ({ persona, className, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -35,12 +35,15 @@ const Toolbar = ({ className, ...rest }) => {
         display="flex"
         justifyContent="flex-end"
       >
-        <Button
-          color="primary"
-          variant="contained"
-        >
-          Add product
-        </Button>
+        {
+          persona == "admin" &&
+          <Button
+            color="primary"
+            variant="contained"
+          >
+            Add product
+          </Button>
+        }
       </Box>
       <Box mt={3}>
         <Card>

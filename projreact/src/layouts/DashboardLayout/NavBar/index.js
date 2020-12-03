@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {  useLocation } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
 	Avatar,
@@ -11,17 +11,10 @@ import {
 	Typography,
 	makeStyles,
 } from "@material-ui/core";
-import {
-	BarChart as BarChartIcon,
-	Settings as SettingsIcon,
-	ShoppingBag as CustomersInIcon,
-	Package as ShoppingBagIcon,
-	Bell as NotificationsIcon,
-	Users as UsersIcon,
-	DollarSign as LatestOrders,
-} from "react-feather";
 import NavItem from "./NavItem";
 import getInitials from "src/utils/getInitials";
+
+import personas from '../data';
 
 const useStyles = makeStyles((theme) => ({
 	mobileDrawer: {
@@ -39,53 +32,13 @@ const useStyles = makeStyles((theme) => ({
 		height: 64,
 	},
 }));
-const user = {
-	avatar: "/static/images/avatars/avatar_6.png",
-	jobTitle: "Administrator",
-	name: "Katarina Smith",
-};
 
-const items = [
-	{
-		href: "/admin/",
-		icon: BarChartIcon,
-		title: "Dashboard",
-	},
-	{
-		href: "/admin/customers/",
-		icon: UsersIcon,
-		title: "Customers",
-	},
-	{
-		href: "/admin/customers/in_store",
-		icon: CustomersInIcon,
-		title: "Customers in Store",
-	},
-	{
-		href: "/admin/orders/",
-		icon: LatestOrders,
-		title: "Latest Purchases",
-	},
-	{
-		href: "/admin/products/",
-		icon: ShoppingBagIcon,
-		title: "Products",
-	},
-	{
-		href: "/admin/notifications/",
-		icon: NotificationsIcon,
-		title: "Notifications",
-	},
-	{
-		href: "/admin/settings/",
-		icon: SettingsIcon,
-		title: "Settings",
-	},
-];
-
-const NavBar = ({ onMobileClose, openMobile }) => {
+const NavBar = ({ onMobileClose, openMobile, persona }) => {
 	const classes = useStyles();
 	const location = useLocation();
+
+	// Define user based on persona passed as props
+	const user = personas[persona];
 
 	useEffect(() => {
 		if (openMobile && onMobileClose) {
@@ -120,7 +73,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
 			<Divider />
 			<Box p={2}>
 				<List>
-					{items.map((item) => (
+					{user.menu.map((item) => (
 						<NavItem
 							href={item.href}
 							key={item.title}

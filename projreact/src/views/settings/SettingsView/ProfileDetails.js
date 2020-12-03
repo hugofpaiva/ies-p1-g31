@@ -13,18 +13,45 @@ import {
   makeStyles
 } from '@material-ui/core';
 
+const states = [
+  {
+    value: 'alabama',
+    label: 'Alabama'
+  },
+  {
+    value: 'new-york',
+    label: 'New York'
+  },
+  {
+    value: 'san-francisco',
+    label: 'San Francisco'
+  }
+];
+
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const ProfileDetails = ({ className, ...rest }) => {
+const ProfileDetails = ({ persona, className, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
-    firstName: 'Katarina',
-    lastName: 'Smith',
-    email: 'demo@storego.pt',
-    phone: '',
+    'admin': {
+      firstName: 'Amélia',
+      lastName: 'Rodrigues',
+      email: 'amelia.rodrigues@gostore.com',
+      phone: '965235687',
+      admin: true,
+    },
+    'employee': {
+      firstName: 'Pedro',
+      lastName: 'Paulo',
+      email: 'pedro.paulo@gostore.com',
+      phone: '923658965',
+      admin: false,
+    }
   });
+
+  const user = values[persona];
 
   const handleChange = (event) => {
     setValues({
@@ -63,7 +90,7 @@ const ProfileDetails = ({ className, ...rest }) => {
                 name="firstName"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={user.firstName}
                 variant="outlined"
               />
             </Grid>
@@ -78,7 +105,7 @@ const ProfileDetails = ({ className, ...rest }) => {
                 name="lastName"
                 onChange={handleChange}
                 required
-                value={values.lastName}
+                value={user.lastName}
                 variant="outlined"
               />
             </Grid>
@@ -93,7 +120,7 @@ const ProfileDetails = ({ className, ...rest }) => {
                 name="email"
                 onChange={handleChange}
                 required
-                value={values.email}
+                value={user.email}
                 variant="outlined"
               />
             </Grid>

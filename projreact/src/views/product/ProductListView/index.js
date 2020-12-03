@@ -18,23 +18,23 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const ProductList = () => {
+const ProductList = (props) => {
 	const classes = useStyles();
-  const [products] = useState(data);
-  const itemsPerPage = 6;
-  const [page, setPage] = React.useState(1);
-  const [noOfPages] = React.useState(
-    Math.ceil(products.length / itemsPerPage)
-  );
+	const [products] = useState(data);
+	const itemsPerPage = 6;
+	const [page, setPage] = React.useState(1);
+	const [noOfPages] = React.useState(
+		Math.ceil(products.length / itemsPerPage)
+	);
 
-  const handleChange = (event, value) => {
-    setPage(value);
-  };
+	const handleChange = (event, value) => {
+		setPage(value);
+	};
 
 	return (
 		<Page className={classes.root} title="Products">
 			<Container maxWidth={false}>
-				<Toolbar />
+				<Toolbar persona={props.persona} />
 				<Box mt={3}>
 					<Grid container spacing={3}>
 						{products.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((product) => (
@@ -42,6 +42,7 @@ const ProductList = () => {
 								<ProductCard
 									className={classes.productCard}
 									product={product}
+									persona={props.persona}
 								/>
 							</Grid>
 						))}
@@ -51,11 +52,11 @@ const ProductList = () => {
 					<Pagination
 						color="primary"
 						count={noOfPages}
-            page={page}
-            defaultPage={1}
-            showFirstButton
-            showLastButton
-            onChange={handleChange}
+						page={page}
+						defaultPage={1}
+						showFirstButton
+						showLastButton
+						onChange={handleChange}
 						size="small"
 					/>
 				</Box>

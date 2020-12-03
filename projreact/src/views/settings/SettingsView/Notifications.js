@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 	},
 });
 
-const Notifications = ({ className, ...rest }) => {
+const Notifications = ({ persona, className, ...rest }) => {
 	const classes = useStyles();
 
 	return (
@@ -50,20 +50,28 @@ const Notifications = ({ className, ...rest }) => {
 							>
 								Notifications
 							</Typography>
-							<FormControlLabel
-								control={<Checkbox defaultChecked />}
-								label="Store is full"
-							/>
-              {/* 
-							<FormControlLabel
-								control={<Checkbox defaultChecked />}
-								label="Help needed"
-              />
-              */}
-							<FormControlLabel
-								control={<Checkbox defaultChecked />}
-								label="Low stock"
-							/>
+
+							{ persona=="employee" &&
+								<FormControlLabel
+									control={<Checkbox defaultChecked />}
+									label="Help needed"
+								/>
+							}
+							{ persona=="admin" &&
+								<Grid
+									container="true"
+									direction="column"
+								>
+									<FormControlLabel
+										control={<Checkbox defaultChecked />}
+										label="Store is full"
+									/>
+									<FormControlLabel
+										control={<Checkbox defaultChecked />}
+										label="Low stock"
+									/>
+								</Grid>
+							}
 						</Grid>
 					</Grid>
 				</CardContent>

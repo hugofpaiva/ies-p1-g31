@@ -7,28 +7,40 @@ import CustomerListView from "src/views/customer/CustomerListView";
 import CustomerInListView from "src/views/customer/CustomerInListView";
 import DashboardView from "src/views/reports/DashboardView";
 import NotificationView from "src/views/reports/NotificationView";
-import ShoppingHistoricView from 'src/views/shopping/ShoppingHistoricView';
 import LoginView from "src/views/auth/LoginView";
 import NotFoundView from "src/views/errors/NotFoundView";
 import ProductListView from "src/views/product/ProductListView";
-import RegisterView from "src/views/auth/RegisterView";
 import SettingsView from "src/views/settings/SettingsView";
+import TasksView from "src/views/tasks/TasksView";
+import DashboardEmployeeView from "src/views/reports/DashboardEmployeeView";
+import ShoppingHistoricView from 'src/views/shopping/ShoppingHistoricView';
 import ManagerView from 'src/views/reports/ManagerView'
+
 
 const routes = [
 	{
 		path: "admin",
-		element: <DashboardLayout />,
+		element: <DashboardLayout persona="admin" />,
 		children: [
 			{ path: "account", element: <AccountView /> },
 			{ path: "customers", element: <CustomerListView /> },
 			{ path: "customers/in_store", element: <CustomerInListView /> },
 			{ path: "orders", element: <ShoppingHistoricView /> },
 			{ path: "/", element: <ManagerView /> },
-			{ path: "products", element: <ProductListView /> },
-			{ path: "settings", element: <SettingsView /> },
+			{ path: "products", element: <ProductListView persona="admin" /> },
+			{ path: "settings", element: <SettingsView persona="admin" /> },
 			{ path: "notifications", element: <NotificationView /> },
 			{ path: "*", element: <Navigate to="/404" /> },
+		],
+	},
+	{
+		path: "employee",
+		element: <DashboardLayout persona="employee" />,
+		children: [
+			{ path: "/", element: <DashboardEmployeeView /> },
+			{ path: "help", element: <TasksView /> },
+			{ path: "products", element: <ProductListView persona="employee" /> },
+			{ path: "settings", element: <SettingsView persona="employee" /> },
 		],
 	},
 
@@ -37,7 +49,6 @@ const routes = [
 		element: <MainLayout />,
 		children: [
 			{ path: "login", element: <LoginView /> },
-			{ path: "register", element: <RegisterView /> },
 			{ path: "404", element: <NotFoundView /> },
 			{ path: "/", element: <Navigate to="/login" /> },
 			{ path: "*", element: <Navigate to="/404" /> },
