@@ -23,7 +23,7 @@ We are using Jira to plan and document our project. You can find it at the links
 
 ## Architecture
 
-![architecture](./reports/architecture.png)
+![architecture](./reports/images/architecture.png)
 
 ### Components
 
