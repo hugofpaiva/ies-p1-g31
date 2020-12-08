@@ -16,7 +16,7 @@ public class PersonService {
     private PersonRepository personRepository;
 
     public Person validatePerson(String email, String password) throws EtAuthException{
-
+        return null;
     }
 
     public Person registerPerson(Person p) throws EtAuthException{
@@ -25,7 +25,7 @@ public class PersonService {
             throw new EtAuthException("Invalid email format");
         Integer count = personRepository.countByEmail(p.getEmail());
         if (count > 0)
-            throw new EtAuthException("Email already in use")
+            throw new EtAuthException("Email already in use");
         return personRepository.save(p);
 
     }
