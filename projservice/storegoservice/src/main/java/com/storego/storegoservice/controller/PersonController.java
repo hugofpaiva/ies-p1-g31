@@ -1,9 +1,13 @@
 package com.storego.storegoservice.controller;
 
 import com.storego.storegoservice.exception.ResourceNotFoundException;
+import com.storego.storegoservice.model.Notification;
 import com.storego.storegoservice.model.Person;
+import com.storego.storegoservice.repository.NotificationRepository;
 import com.storego.storegoservice.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +16,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@EnableMongoRepositories(basePackageClasses = NotificationRepository.class)
+@EnableJpaRepositories(basePackageClasses = {PersonRepository.class})
 @RestController
 @RequestMapping("/api")
 public class PersonController {
     @Autowired
     private PersonRepository personRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @GetMapping("/persons")
     public List<Person> getAllPersons() {
