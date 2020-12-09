@@ -1,25 +1,57 @@
 import random
 import time
 import threading
+from kafka import KafkaProducer
+import json
 
+#json.loads(str)
+#json.dumps(json)
 
 class dataGenerator:
-    def __init__(self, clients, products):
+    def __init__(self, clients, products, peopleLimit):
         self.clients = clients              # dictionary {nif: status}
         self.products = products            # dictionary {id: stock}
+        self.peopleLimit = peopleLimit
+        self.peopleInStore = 0
+        self.producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.loads(json.dumps(v)))
 
     def getClients(self):
-        return this.clients
+        return self.clients
     
     def getRandomClient(self):
         return random.choices(list(self.clients.keys()))
 
+    def setPeopleLimit(self, peopleLimit):
+        self.peopleLimit = peopleLimit
+    
+    def newProduct(self, id, stock):
+        self.products[id] = stock
+
+    def eraseProduct(self,id):
+        del self.products[id]
+
+    def restock(self, id, stock):
+        self.products[id] += stock
+
+    def wasHelped(self, client_nif):
+        if self.clients[client_nif][0] == 2:
+            client_cart = self.clients[client_nif][1]
+            self.clients[client_nif] = (1, client_cart)
+
     def enterStore(self, client_nif):
         self.clients[client_nif] = (1,{})   # setting status to 'inside' with empty cart
-        # TODO: send info to broker
+        self.peopleInStore += 1
+        if self.peopleInStore == self.peopleLimit:
+            msg = '{"type": "reached-limit"}'
+            producer.send('client-events', msg)
+        
+        msg = {"type": "entering-store", "nif": client_nif}
+        producer.send('client-events', msg)
 
     def leaveStore(self, client_nif):
-        # TODO: send info to broker
+        msg = {"type": "leaving-store", "nif": client_nif, "cart": self.clients[client_nif][1]}
+        producer.send('client-events', msg)
+        self.peopleInStore -= 1
         self.clients[client_nif] = (0,{})   # setting status to 'outside' with empty cart
 
     def addProduct(self, client_nif):
@@ -40,7 +72,8 @@ class dataGenerator:
         print("client " + str(client_nif) + " adding product " + str(product) + " in quantity " + str(qty))
         print(self.clients)
         print(self.products)
-        # TODO: send info to broker
+        msg = {"type": "adding-product", "nif": client_nif, "id": product, "qty": qty}
+        producer.send('client-events', msg)    
     
     def removeProduct(self, client_nif):
         client_cart = self.clients[client_nif][1]       # choosing a random product from the cart
@@ -56,12 +89,14 @@ class dataGenerator:
         print("client " + str(client_nif) + " deleting product " + str(product) + " in quantity " + str(qty))
         print(self.clients)
         print(self.products)
-        # TODO: send info to broker
+        msg = {"type": "removing-product", "nif": client_nif, "id": product, "qty": qty}
+        producer.send('client-events', msg)
 
     def askForHelp(self, client_nif):
         client_cart = self.clients[client_nif][1]
         self.clients[client_nif] = (2, client_cart)
-        # TODO: send info to broker
+        msg = {"type": "help-needed", "nif": client_nif}
+        producer.send('client-events', msg)
         waiting_time = random.randint(5,10)     # clients wait for the employee for a few time
         time.sleep(waiting_time)
         print("timeout for " + str(client_nif))
@@ -72,19 +107,20 @@ class dataGenerator:
             self.leaveStore(client_nif)
             print("client " + str(client_nif) + " angerily leaving store")
             print(self.clients)
-            # TODO: send info to broker
     
     def emptyCart(self, client_nif):
         client_cart = self.clients[client_nif][1]
         prods = list(client_cart.keys())
         for prod in prods:
+            msg = {"type": "removing-product", "nif": client_nif, "id": prod, "qty": self.clients[client_nif][1][prod]}
+            producer.send('client-events', msg)
             del client_cart[prod]
     
     def action(self, client_nif):
         client_status = self.clients[client_nif][0]
         client_cart = self.clients[client_nif][1]
 
-        if client_status == 0:              # if client is outside the store 
+        if client_status == 0 and self.peopleInStore < self.peopleLimit:    # if client is outside a not-full store 
             self.enterStore(client_nif)     # the client can only enter the store 
             print("client " + str(client_nif) + " entering the store")
             print(self.clients)
