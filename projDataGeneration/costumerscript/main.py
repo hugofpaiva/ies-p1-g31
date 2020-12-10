@@ -60,8 +60,8 @@ def main():
             5192: 120}
     
     generator = dataGenerator(people, products, 100)
-    t = threading.Thread(target=readMessages, args=(generator,))
-    t.start()
+    th = threading.Thread(target=readMessages, args=(generator,))
+    th.start()
 
     while True:
         t = random.randint(0,2)
