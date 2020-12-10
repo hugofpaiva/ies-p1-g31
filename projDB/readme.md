@@ -1,6 +1,12 @@
 # Base de dados
 
-Vamos utilizar dois tipos de bases de dados: MySQL e MongoDB. Ambas serão deployed em containers Docker.
+Vamos utilizar dois tipos de bases de dados: MySQL e MongoDB. Ambas serão deployed em containers Docker. Para este efeito, criámos um ficheiro `docker-compose.yml` para podermos fazer *deploy* de ambos em simultâneo com recurso à ferramenta Docker Compose.
+
+Este ficheiro cria um *container* para cada um dos tipos de base de dados criados, em ambos com a palavra-passe `password` para o administrador (utilizador `root`).
+
+
+
+## 1. Inicializar o Docker
 
 Antes de avançar com qualquer configuração, o Docker deve ser inicializado sem permissões de utilizador.
 
@@ -10,88 +16,35 @@ $ systemctl --user start docker.service
 
 
 
-## MySQL
+## 2. Criar containers
 
-### 1. Construir imagem
-
-O Dockerfile e os ficheiros necessários à sua construção estão disponíveis em /projdb/mysql. Para fazer build da imagem do container, deve ser executado o seguinte comando na referida pasta:
+Para criar os *containers*, o ficheiro com as configurações deve ser validado.
 
 ```bash
-$ docker build --tag mysql .
+$ docker-compose config
 ```
 
-Concluída a construção sem erros, a imagem está pronta a ser corrida.
-
-
-
-### 2. Correr a imagem
+Se não forem mostrados erros, pode avançar-se com a sua criação.
 
 ```bash
-$ docker run -p 3306:3306 -d --name ies_mysql mysql:latest
+$ docker-compose run -d
 ```
 
-> -d Faz com que o container corra em segundo plano
+> `-d` para ser executado em segundo plano.
 
 
 
-### 3. Alterar a palavra-passe do administrador
+## 3. Testar conexão às bases de dados
 
-O administrador da base de dados terá atribuída uma palavra-passe aleatória por defeito. Esta é impressa no log da construção, que pode ser consultado através do comando abaixo.
+### MySQL
 
-```bash
-$ docker logs ies_mysql
-```
-
-A linha que mostra esta palavra-passe começa por GENERATED ROOT PASSWORD, pelo que pode ser utilizado o | grep GENERATED em conjunto com o comando anterior para facilitar a sua consulta.
-
-Para a alterar, deve aceder-se à bash do container container.
-
-```bash
-$ docker exec -it ies_mysql bash
-```
-
-Uma vez no container, deve abrir-se o cliente da linha de comandos do MySQL, inserindo a palavra-passe descoberta anteriormente quando pedida.
-
-```bash
-$ mysql -uroot -p
-```
-
-Uma vez autenticado, deve executar o comando abaixo para alterar a palavra-passe, alterando a 'password' para a palavra-passe desejada.
-
-```mysql
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';
-```
-
-
-
-### 4. Criar utilizador com acesso externo
-
-Por defeito, o administrador da BD não lhe pode aceder através do exterior do container. Para tal, vamos criar um utilizador com estas permissões.
-
-No cliente da linha de comandos do MySQL, executado dentro da bash do container (ver passo anterior), deve executar-se o comando abaixo para criar o utilizador e atribuir-lhe permissões.
-
-> Tal como no passo anterior, ‘password’ deve ser substituído pela palavra-passe pretendida.
->
-> O '%' autoriza o utilizador a aceder à BD através de qualquer endereço IP. Se este for conhecido, deve ser alterado, de forma a tornar os acessos mais seguros.
->
-> O utilizador está a ser criado com todos os privilégios sobre todas as bases de dados. Em produção, estas autorizações devem ser restringidas.
-
-```mysql
-CREATE USER 'ies_spring'@'%' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON *.* TO 'ies_spring'@'%';
-```
-
-
-
-### 5. Testar conexão à base de dados
-
-Para efeitos de teste da conectividade à base de dados, foi criado o script Python que se encontra na pasta /projDB/mysql/test/testMySQL.py.
+Para efeitos de teste da conectividade à base de dados, foi criado o script Python que se encontra na pasta mysql/testMySQL.py.
 
 Este deve ser executado com os parâmetros user e password.
 
 ```bash
-# Exemplo para o utilizador 'ies_spring', com palavra-passe 'password'
-$ python testMysql.py 'ies_spring' 'password'
+# Exemplo para o utilizador 'root', com palavra-passe 'password'
+$ python testMysql.py 'root' 'password'
 ```
 
 O início do output, em caso de sucesso, deve ser semelhante ao disponibilizado abaixo.
@@ -113,59 +66,19 @@ O restante simula a adição de dados caso a tabela de testes ainda não tenha s
 
 
 
-> **Referências**
->
-> [Repositório com Dockerfile](https://github.com/mysql/mysql-docker/tree/mysql-server/8.0 )
->
-> [Trabalhar com o MySQL num container Docker](https://dev.mysql.com/doc/mysql-installation-excerpt/8.0/en/docker-mysql-getting-started.html)
->
-> [Criar novo utilizador, com autorização para aceder à BD fora do container](https://stackoverflow.com/a/19101356/10735382)
-
-
-
-## MongoDB
-
-### 1. Construir imagem
-
-O Dockerfile e os ficheiros necessários à sua construção estão disponíveis em /projdb/mongodb. Para fazer build da imagem do container, deve ser executado o seguinte comando na referida pasta:
-
-```bash
-$ docker build --tag mongodb .
-```
-
-Concluída a construção sem erros, a imagem está pronta a ser corrida.
-
-
-
-### 2. Correr a imagem
-
-```bash
-$ docker run -p 27017:27017 -d --name ies_mongodb mongodb:latest
-```
-
-> -d Faz com que o container corra em segundo plano
-
-Se der o erro “Error response from daemon: OCI runtime create failed: container_linux.go:349: starting container process caused "exec: \"docker-entrypoint.sh\": executable file not found in $PATH": unknown.”, devem ser executados os seguintes comandos e repetida a execução.
-
-```bash
-$ chmod 777 ./docker-entrypoint.sh
-$ ln -s ./docker-entrypoint.sh
-```
-
-
-
-### 3. Testar conexão à base de dados
+### MongoDB
 
 A base de dados deverá de ficar disponível na porta 27017 do localhost.
 
 ```bash
-$ mongo --port 27017
+# Exemplo para autenticação com o utilizador 'root' com palavra-passe 'password'
+$ mongo --port 27017 --username root --password password --authenticationDatabase admin
 ```
 
 Para testar o seu funcionamento, pode ser feita a importação da coleção de amostra com restaurantes, disponível [aqui](https://github.com/ozlerhakan/mongodb-json-files/blob/master/datasets/restaurant.json).
 
 ```bash
-$ mongoimport --port 27017 --db ies_test --collection rest --drop --file restaurant.json
+$ mongoimport --port 27017 --username root --password password --authenticationDatabase admin --db ies_test --collection rest --drop --file ./mongodb/restaurant.json 
 ```
 
 No cliente de da linha de comandos do Mongo.
@@ -180,6 +93,6 @@ db.rest.count()
 
 > **Referências**
 >
-> [Repositório com Dockerfile](https://github.com/docker-library/mongo/tree/fb982041304c66b108192458aba89b33b5bebc60/4.4 )
+> [Docker Hub MySQL](https://hub.docker.com/_/mysql)
 >
-> [Solução para o erro na construção do container](https://github.com/docker-library/postgres/issues/296#issuecomment-308698059)
+> [Docker Hub Mongo](https://hub.docker.com/_/mongo)
