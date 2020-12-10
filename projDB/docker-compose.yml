@@ -21,9 +21,9 @@ services:
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: 'root'
-      MONGO_INITDB_ROOT_PASSWORD: 'rootpassword'
+      MONGO_INITDB_ROOT_PASSWORD: 'rootpass'
       MONGODB_USER: 'spring'
-      MONGODB_DATABASE: 'springpass'
+      MONGODB_PASSWORD: 'springpass'
       MONGODB_DATABASE: 'ies'
     ports:
       - "27017:27017"
