@@ -1,0 +1,31 @@
+# Use root/example as user/password credentials
+version: '3.8'
+
+services:
+
+  mysql:
+    image: mysql:5.7
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 'rootpass'
+      MYSQL_USER: 'spring'
+      MYSQL_PASSWORD: 'springpass'
+      MYSQL_DATABASE: 'ies'
+    ports:
+      - "3306:3306"
+    volumes:
+      - ~/docker/mysql:/var/lib/mysql
+
+  mongodb:
+    image: mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 'root'
+      MONGO_INITDB_ROOT_PASSWORD: 'rootpass'
+      MONGODB_USER: 'spring'
+      MONGODB_PASSWORD: 'springpass'
+      MONGODB_DATABASE: 'ies'
+    ports:
+      - "27017:27017"
+    volumes:
+      - ~/docker/mongodb:/data/db

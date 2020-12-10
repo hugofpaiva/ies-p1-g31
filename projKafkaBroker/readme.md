@@ -10,16 +10,11 @@
 
 ## Instalando e iniciando o Kafka
 
-Para iniciar o Kafka utilizaremos um arquivo docker-compose criado e mantido pela Confluent, disponível no [Github](https://github.com/confluentinc/cp-docker-images) 
+Para iniciar o Kafka utilizaremos um arquivo docker-compose criado e mantido pela Confluent, disponível no [DockerHub](https://hub.docker.com/u/confluentinc) 
 
-**Clonar repositório**
-```bash
-$ git clone https://github.com/confluentinc/cp-docker-images
-```
+O ficheiro *docker-compose.yml* tem declarado os serviços e ao corrê-lo irá instalar e inicializar os serviços *Zookeeper* e o *Kafka*.
 
-Na pasta *cp-docker-images/examples/kafka-single-node*. Esta pasta conterá o ficheiro *docker-compose.yml*, que irá inicializar os serviços *Zookeeper* e o *Kafka*.
-
-Para executar os serviços em segundo plano:
+Para executar o ficheiro **.yml** e correr os serviços em segundo plano:
 ```bash
 $ docker-compose up -d
 ```
@@ -28,7 +23,7 @@ Para verificar se os serviços estão a execução corretamente (portas devem es
 ```bash
 $ docker-compose ps
 
-**Resultado esperado:**
+Resultado esperado:
 Name                         Command            State   Ports
 ----------------------------------------------------------------
 kafka-single-node_kafka_1       /etc/confluent/docker/run   Up

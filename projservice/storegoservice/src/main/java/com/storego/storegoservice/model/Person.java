@@ -2,7 +2,7 @@ package com.storego.storegoservice.model;
 
 import javax.persistence.*;
 
-@Entity
+@Entity // This tells Hibernate to make a table out of this class
 @Table(name = "person")
 public class Person {
 
