@@ -1,0 +1,17 @@
+# Use root/example as user/password credentials
+version: '3.8'
+
+services:
+
+  dbsql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: 'ies'
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "3306:3306"
+    volumes:
+      - ~/docker/mysql:/var/lib/mysql
