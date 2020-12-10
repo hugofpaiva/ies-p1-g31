@@ -6,14 +6,20 @@ import javax.persistence.*;
 @Table(name = "person")
 public class Person {
 
-    private long id;
+    // Attributes
+    private int nif;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
+    private PersonType type;
 
+    // Relations
+    private Cart cart;
+    private Set<Transaction> transactions;
+
+    // Constructors
     public Person(){
-
     }
 
     public Person(String firstName, String lastName, String email){
@@ -22,14 +28,16 @@ public class Person {
         this.email = email;
     }
 
+    // Getters and setters
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-        public long getId() {
-        return id;
+    @Column(name = "nif", nullable = false)
+    public int getNif() {
+        return nif;
     }
-    public void setId(long id) {
-        this.id = id;
+    public void setNif(int nif) {
+        this.nif = nif;
     }
+
 
     @Column(name = "first_name", nullable = false)
     public String getFirstName() {
@@ -55,5 +63,36 @@ public class Person {
         this.email = email;
     }
 
+    @Column(name = "password", nullable = false)
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
+    @Column(name = "type", nullable = false)
+    public PersonType getType() {
+        return type;
+    }
+    public void setType(PersonType type) {
+        this.type = type;
+    }
+
+    @OneToOne(mappedBy = "nif_cliente", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    public Cart getCart() {
+        return cart;
+    }
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    @OneToMany(mappedBy="nif_cliente", cascade = CascadeType.ALL)
+    public Set<Transaction> getTransactions() {
+        return transactions;
+    }
+    public void setTransactions(Set<Transaction> transactions) {
+        this.transactions = transactions;
+    }
 }
