@@ -34,9 +34,9 @@ def readMessages(generator):
                         generator.wasHelped(nif)
 
 def main():
-    
+    # time.sleep(20)
     # starting our people representation with everyone outside the store
-    producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+    producer = KafkaProducer(bootstrap_servers='localhost:9092', api_version=(0, 10), value_serializer=lambda v: json.dumps(v).encode('utf-8'))
     msg = {"type": "initialize-request"}
     people={732421123: (0,{}),
             261546474: (0,{}),
