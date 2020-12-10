@@ -13,9 +13,10 @@ class dataGenerator:
         self.products = products            # dictionary {id: stock}
         self.peopleLimit = peopleLimit
         self.peopleInStore = 0
-        self.producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.loads(json.dumps(v)))
+        self.producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
 
     def getClients(self):
+        print(self.clients)
         return self.clients
     
     def getRandomClient(self):
@@ -23,15 +24,18 @@ class dataGenerator:
 
     def setPeopleLimit(self, peopleLimit):
         self.peopleLimit = peopleLimit
+        print(self.peopleLimit)
     
-    def newProduct(self, id, stock):
-        self.products[id] = stock
+    def newProduct(self, pid, stock):
+        self.products[pid] = stock
+        print(str(pid) + ": " + str(self.products[pid]))
 
-    def eraseProduct(self,id):
-        del self.products[id]
+    def eraseProduct(self,pid):
+        del self.products[pid]
 
-    def restock(self, id, stock):
-        self.products[id] += stock
+    def restock(self, pid, stock):
+        self.products[pid] += stock
+        print(str(pid) + ": " + str(self.products[pid]))
 
     def wasHelped(self, client_nif):
         if self.clients[client_nif][0] == 2:
@@ -41,26 +45,23 @@ class dataGenerator:
     def enterStore(self, client_nif):
         self.clients[client_nif] = (1,{})   # setting status to 'inside' with empty cart
         self.peopleInStore += 1
-        if self.peopleInStore == self.peopleLimit:
-            msg = '{"type": "reached-limit"}'
-            producer.send('costumer-events', msg)
-        
         msg = {"type": "entering-store", "nif": client_nif}
-        producer.send('costumer-events', msg)
+        self.producer.send('costumer-events', msg)
 
     def leaveStore(self, client_nif):
-        msg = {"type": "leaving-store", "nif": client_nif, "cart": self.clients[client_nif][1]}
-        producer.send('costumer-events', msg)
+        msg = {"type": "leaving-store", "nif": client_nif}
+        self.producer.send('costumer-events', msg)
         self.peopleInStore -= 1
         self.clients[client_nif] = (0,{})   # setting status to 'outside' with empty cart
 
     def addProduct(self, client_nif):
-        available_prods = []
-        for prod in self.products.keys():               # populating the array of avaliable products with all products that have stock
-            if self.products[prod] != 0:
-                available_prods.append(prod)
-        product = random.choice(available_prods)        # choosing a random avaliable product
-        qty = random.randint(1,self.products[product]+1)# choosing a random quantity that has to be less than the existing stock
+        product = random.choice(list(self.products.keys()))        # choosing a random avaliable product
+        if self.products[product] == 0:
+            return 
+        elif self.products[product] == 1:
+            qty = 1
+        else:
+            qty = random.randint(1,self.products[product]+1)# choosing a random quantity that has to be less than the existing stock
         
         client_cart = self.clients[client_nif][1]
         if product not in client_cart:                  # adding product + quantity to client cart
@@ -73,7 +74,7 @@ class dataGenerator:
         print(self.clients)
         print(self.products)
         msg = {"type": "adding-product", "nif": client_nif, "id": product, "qty": qty}
-        producer.send('costumer-events', msg)    
+        self.producer.send('costumer-events', msg)    
     
     def removeProduct(self, client_nif):
         client_cart = self.clients[client_nif][1]       # choosing a random product from the cart
@@ -90,13 +91,13 @@ class dataGenerator:
         print(self.clients)
         print(self.products)
         msg = {"type": "removing-product", "nif": client_nif, "id": product, "qty": qty}
-        producer.send('costumer-events', msg)
+        self.producer.send('costumer-events', msg)
 
     def askForHelp(self, client_nif):
         client_cart = self.clients[client_nif][1]
         self.clients[client_nif] = (2, client_cart)
         msg = {"type": "help-needed", "nif": client_nif}
-        producer.send('costumer-events', msg)
+        self.producer.send('costumer-events', msg)
         waiting_time = random.randint(5,10)     # clients wait for the employee for a few time
         time.sleep(waiting_time)
         print("timeout for " + str(client_nif))
@@ -113,7 +114,7 @@ class dataGenerator:
         prods = list(client_cart.keys())
         for prod in prods:
             msg = {"type": "removing-product", "nif": client_nif, "id": prod, "qty": self.clients[client_nif][1][prod]}
-            producer.send('costumer-events', msg)
+            self.producer.send('costumer-events', msg)
             del client_cart[prod]
     
     def action(self, client_nif):

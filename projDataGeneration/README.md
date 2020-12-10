@@ -40,10 +40,6 @@ When the emplyee accepts a "help-needed" notification:
 
 # Possible JSON messages published in topic 'costumer-events':
 
-When the max number of people allowed in the store is reached:
-{"type": "reached-limit"}
-
-
 
 When a costumer enters the store:
 {
@@ -57,10 +53,7 @@ When a costumer leaves the store:
 
 ​	"type": "leaving-store",
 
-​	"nif": xxxxxxxxx,
-
-​	"cart": {prod1: xx, prod2, yy,....}
-
+​	"nif": xxxxxxxxx
 }
 
 When a costumer adds a product to their cart:
