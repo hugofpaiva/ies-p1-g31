@@ -5,7 +5,7 @@ import time
 
 
 def readMessages(generator):
-        consumer = KafkaConsumer('storego-events', fetch_max_wait_ms = 0)
+        consumer = KafkaConsumer('storego-events')
         while True:
             print("loop")
             for bmsg in consumer:
@@ -36,6 +36,8 @@ def readMessages(generator):
 def main():
     
     # starting our people representation with everyone outside the store
+    producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+    msg = {"type": "initialize-request"}
     people={732421123: (0,{}),
             261546474: (0,{}),
             390615322: (0,{}),
