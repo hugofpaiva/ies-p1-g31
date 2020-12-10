@@ -43,14 +43,14 @@ class dataGenerator:
         self.peopleInStore += 1
         if self.peopleInStore == self.peopleLimit:
             msg = '{"type": "reached-limit"}'
-            producer.send('client-events', msg)
+            producer.send('costumer-events', msg)
         
         msg = {"type": "entering-store", "nif": client_nif}
-        producer.send('client-events', msg)
+        producer.send('costumer-events', msg)
 
     def leaveStore(self, client_nif):
         msg = {"type": "leaving-store", "nif": client_nif, "cart": self.clients[client_nif][1]}
-        producer.send('client-events', msg)
+        producer.send('costumer-events', msg)
         self.peopleInStore -= 1
         self.clients[client_nif] = (0,{})   # setting status to 'outside' with empty cart
 
@@ -73,7 +73,7 @@ class dataGenerator:
         print(self.clients)
         print(self.products)
         msg = {"type": "adding-product", "nif": client_nif, "id": product, "qty": qty}
-        producer.send('client-events', msg)    
+        producer.send('costumer-events', msg)    
     
     def removeProduct(self, client_nif):
         client_cart = self.clients[client_nif][1]       # choosing a random product from the cart
@@ -90,13 +90,13 @@ class dataGenerator:
         print(self.clients)
         print(self.products)
         msg = {"type": "removing-product", "nif": client_nif, "id": product, "qty": qty}
-        producer.send('client-events', msg)
+        producer.send('costumer-events', msg)
 
     def askForHelp(self, client_nif):
         client_cart = self.clients[client_nif][1]
         self.clients[client_nif] = (2, client_cart)
         msg = {"type": "help-needed", "nif": client_nif}
-        producer.send('client-events', msg)
+        producer.send('costumer-events', msg)
         waiting_time = random.randint(5,10)     # clients wait for the employee for a few time
         time.sleep(waiting_time)
         print("timeout for " + str(client_nif))
@@ -113,7 +113,7 @@ class dataGenerator:
         prods = list(client_cart.keys())
         for prod in prods:
             msg = {"type": "removing-product", "nif": client_nif, "id": prod, "qty": self.clients[client_nif][1][prod]}
-            producer.send('client-events', msg)
+            producer.send('costumer-events', msg)
             del client_cart[prod]
     
     def action(self, client_nif):

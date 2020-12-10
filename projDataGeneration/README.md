@@ -1,4 +1,4 @@
-Possible JSON messages published in topic 'storego-events':
+# Possible JSON messages published in topic 'storego-events':
 
 When the manager updates the max number of people allowed in the store:
 {
@@ -19,7 +19,10 @@ When the manager stops selling a product and removes it from the platform:
     "id": xxxx
 }
 
-# TODO: Check this with Team!
+
+
+#Check with the team
+
 When the employee wants to confirm that they restocked a product:
 {
     "type": "restock",
@@ -29,40 +32,67 @@ When the employee wants to confirm that they restocked a product:
 
 When the emplyee accepts a "help-needed" notification:
 {
-    "type":"giving-help",
+    "type": "help-given",
     "nif": xxxxxxxxx
 }
 
 
-Possible JSON messages published in topic 'client-events':
+
+# Possible JSON messages published in topic 'costumer-events':
 
 When the max number of people allowed in the store is reached:
 {"type": "reached-limit"}
 
-When a client enters the store:
+
+
+When a costumer enters the store:
 {
     "type": "entering-store",
     "nif": xxxxxxxxx
 }
 
-When a client 
+When a costumer leaves the store:
 
-When the manager stops selling a product and removes it from the platform:
 {
-    "type": "remove-product",
-    "id": xxxx
+
+​	"type": "leaving-store",
+
+​	"nif": xxxxxxxxx,
+
+​	"cart": {prod1: xx, prod2, yy,....}
+
 }
 
-# TODO: Check this with Team!
-When the employee wants to confirm that they restocked a product:
+When a costumer adds a product to their cart:
+
 {
-    "type": "restock",
-    "id": xxxx,
-    "qty": yyyy (quantity of new items added)
+
+​	"type": "adding-product",
+
+​	"nif": xxxxxxxxx,
+
+​	"id": yyyy,
+
+​	"qty": zz
+
 }
 
-When the emplyee accepts a "help-needed" notification:
+When a costumer removes a product of their cart:
+
 {
-    "type":"giving-help",
+
+​	"type": "removing-product",
+
+​	"nif": xxxxxxxxx,
+
+​	"id": yyyy,
+
+​	"qty": zz
+
+}
+
+When the costumer asks for help:
+{
+    "type": "help-needed",
     "nif": xxxxxxxxx
 }

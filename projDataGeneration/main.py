@@ -54,7 +54,7 @@ def main():
                         id = msg["id"]
                         qty = msg["qty"]
                         generator.restock(id, qty)
-                elif msg["type"] == "giving-help":
+                elif msg["type"] == "help-given":
                         nif = msg["nif"]
                         generator.wasHelped(nif)
         t = random.randint(0,2)
