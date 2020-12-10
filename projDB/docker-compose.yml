@@ -4,14 +4,13 @@ version: '3.8'
 services:
 
   mysql:
-    image: mysql/mysql-server:5.7
+    image: mysql:5.7
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_USER: spring
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: ies
-      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: 'rootpass'
+      MYSQL_USER: 'spring'
+      MYSQL_PASSWORD: 'springpass'
+      MYSQL_DATABASE: 'ies'
     ports:
       - "3306:3306"
     volumes:
@@ -21,8 +20,11 @@ services:
     image: mongo
     restart: unless-stopped
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_ROOT_USERNAME: 'root'
+      MONGO_INITDB_ROOT_PASSWORD: 'rootpassword'
+      MONGODB_USER: 'spring'
+      MONGODB_DATABASE: 'springpass'
+      MONGODB_DATABASE: 'ies'
     ports:
       - "27017:27017"
     volumes:
