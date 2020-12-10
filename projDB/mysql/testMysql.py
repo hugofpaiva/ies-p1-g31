@@ -1,6 +1,8 @@
 import sys
 import mysql.connector
 
+# Usage: $ python testMysql.py 'root' 'password'
+
 # Validate arguments
 if len(sys.argv)!=3:
     print("USAGE: $ python testMYSql.py <user> <password>")
