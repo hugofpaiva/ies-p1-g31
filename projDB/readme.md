@@ -32,6 +32,10 @@ $ docker-compose run -d
 
 > `-d` para ser executado em segundo plano.
 
+> PROBLEMA COMUM
+>
+> Caso o MySQL esteja constantemente a reiniciar, deve ser eliminada a pasta que garante a sua persistência em `~/docker/mysql`. Deve ser tido em atenção que esta operação vai eliminar dados guardados previamente na base de dados.
+
 
 
 ## 3. Testar conexão às bases de dados
