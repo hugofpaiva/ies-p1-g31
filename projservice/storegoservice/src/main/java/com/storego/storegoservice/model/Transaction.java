@@ -8,7 +8,7 @@ import java.util.Set;
 public class Transaction {
 
     private long id;
-    private int nif_cliente;
+    private Person client;
     private Set<TransactionProduct> transactionproducts;
 
     public Transaction() {
@@ -26,11 +26,11 @@ public class Transaction {
 
     @ManyToOne
     @JoinColumn(name = "nif_cliente", nullable = false)
-    public int getNif_cliente() {
-        return nif_cliente;
+    public Person getClient() {
+        return client;
     }
-    public void setNif_cliente(int nif_cliente) {
-        this.nif_cliente = nif_cliente;
+    public void setClient(Person client) {
+        this.client = client;
     }
 
     @OneToMany(mappedBy="transaction")

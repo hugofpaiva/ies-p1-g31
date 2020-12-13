@@ -17,13 +17,12 @@ public class Person {
 
     // Relations
     private Cart cart;
-    private Set<Transaction> transactions;
 
     // Constructors
-    public Person(){
+    public Person() {
     }
 
-    public Person(String firstName, String lastName, String email){
+    public Person(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -81,20 +80,11 @@ public class Person {
         this.type = type;
     }
 
-    @OneToOne(mappedBy = "nif_cliente", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
     public Cart getCart() {
         return cart;
     }
     public void setCart(Cart cart) {
         this.cart = cart;
-    }
-
-    @OneToMany(mappedBy="nif_cliente", cascade = CascadeType.ALL)
-    public Set<Transaction> getTransactions() {
-        return transactions;
-    }
-    public void setTransactions(Set<Transaction> transactions) {
-        this.transactions = transactions;
     }
 }

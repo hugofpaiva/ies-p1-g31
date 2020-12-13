@@ -7,16 +7,16 @@ import java.util.Objects;
 @Embeddable
 class TransactionProductKey implements Serializable {
 
-    private int transactionId;
+    private long transactionId;
     private long productId;
 
     public TransactionProductKey() {}
 
     @Column(name = "transaction_id")
-    public int getTransactionId() {
+    public long getTransactionId() {
         return transactionId;
     }
-    public void setTransactionId(int transactionId) {
+    public void setTransactionId(long transactionId) {
         this.transactionId = transactionId;
     }
 

@@ -7,19 +7,27 @@ import java.util.Set;
 @Table(name = "cart")
 public class Cart {
 
-    private int nif_cliente;
+    private int nif;
+    private Person client;
     private Set<CartProduct> cartproducts;
 
     public Cart() {}
 
     @Id
-    @OneToOne(mappedBy="nif")
-    @JoinColumn(name = "nif_cliente")
-    public int getNif_cliente() {
-        return nif_cliente;
+    public int getNif() {
+        return nif;
     }
-    public void setNif_cliente(int nif_cliente) {
-        this.nif_cliente = nif_cliente;
+    public void setNif(int nif) {
+        this.nif = nif;
+    }
+
+    @OneToOne
+    @MapsId
+    public Person getClient() {
+        return client;
+    }
+    public void setClient(Person client) {
+        this.client = client;
     }
 
     @OneToMany(mappedBy="cart")
@@ -29,4 +37,5 @@ public class Cart {
     public void setCartproducts(Set<CartProduct> cartproducts) {
         this.cartproducts = cartproducts;
     }
+
 }
