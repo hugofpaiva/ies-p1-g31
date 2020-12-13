@@ -2,6 +2,7 @@ package com.storego.storegoservice.model;
 
 import javax.persistence.*;
 import java.util.Set;
+import java.util.Date;
 
 @Entity
 @Table(name = "transaction")
@@ -9,6 +10,9 @@ public class Transaction {
 
     private long id;
     private Person client;
+    private Date date;
+
+    // Relations
     private Set<TransactionProduct> transactionproducts;
 
     public Transaction() {
@@ -31,6 +35,14 @@ public class Transaction {
     }
     public void setClient(Person client) {
         this.client = client;
+    }
+
+    @Column(name = "date", nullable = false)
+    public Date getDate() {
+        return date;
+    }
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     @OneToMany(mappedBy="transaction")
