@@ -1,16 +1,19 @@
 package com.storego.storegoservice.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "transaction")
-public class TransactionProduct {
+public class Transaction {
 
     private long id;
     private int nif_cliente;
     private Set<TransactionProduct> transactionproducts;
 
-    public Cart() {}
+    public Transaction() {
+
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,6 +1,7 @@
 package com.storego.storegoservice.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "cart")
@@ -12,7 +13,7 @@ public class Cart {
     public Cart() {}
 
     @Id
-    @OneToOne
+    @OneToOne(mappedBy="nif")
     @JoinColumn(name = "nif_cliente")
     public int getNif_cliente() {
         return nif_cliente;

@@ -1,6 +1,7 @@
 package com.storego.storegoservice.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "productCategory")

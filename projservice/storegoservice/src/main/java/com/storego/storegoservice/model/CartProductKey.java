@@ -1,6 +1,8 @@
 package com.storego.storegoservice.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 class CartProductKey implements Serializable {

@@ -1,6 +1,8 @@
 package com.storego.storegoservice.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 class TransactionProductKey implements Serializable {
@@ -8,7 +10,7 @@ class TransactionProductKey implements Serializable {
     private int transactionId;
     private long productId;
 
-    public TransactionProduct() {}
+    public TransactionProductKey() {}
 
     @Column(name = "transaction_id")
     public int getTransactionId() {

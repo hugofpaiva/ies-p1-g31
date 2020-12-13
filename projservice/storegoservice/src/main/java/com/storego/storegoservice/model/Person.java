@@ -1,6 +1,7 @@
 package com.storego.storegoservice.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity // This tells Hibernate to make a table out of this class
 @Table(name = "person")
@@ -72,6 +73,7 @@ public class Person {
     }
 
     @Column(name = "type", nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     public PersonType getType() {
         return type;
     }
