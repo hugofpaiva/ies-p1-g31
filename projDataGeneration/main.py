@@ -7,11 +7,10 @@ import time
 def readMessages(generator):
     consumer = KafkaConsumer('storego-events', bootstrap_servers=['kafka:9092'],
                              auto_offset_reset='earliest',
-                             enable_auto_commit=True,)
+                             enable_auto_commit=True, value_deserializer=lambda x: json.loads(x.decode('utf-8')))
     while True:
         print("loop")
-        for bmsg in consumer:
-            msg = json.loads(bmsg.value.decode('utf8'))
+        for msg in consumer:
             print(msg["type"])
             if msg["type"] == "new-limit":
                 value = msg["qty"]
@@ -39,9 +38,6 @@ def readMessages(generator):
 def main():
     # time.sleep(20)
     # starting our people representation with everyone outside the store
-    producer = KafkaProducer(bootstrap_servers='kafka:9092', api_version=(
-        0, 10), value_serializer=lambda v: json.dumps(v).encode('utf-8'))
-    msg = {"type": "initialize-request"}
     people = {732421123: (0, {}),
               261546474: (0, {}),
               390615322: (0, {}),

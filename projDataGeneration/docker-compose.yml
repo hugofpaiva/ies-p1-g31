@@ -2,19 +2,21 @@
 version: '3.9'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:latest
+    image: confluentinc/cp-zookeeper:6.0.1
+    container_name: zookeeper
     restart: unless-stopped
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:6.0.1
     depends_on:
       - zookeeper
     ports:
       - 9092:9092
     restart: unless-stopped
+    container_name: kafka
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -25,4 +27,8 @@ services:
 
   generator:
     build: .
+    container_name: data_generator
+    restart: unless-stopped
     image: python-generator
+    depends_on:
+      - kafka
