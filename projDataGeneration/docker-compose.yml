@@ -24,6 +24,11 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: ["CMD", "nc", "-vz", "localhost", "9092"]
+      interval: 30s
+      timeout: 10s
+      retries: 4
 
   generator:
     build: .
@@ -31,4 +36,5 @@ services:
     restart: unless-stopped
     image: python-generator
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
