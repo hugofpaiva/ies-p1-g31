@@ -1,42 +1,49 @@
 from kafka import KafkaConsumer
-from dataGenerator import *
+from dataGenerator import dataGenerator
+import threading
 import random
 import time
+import json
 
 
 def readMessages(generator):
-    consumer = KafkaConsumer('storego-events', bootstrap_servers=['kafka:9092'],
-                             auto_offset_reset='earliest',
-                             enable_auto_commit=True, value_deserializer=lambda x: json.loads(x.decode('utf-8')))
-    while True:
-        print("loop")
-        for msg in consumer:
-            print(msg["type"])
-            if msg["type"] == "new-limit":
-                value = msg["qty"]
-                generator.setPeopleLimit(value)
-            elif msg["type"] == "add-product":
-                print("2")
-                pid = msg["id"]
-                stock = msg["qty"]
-                generator.newProduct(pid, stock)
-            elif msg["type"] == "remove-product":
-                print("3")
-                pid = msg["id"]
-                generator.eraseProduct(pid)
-            elif msg["type"] == "restock":
-                print("4")
-                pid = msg["id"]
-                qty = msg["qty"]
-                generator.restock(pid, qty)
-            elif msg["type"] == "help-given":
-                print("5")
-                nif = msg["nif"]
-                generator.wasHelped(nif)
+    consumer = None
+    while consumer is None:
+        try:
+            consumer = KafkaConsumer('storego-events', bootstrap_servers=['kafka:9092'],
+                                     auto_offset_reset='earliest',
+                                     enable_auto_commit=True, value_deserializer=lambda x: json.loads(x.decode('utf-8')))
+        except:
+            print('\033[95m' + "[Consumer] Kafka Broker is not available!"+ '\033[0m')
+            time.sleep(5)
+
+    for msg in consumer:
+        print("New message received: " + msg)
+
+        if msg["type"] == "new-limit":
+            value = msg["qty"]
+            generator.setPeopleLimit(value)
+
+        elif msg["type"] == "add-product":
+            pid = msg["id"]
+            stock = msg["qty"]
+            generator.newProduct(pid, stock)
+
+        elif msg["type"] == "remove-product":
+            pid = msg["id"]
+            generator.eraseProduct(pid)
+
+        elif msg["type"] == "restock":
+            pid = msg["id"]
+            qty = msg["qty"]
+            generator.restock(pid, qty)
+
+        elif msg["type"] == "help-given":
+            nif = msg["nif"]
+            generator.wasHelped(nif)
 
 
 def main():
-    # time.sleep(20)
     # starting our people representation with everyone outside the store
     people = {732421123: (0, {}),
               261546474: (0, {}),
