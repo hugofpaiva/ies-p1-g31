@@ -15,7 +15,7 @@ class dataGenerator:
         while self.producer is None:
             try:
                 self.producer = KafkaProducer(
-                    bootstrap_servers='kafka:9092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+                    bootstrap_servers='kafka:29092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
             except:
                 print('\033[95m' + "[Producer] Kafka Broker is not available!" + '\033[0m')
                 time.sleep(5)
@@ -24,6 +24,7 @@ class dataGenerator:
         try:
             self.producer.send(topic, msg)
         except Exception as e:
+            print(e)
             print('\033[95m' + "[Producer] Failed to send message!" + '\033[0m')
             time.sleep(5)
             self.sendMessage(topic, msg)
