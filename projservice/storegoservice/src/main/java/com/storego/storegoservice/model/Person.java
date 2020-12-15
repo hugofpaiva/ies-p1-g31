@@ -22,10 +22,13 @@ public class Person {
     public Person() {
     }
 
-    public Person(String firstName, String lastName, String email) {
+    public Person(int nif, String firstName, String lastName, String email, String password, PersonType type) {
+        this.nif = nif;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
+        this.type = type;
     }
 
     // Getters and setters
@@ -91,6 +94,7 @@ public class Person {
     @Override
     public String toString() {
         return "Person{" +
+                ", nif='" + nif + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
