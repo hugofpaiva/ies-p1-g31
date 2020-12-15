@@ -63,7 +63,7 @@ const CustomerCard = ({ className, customer, onnclick, ...rest }) => {
 						gutterBottom
 						variant="h6"
 					>
-						Entered at: {moment(customer.createdAt).format('DD/MM/YYYY, h:mm:ss')}
+						Entered at: {moment(customer.pushed_at).format('DD/MM/YYYY, h:mm:ss')}
 					</Typography>
 				</Box>
 				<Grid container justify="center">

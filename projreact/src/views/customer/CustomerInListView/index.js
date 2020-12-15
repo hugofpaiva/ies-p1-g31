@@ -1,12 +1,17 @@
-import React, { useState } from "react";
-import { Box, Container, Grid, makeStyles } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import {
+	Box,
+	Container,
+	Grid,
+	makeStyles,
+	LinearProgress,
+} from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import Page from "src/components/Page";
 import Toolbar from "./Toolbar";
 import CustomerCard from "./CustomerCard";
 import { withStyles } from "@material-ui/core/styles";
-import data from "./data";
-import prodData from "./productList";
 import ProductCard from "./ProductCard";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -48,18 +53,26 @@ const DialogActions = withStyles((theme) => ({
 
 const CustomerList = () => {
 	const classes = useStyles();
-	const [customers] = useState(data);
-	const [products] = useState(prodData);
+	const [customers, setCostumers] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [searchName, setSearchName] = useState("");
+	const [noOfPages, setnoOfPages] = useState(3);
+	const [products, setProducts] = useState([]);
 	const itemsPerPage = 12;
 	const [page, setPage] = React.useState(1);
-	const [noOfPages] = React.useState(
-		Math.ceil(customers.length / itemsPerPage)
-	);
-	const [total, setTotal] = useState(0)
 
 	const handleChange = (event, value) => {
 		setPage(value);
 	};
+
+	useEffect(() => {
+		setLoading(true);
+		const apiUrl = "https://api.github.com/users/hacktivist123/repos";
+		axios.get(apiUrl).then((response) => {
+			setCostumers(response.data);
+			setLoading(false);
+		});
+	}, [page, searchName]);
 
 	const [open, setOpen] = React.useState(false);
 
@@ -73,43 +86,48 @@ const CustomerList = () => {
 	return (
 		<Page className={classes.root} title="Customers in Store">
 			<Container maxWidth={false}>
-				<Toolbar />
-				<Box mt={3}>
-					<Grid container spacing={3}>
-						{customers
-							.slice(
-								(page - 1) * itemsPerPage,
-								page * itemsPerPage
-							)
-							.map((customer) => (
-								<Grid
-									item
-									key={customer.id}
-									lg={3}
-									md={4}
-									xs={12}
-								>
-									<CustomerCard
-										className={classes.customerCard}
-										customer={customer}
-										onnclick={handleClickOpen}
-									/>
-								</Grid>
-							))}
-					</Grid>
-				</Box>
-				<Box mt={3} display="flex" justifyContent="center">
-					<Pagination
-						color="primary"
-						count={noOfPages}
-						page={page}
-						defaultPage={1}
-						showFirstButton
-						showLastButton
-						onChange={handleChange}
-						size="small"
-					/>
-				</Box>
+			<Toolbar setSearchName={setSearchName} searchName={searchName} />
+				{loading || !customers ? (
+					<Box style={{ marginTop: "20%" }}>
+						<LinearProgress />
+					</Box>
+					
+				
+				) : (
+					<div>
+						<Box mt={3}>
+							<Grid container spacing={3}>
+								{customers.map((customer) => (
+									<Grid
+										item
+										key={customer.id}
+										lg={3}
+										md={4}
+										xs={12}
+									>
+										<CustomerCard
+											className={classes.customerCard}
+											customer={customer}
+											onnclick={handleClickOpen}
+										/>
+									</Grid>
+								))}
+							</Grid>
+						</Box>
+						<Box mt={3} display="flex" justifyContent="center">
+							<Pagination
+								color="primary"
+								count={noOfPages}
+								page={page}
+								defaultPage={1}
+								showFirstButton
+								showLastButton
+								onChange={handleChange}
+								size="small"
+							/>
+						</Box>
+					</div>
+				)}
 			</Container>
 			<Dialog
 				onClose={handleClose}
@@ -117,33 +135,32 @@ const CustomerList = () => {
 				open={open}
 			>
 				<DialogContent dividers>
-						<Box>
-							<Typography
-								variant="h1"
-								style={{ letterSpacing: "1px" }}
-							>
-								Cart
-							</Typography>
-						</Box>
-						<Box mt={3}>
-							<Grid container spacing={3}>
-								{products.map((product) => (
-									<Grid
-										item
-										key={product.id}
-										lg={12}
-										md={12}
-										xs={12}
-									>
-										<ProductCard
-											className={classes.productCard}
-											product={product}
-								
-										/>
-									</Grid>
-								))}
-							</Grid>
-						</Box>
+					<Box>
+						<Typography
+							variant="h1"
+							style={{ letterSpacing: "1px" }}
+						>
+							Cart
+						</Typography>
+					</Box>
+					<Box mt={3}>
+						<Grid container spacing={3}>
+							{products.map((product) => (
+								<Grid
+									item
+									key={product.id}
+									lg={12}
+									md={12}
+									xs={12}
+								>
+									<ProductCard
+										className={classes.productCard}
+										product={product}
+									/>
+								</Grid>
+							))}
+						</Grid>
+					</Box>
 				</DialogContent>
 				<DialogActions>
 					<Button autoFocus onClick={handleClose} color="primary">
