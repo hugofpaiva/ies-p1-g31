@@ -101,7 +101,12 @@ class dataGenerator:
         client_cart = self.clients[client_nif][1]
         product = random.choice(list(client_cart.keys()))
         # choosing a random quantity from product quantity inside the cart
-        qty = random.randint(1, client_cart[product]+1)
+        if client_cart[product] == 0:
+            return
+        elif client_cart[product] == 1:
+            qty = 1
+        else:
+            qty = random.randint(1, client_cart[product]+1)
 
         # if we chose to remove the full quantity, then delete product from the cart
         if qty == client_cart[product]:
