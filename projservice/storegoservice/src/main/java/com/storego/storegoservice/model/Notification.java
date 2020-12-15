@@ -19,7 +19,7 @@ public class Notification {
     private int qty;
 
     //Help needed Notification
-    private int nif;
+    private long nif;
     private Integer state;
 
     // Constructor
@@ -66,11 +66,11 @@ public class Notification {
         this.qty = qty;
     }
 
-    public int getNif() {
+    public long getNif() {
         return nif;
     }
 
-    public void setNif(int nif) {
+    public void setNif(long nif) {
         this.nif = nif;
     }
 

@@ -8,7 +8,7 @@ import java.util.Set;
 public class Person {
 
     // Attributes
-    private int nif;
+    private long nif;
     private String firstName;
     private String lastName;
     private String email;
@@ -22,7 +22,7 @@ public class Person {
     public Person() {
     }
 
-    public Person(int nif, String firstName, String lastName, String email, String password, PersonType type) {
+    public Person(long nif, String firstName, String lastName, String email, String password, PersonType type) {
         this.nif = nif;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -34,10 +34,10 @@ public class Person {
     // Getters and setters
     @Id
     @Column(name = "nif", nullable = false)
-    public int getNif() {
+    public long getNif() {
         return nif;
     }
-    public void setNif(int nif) {
+    public void setNif(long nif) {
         this.nif = nif;
     }
 
