@@ -87,4 +87,13 @@ public class Person {
     public void setCart(Cart cart) {
         this.cart = cart;
     }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }
