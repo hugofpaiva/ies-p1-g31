@@ -1,5 +1,5 @@
 package com.storego.storegoservice.services;
-import com.storego.storegoservice.model.Person;
+import com.storego.storegoservice.model.Notification;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -21,46 +21,46 @@ public class Config {
     // between Spring application
     // and Kafka server
     @Bean
-    public ConsumerFactory<String, Person>
-    personConsumer()
+    public ConsumerFactory<String, Notification>
+    notificationConsumer()
     {
 
         // HashMap to store the configurations
-        Map<String, Object> map
-                = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
         // put the host IP in the map
-        map.put(ConsumerConfig
-                        .BOOTSTRAP_SERVERS_CONFIG,
-                "127.0.0.1:9092");
+        map.put(
+            ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+            "127.0.0.1:9092"
+        );
 
         // put the group ID of consumer in the map
-        map.put(ConsumerConfig
-                        .GROUP_ID_CONFIG,
-                "id");
-        map.put(ConsumerConfig
-                        .KEY_DESERIALIZER_CLASS_CONFIG,
-                StringDeserializer.class);
-        map.put(ConsumerConfig
-                        .VALUE_DESERIALIZER_CLASS_CONFIG,
-                JsonDeserializer.class);
+        map.put(
+            ConsumerConfig.GROUP_ID_CONFIG,
+            "id"
+        );
+        map.put(
+            ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+            StringDeserializer.class
+        );
+        map.put(
+            ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+            JsonDeserializer.class
+        );
 
         // return message in JSON formate
         return new DefaultKafkaConsumerFactory<>(
-                map, new StringDeserializer(),
-                new JsonDeserializer<>(Person.class));
+            map, new StringDeserializer(),
+            new JsonDeserializer<>(Notification.class)
+        );
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String,
-                Person>
-    personListner()
+    public ConcurrentKafkaListenerContainerFactory<String, Notification>
+    notificationListener()
     {
-        ConcurrentKafkaListenerContainerFactory<String,
-                Person>
-                factory
-                = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(personConsumer());
+        ConcurrentKafkaListenerContainerFactory<String, Notification> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(notificationConsumer());
         return factory;
     }
 }
