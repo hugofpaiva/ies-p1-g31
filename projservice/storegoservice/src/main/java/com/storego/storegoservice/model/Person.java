@@ -2,6 +2,7 @@ package com.storego.storegoservice.model;
 
 import javax.persistence.*;
 import java.util.Set;
+import java.util.Objects;
 
 @Entity // This tells Hibernate to make a table out of this class
 @Table(name = "person")
@@ -94,10 +95,29 @@ public class Person {
     @Override
     public String toString() {
         return "Person{" +
-                ", nif='" + nif + '\'' +
+                "nif='" + nif + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        System.out.println("equals()");
+        System.out.println(this.toString());
+        System.out.println(getClass());
+        System.out.println(object);
+        System.out.println(object.getClass());
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        if (!super.equals(object)) return false;
+        Person person = (Person) object;
+        return nif == person.getNif();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), nif);
     }
 }

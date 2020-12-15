@@ -41,36 +41,31 @@ public class StoreServices {
         // Get client at DB
         System.out.println(notification.getNif());
 
-        Person client = null;
-        /*
         Person client = personRepository.findById(
             notification.getNif()
         ).orElseThrow(
-            () -> new ResourceNotFoundException("Person not found for this NIF " + notification.getNif())
+                () -> new ResourceNotFoundException("Person not found for this NIF ")
         );
-        */
 
         // Process entry
         switch(notification.getType()) {
             case "entering-store":
-                // clientsInStore.add(client);
+                clientsInStore.add(client);
                 // For debugging
                 System.out.println("> Client entering store: " + client);
                 System.out.print("> Clients in store: ");
                 for(Person p:clientsInStore) {
                     System.out.print(p.getNif() + "; ");
-                    continue;
                 }
                 System.out.println();
                 break;
             case "leaving-store":
-                // clientsInStore.remove(client);
+                clientsInStore.remove(client);
                 // For debugging
                 System.out.println("> Client leaving store: " + client);
                 System.out.print("> Clients in store: ");
                 for(Person p:clientsInStore) {
                     System.out.print(p.getNif() + "; ");
-                    continue;
                 }
                 System.out.println();
                 break;
