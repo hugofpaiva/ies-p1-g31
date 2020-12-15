@@ -93,7 +93,7 @@ class dataGenerator:
         print(self.clients)
         print(self.products)
         msg = {"type": "adding-product",
-               "nif": client_nif, "id": product, "qty": qty}
+               "nif": client_nif, "idProduct": product, "qty": qty}
         self.sendMessage('costumer-events', msg)
 
     def removeProduct(self, client_nif):
@@ -120,7 +120,7 @@ class dataGenerator:
         print(self.clients)
         print(self.products)
         msg = {"type": "removing-product",
-               "nif": client_nif, "id": product, "qty": qty}
+               "nif": client_nif, "idProduct": product, "qty": qty}
         self.sendMessage('costumer-events', msg)
 
     def askForHelp(self, client_nif):

@@ -11,38 +11,89 @@ public class Notification {
     @Id
     private String id;
 
-    private Integer type;
+    private String type;
     private Date date;
 
     //Stock Notification
     private long idProduct;
+    private int qty;
 
     //Help needed Notification
-    private long nifClient;
+    private int nif;
     private Integer state;
 
+    // Constructor
     public Notification() {}
 
-    public Notification(Integer type, Date date) {
+    // Getters and setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
         this.type = type;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    //Stock Notification
-    public Notification(Integer type, long idProduct) {
-        this.type = type;
-        this.date = new Date();;
+    public long getIdProduct() {
+        return idProduct;
+    }
+
+    public void setIdProduct(long idProduct) {
         this.idProduct = idProduct;
     }
 
-    //Help needed Notification
-    public Notification(Integer type, long nifClient, Integer state) {
-        this.type = type;
-        this.date = new Date();;
-        this.nifClient = nifClient;
+    public int getQty() {
+        return qty;
+    }
+
+    public void setQty(int qty) {
+        this.qty = qty;
+    }
+
+    public int getNif() {
+        return nif;
+    }
+
+    public void setNif(int nif) {
+        this.nif = nif;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
         this.state = state;
     }
 
+    // To String
 
-
+    @java.lang.Override
+    public java.lang.String toString() {
+        return "Notification{" +
+                "id='" + id + '\'' +
+                ", type='" + type + '\'' +
+                ", date=" + date +
+                ", idProduct=" + idProduct +
+                ", qty=" + qty +
+                ", nif=" + nif +
+                ", state=" + state +
+                '}';
+    }
 }
