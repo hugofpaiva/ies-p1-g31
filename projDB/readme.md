@@ -27,7 +27,7 @@ $ docker-compose config
 Se não forem mostrados erros, pode avançar-se com a sua criação.
 
 ```bash
-$ docker-compose run -d
+$ docker-compose up -d
 ```
 
 > `-d` para ser executado em segundo plano.
