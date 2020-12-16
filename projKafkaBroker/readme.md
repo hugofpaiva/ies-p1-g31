@@ -128,3 +128,122 @@ for msg in consumer:
     print("Topic name=%s, Message=%s"%(msg.topic,msg.value))
 ```
 
+## Publicar/Consumir para o Spring
+
+### Consumir
+
+Utilizart o model class *Person*.
+
+Criar a classe *Config* e as anotações *@Configuration* e *@EnableKafka*. Criar as beans *ConsumerFactory* e *ConcurrentKafkaListenerContainerFactory* com a classe *Person*.
+```bash
+@EnableKafka
+@Configuration
+public class Config {
+
+    // Function to establish a connection
+    // between Spring application
+    // and Kafka server
+    @Bean
+    public ConsumerFactory<String, Person>
+    personConsumer()
+    {
+
+        // HashMap to store the configurations
+        Map<String, Object> map
+                = new HashMap<>();
+
+        // put the host IP in the map
+        map.put(ConsumerConfig
+                        .BOOTSTRAP_SERVERS_CONFIG,
+                "127.0.0.1:9092");
+
+        // put the group ID of consumer in the map
+        map.put(ConsumerConfig
+                        .GROUP_ID_CONFIG,
+                "id");
+        map.put(ConsumerConfig
+                        .KEY_DESERIALIZER_CLASS_CONFIG,
+                StringDeserializer.class);
+        map.put(ConsumerConfig
+                        .VALUE_DESERIALIZER_CLASS_CONFIG,
+                JsonDeserializer.class);
+
+        // return message in JSON formate
+        return new DefaultKafkaConsumerFactory<>(
+                map, new StringDeserializer(),
+                new JsonDeserializer<>(Person.class));
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String,
+                Person>
+    personListner()
+    {
+        ConcurrentKafkaListenerContainerFactory<String,
+                Person>
+                factory
+                = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(personConsumer());
+        return factory;
+    }
+}
+```
+
+Criar a classe *KafkaService* com  a anotação *@Service*. Esta classe vai conter o método listener para publicar a mensagem no terminal.
+```bash
+@Service
+public class StoreServices {
+
+    // Annotation required to listen
+    // the message from Kafka server
+    @KafkaListener(topics = "JsonTopic",
+            groupId = "id", containerFactory
+            = "personListner")
+    public void
+    publish(Person person)
+    {
+        System.out.println("New Entry: "
+                + person);
+    }
+}
+```
+
+Correr o Spring no terminal para receber as mensagens produzidas.
+```bash
+$ ./mvnw spring-boot:run
+```
+
+
+### Produzir
+
+Para teste vamos produzir uma mensagem utilizando um ficheiro *people.json*.
+No terminal, entrar na bash do container kafka.
+```bash
+$ docker exec -it projkafkabroker_kafka_1 bash
+```
+
+Criar o ficheiro *people.json*.
+```bash
+$ cat > people.json
+{ "firstName": "Giovane", "lastName": "Matos", "email": "gmatos@mail.com" }
+{ "firstName": "Luisa", "lastName": "Martins", "email": "martins@mail.com" }
+{ "firstName": "Andre", "lastName": "Ferreira", "email": "ferreira@mail.com" }
+{ "firstName": "Paulo", "lastName": "Loredo", "email": "loredo@mail.com" }
+{ "firstName": "Joana", "lastName": "Paiva", "email": "paiva@mail.com" }
+{ "firstName": "Jesus", "lastName": "Carvalho", "email": "carv@mail.com" }
+```
+
+Produzir mensagem 
+```bash
+$ cat people.json | kafka-console-producer --request-required-acks 1 --broker-list localhost:9092 --topic JsonTopic && echo 'Produced json message.'
+```
+
+Resultado esperado no terminal do Spring:
+```bash
+New Entry: Person{, firstName='Giovane', lastName='Matos', email='gmatos@mail.com'}
+New Entry: Person{, firstName='Luisa', lastName='Martins', email='martins@mail.com'}
+New Entry: Person{, firstName='Andre', lastName='Ferreira', email='ferreira@mail.com'}
+New Entry: Person{, firstName='Paulo', lastName='Loredo', email='loredo@mail.com'}
+New Entry: Person{, firstName='Joana', lastName='Paiva', email='paiva@mail.com'}
+New Entry: Person{, firstName='Jesus', lastName='Carvalho', email='carv@mail.com'}
+```

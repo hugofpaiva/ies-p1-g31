@@ -27,10 +27,14 @@ $ docker-compose config
 Se não forem mostrados erros, pode avançar-se com a sua criação.
 
 ```bash
-$ docker-compose run -d
+$ docker-compose up -d
 ```
 
 > `-d` para ser executado em segundo plano.
+
+> PROBLEMA COMUM
+>
+> Caso o MySQL esteja constantemente a reiniciar, deve ser eliminada a pasta que garante a sua persistência em `~/docker/mysql`. Deve ser tido em atenção que esta operação vai eliminar dados guardados previamente na base de dados.
 
 
 
