@@ -48,6 +48,7 @@ public class StoreServices {
 
     public void leaveStore(Long nif){
         Person p = personRepository.findByNif(nif);
+        System.out.println(p.getName());
         clientsInStore.remove(p);
     }
 

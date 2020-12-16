@@ -63,7 +63,7 @@ const Results = ({ className, customers, ...rest }) => {
 						</TableHead>
 						<TableBody>
 							{customers.slice(0, limit).map((customer) => (
-								<TableRow hover key={customer.id}>
+								<TableRow hover key={customer.nif}>
 									<TableCell>
 										<Typography
 											color="textPrimary"
@@ -75,7 +75,7 @@ const Results = ({ className, customers, ...rest }) => {
 									<TableCell>{customer.nif}</TableCell>
 									<TableCell>{customer.email}</TableCell>
 									<TableCell>
-										{moment(customer.createdAt).format('DD/MM/YYYY, h:mm:ss')}
+										{moment(customer.last_visit).format('DD/MM/YYYY, h:mm:ss')}
 									</TableCell>
 									<TableCell>
 										<Button

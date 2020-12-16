@@ -22,20 +22,25 @@ public class Consumer {
                 new ObjectMapper().readValue(message, HashMap.class);
         switch ((String) result.get("type")){
             case "entering-store":
+                System.out.println(result);
                 service.enterStore(Long.valueOf((Integer) result.get("nif")));
+                break;
             case "leaving-store":
-                service.enterStore(Long.valueOf((Integer) result.get("nif")));
+                System.out.println(result);
+                service.leaveStore(Long.valueOf((Integer) result.get("nif")));
+                break;
             case "adding-product":
-                System.out.println("adding-product");
-                System.out.println(result);
+                System.out.println("adding-product - " + result);
+                break;
             case "removing-product":
-                System.out.println("removing-product");
-                System.out.println(result);
+                System.out.println("removing-product - " + result);
+                break;
             case "help-needed":
-                System.out.println("help-needed");
-                System.out.println(result);
+                System.out.println("help-needed - " + result);
+                break;
             default:
                 System.out.println("Event not supported!");
+                break;
         }
     }
 }
