@@ -1,41 +1,27 @@
 package com.storego.storegoservice.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Data
 @Table(name = "cart")
 public class Cart {
 
-    private long nif;
-    private Person client;
-    private Set<CartProduct> cartproducts;
-
-    public Cart() {}
-
     @Id
-    public long getNif() {
-        return nif;
-    }
-    public void setNif(long nif) {
-        this.nif = nif;
-    }
+    @Column(name = "person_id")
+    private Long id;
 
     @OneToOne
     @MapsId
-    public Person getClient() {
-        return client;
-    }
-    public void setClient(Person client) {
-        this.client = client;
-    }
+    @JoinColumn(name = "person_id")
+    private Person person;
 
     @OneToMany(mappedBy="cart")
-    public Set<CartProduct> getCartproducts() {
-        return cartproducts;
-    }
-    public void setCartproducts(Set<CartProduct> cartproducts) {
-        this.cartproducts = cartproducts;
-    }
+    Set<CartProduct> products;
+
+    public Cart() {}
 
 }

@@ -1,123 +1,66 @@
 package com.storego.storegoservice.model;
 
+import lombok.Data;
+
+
 import javax.persistence.*;
-import java.util.Set;
+import java.util.Date;
 import java.util.Objects;
 
+
 @Entity // This tells Hibernate to make a table out of this class
+@Data
 @Table(name = "person")
 public class Person {
 
     // Attributes
+    @Id
+    @Column(name = "nif", nullable = false)
     private long nif;
-    private String firstName;
-    private String lastName;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "last_visit")
+    private Date last_visit;
+
+    @Column(name = "type", nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private PersonType type;
 
-    // Relations
+    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private Cart cart;
+
 
     // Constructors
     public Person() {
     }
 
-    public Person(long nif, String firstName, String lastName, String email, String password, PersonType type) {
+    public Person(long nif, String name, String email, String password, PersonType type) {
         this.nif = nif;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
         this.email = email;
         this.password = password;
         this.type = type;
     }
 
-    // Getters and setters
-    @Id
-    @Column(name = "nif", nullable = false)
-    public long getNif() {
-        return nif;
-    }
-    public void setNif(long nif) {
-        this.nif = nif;
-    }
-
-
-    @Column(name = "first_name", nullable = false)
-    public String getFirstName() {
-        return firstName;
-    }
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    @Column(name = "last_name", nullable = false)
-    public String getLastName() {
-        return lastName;
-    }
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    @Column(name = "email", nullable = false)
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Column(name = "password", nullable = false)
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Column(name = "type", nullable = false)
-    @Enumerated(EnumType.ORDINAL)
-    public PersonType getType() {
-        return type;
-    }
-    public void setType(PersonType type) {
-        this.type = type;
-    }
-
-    @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
-    public Cart getCart() {
-        return cart;
-    }
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
-
     @Override
-    public String toString() {
-        return "Person{" +
-                "nif='" + nif + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        System.out.println("equals()");
-        System.out.println(this.toString());
-        System.out.println(getClass());
-        System.out.println(object);
-        System.out.println(object.getClass());
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        if (!super.equals(object)) return false;
-        Person person = (Person) object;
-        return nif == person.getNif();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return nif == person.nif;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), nif);
+        return Objects.hash(nif);
     }
 }

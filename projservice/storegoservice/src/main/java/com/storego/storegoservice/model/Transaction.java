@@ -1,55 +1,39 @@
 package com.storego.storegoservice.model;
 
+import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.util.Set;
 import java.util.Date;
 
 @Entity
+@Data
 @Table(name = "transaction")
 public class Transaction {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    @ManyToOne
+    @JoinColumn(name = "nif_cliente", nullable = false)
     private Person client;
+
+    @Column(name = "date", nullable = false)
+    @CreationTimestamp
     private Date date;
 
-    // Relations
-    private Set<TransactionProduct> transactionproducts;
+    @OneToMany(mappedBy="transaction")
+    Set<TransactionProduct> products;
 
     public Transaction() {
 
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public long getId() {
-        return id;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "nif_cliente", nullable = false)
-    public Person getClient() {
-        return client;
-    }
-    public void setClient(Person client) {
+    public Transaction(Person client, Date date) {
         this.client = client;
-    }
-
-    @Column(name = "date", nullable = false)
-    public Date getDate() {
-        return date;
-    }
-    public void setDate(Date date) {
         this.date = date;
     }
 
-    @OneToMany(mappedBy="transaction")
-    public Set<TransactionProduct> getTransactionproducts() {
-        return transactionproducts;
-    }
-    public void setTransactionproducts(Set<TransactionProduct> transactionproducts) {
-        this.transactionproducts = transactionproducts;
-    }
 }

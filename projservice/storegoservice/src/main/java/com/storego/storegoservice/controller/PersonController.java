@@ -37,6 +37,7 @@ public class PersonController {
         return personRepository.findAll();
     }
 
+
     @GetMapping("/persons_in_store")
     public Set<Person> getPersonsInStore() {
         return service.getClientsInStore();
@@ -55,18 +56,6 @@ public class PersonController {
         return personRepository.save(person);
     }
 
-    @PutMapping("/persons/{id}")
-    public ResponseEntity<Person> updatePerson(@PathVariable(value = "id") Long personId,
-                                                   @Valid @RequestBody Person personDetails) throws ResourceNotFoundException {
-        Person person = personRepository.findById(personId)
-                .orElseThrow(() -> new ResourceNotFoundException("Person not found for this id :: " + personId));
-
-        person.setEmail(personDetails.getEmail());
-        person.setLastName(personDetails.getLastName());
-        person.setFirstName(personDetails.getFirstName());
-        final Person updatedPerson = personRepository.save(person);
-        return ResponseEntity.ok(updatedPerson);
-    }
 
     @DeleteMapping("/persons/{id}")
     public Map<String, Boolean> deletePerson(@PathVariable(value = "id") Long personId)

@@ -1,17 +1,28 @@
 package com.storego.storegoservice.model;
 
+import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.util.Date;
 
 @Document(collection = "Notifications")
+@Data
 public class Notification {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
-    private String type;
+    @Enumerated(EnumType.ORDINAL)
+    private NotificationType type;
+
+    @CreationTimestamp
     private Date date;
 
     //Stock Notification
@@ -20,80 +31,12 @@ public class Notification {
 
     //Help needed Notification
     private long nif;
-    private Integer state;
+
+    @Enumerated(EnumType.ORDINAL)
+    private HelpNeededState state;
 
     // Constructor
     public Notification() {}
 
-    // Getters and setters
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public long getIdProduct() {
-        return idProduct;
-    }
-
-    public void setIdProduct(long idProduct) {
-        this.idProduct = idProduct;
-    }
-
-    public int getQty() {
-        return qty;
-    }
-
-    public void setQty(int qty) {
-        this.qty = qty;
-    }
-
-    public long getNif() {
-        return nif;
-    }
-
-    public void setNif(long nif) {
-        this.nif = nif;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    // To String
-
-    @java.lang.Override
-    public java.lang.String toString() {
-        return "Notification{" +
-                "id='" + id + '\'' +
-                ", type='" + type + '\'' +
-                ", date=" + date +
-                ", idProduct=" + idProduct +
-                ", qty=" + qty +
-                ", nif=" + nif +
-                ", state=" + state +
-                '}';
-    }
 }
