@@ -53,8 +53,8 @@ const DialogActions = withStyles((theme) => ({
 
 const CustomerList = () => {
 	const classes = useStyles();
-	const [customers, setCostumers] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [customers, setCustomers] = useState([]);
+	const [loading, setLoading] = useState(true);
 	const [searchName, setSearchName] = useState("");
 	const [noOfPages, setnoOfPages] = useState(3);
 	const [products, setProducts] = useState([]);
@@ -64,15 +64,33 @@ const CustomerList = () => {
 	const handleChange = (event, value) => {
 		setPage(value);
 	};
+	/*
+	useEffect(() => {
+		setLoading(true);
+		const apiUrl = "http://localhost:8080/api/persons_in_store/";
+		axios.get(apiUrl).then((response) => {
+			console.log(response.data)
+			setCustomers(response.data);
+			setLoading(false);
+		});
+	}, [page, searchName]);*/
 
 	useEffect(() => {
 		setLoading(true);
-		const apiUrl = "https://api.github.com/users/hacktivist123/repos";
-		axios.get(apiUrl).then((response) => {
-			setCostumers(response.data);
-			setLoading(false);
-		});
-	}, [page, searchName]);
+		axios
+			.get("http://localhost:8080/api/persons_in_store/")
+			.then((response) => {
+				setCustomers(response.data);
+				setLoading(false);
+			});
+		setInterval(function() {
+			axios
+				.get("http://localhost:8080/api/persons_in_store/")
+				.then((response) => {
+					setCustomers(response.data);
+				});
+		}, 1000);
+	}, []);
 
 	const [open, setOpen] = React.useState(false);
 
@@ -86,13 +104,14 @@ const CustomerList = () => {
 	return (
 		<Page className={classes.root} title="Customers in Store">
 			<Container maxWidth={false}>
-			<Toolbar setSearchName={setSearchName} searchName={searchName} />
+				<Toolbar
+					setSearchName={setSearchName}
+					searchName={searchName}
+				/>
 				{loading || !customers ? (
 					<Box style={{ marginTop: "20%" }}>
 						<LinearProgress />
 					</Box>
-					
-				
 				) : (
 					<div>
 						<Box mt={3}>
