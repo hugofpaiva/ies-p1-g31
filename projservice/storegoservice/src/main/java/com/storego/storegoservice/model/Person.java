@@ -1,98 +1,66 @@
 package com.storego.storegoservice.model;
 
+import lombok.Data;
+
+
 import javax.persistence.*;
+import java.util.Date;
+import java.util.Objects;
+
 
 @Entity // This tells Hibernate to make a table out of this class
+@Data
 @Table(name = "person")
 public class Person {
 
     // Attributes
-    private int nif;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-    private PersonType type;
-
-    // Relations
-    private Cart cart;
-    private Set<Transaction> transactions;
-
-    // Constructors
-    public Person(){
-    }
-
-    public Person(String firstName, String lastName, String email){
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-    }
-
-    // Getters and setters
     @Id
     @Column(name = "nif", nullable = false)
-    public int getNif() {
-        return nif;
-    }
-    public void setNif(int nif) {
-        this.nif = nif;
-    }
+    private long nif;
 
-
-    @Column(name = "first_name", nullable = false)
-    public String getFirstName() {
-        return firstName;
-    }
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    @Column(name = "last_name", nullable = false)
-    public String getLastName() {
-        return lastName;
-    }
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "email", nullable = false)
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    private String email;
 
     @Column(name = "password", nullable = false)
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    private String password;
+
+    @Column(name = "last_visit")
+    private Date last_visit;
 
     @Column(name = "type", nullable = false)
-    public PersonType getType() {
-        return type;
+    @Enumerated(EnumType.ORDINAL)
+    private PersonType type;
+
+    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Cart cart;
+
+
+    // Constructors
+    public Person() {
     }
-    public void setType(PersonType type) {
+
+    public Person(long nif, String name, String email, String password, PersonType type) {
+        this.nif = nif;
+        this.name = name;
+        this.email = email;
+        this.password = password;
         this.type = type;
     }
 
-    @OneToOne(mappedBy = "nif_cliente", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    public Cart getCart() {
-        return cart;
-    }
-    public void setCart(Cart cart) {
-        this.cart = cart;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return nif == person.nif;
     }
 
-    @OneToMany(mappedBy="nif_cliente", cascade = CascadeType.ALL)
-    public Set<Transaction> getTransactions() {
-        return transactions;
-    }
-    public void setTransactions(Set<Transaction> transactions) {
-        this.transactions = transactions;
+    @Override
+    public int hashCode() {
+        return Objects.hash(nif);
     }
 }

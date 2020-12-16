@@ -13,3 +13,6 @@ https://www.baeldung.com/jpa-join-column
 
 // Many to many
 https://www.baeldung.com/jpa-many-to-many
+
+// Dates and times
+https://www.baeldung.com/hibernate-date-time

@@ -1,52 +1,30 @@
 package com.storego.storegoservice.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
+@Data
 @Table(name = "transaction_has_product")
 public class TransactionProduct {
 
-    private TransactionProductKey id;
-    private Transaction transaction;
-    private Product product;
-    private int units;
-
-    public TransactionProduct() {}
-
     @EmbeddedId
-    public TransactionProductKey getId() {
-        return id;
-    }
-    public void setId(TransactionProductKey id) {
-        this.id = id;
-    }
+    private TransactionProductKey id;
 
     @ManyToOne
     @MapsId("transactionId")
     @JoinColumn(name = "transaction_id")
-    public Transaction getTransaction() {
-        return transaction;
-    }
-    public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
-    }
+    private Transaction transaction;
 
     @ManyToOne
     @MapsId("productId")
     @JoinColumn(name = "product_id")
-    public Product getProduct() {
-        return product;
-    }
-    public void setProduct(Product product) {
-        this.product = product;
-    }
+    private Product product;
 
     @Column(name = "units", nullable = false)
-    public int getUnits() {
-        return units;
-    }
-    public void setUnits(int units) {
-        this.units = units;
-    }
+    private int units;
+
+    public TransactionProduct() {}
 
 }

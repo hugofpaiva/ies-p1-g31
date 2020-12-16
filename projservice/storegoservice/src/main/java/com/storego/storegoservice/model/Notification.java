@@ -1,48 +1,42 @@
 package com.storego.storegoservice.model;
 
+import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.util.Date;
 
 @Document(collection = "Notifications")
+@Data
 public class Notification {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
-    private Integer type;
+    @Enumerated(EnumType.ORDINAL)
+    private NotificationType type;
+
+    @CreationTimestamp
     private Date date;
 
     //Stock Notification
     private long idProduct;
+    private int qty;
 
     //Help needed Notification
-    private long nifClient;
-    private Integer state;
+    private long nif;
 
+    @Enumerated(EnumType.ORDINAL)
+    private HelpNeededState state;
+
+    // Constructor
     public Notification() {}
-
-    public Notification(Integer type, Date date) {
-        this.type = type;
-        this.date = date;
-    }
-
-    //Stock Notification
-    public Notification(Integer type, long idProduct) {
-        this.type = type;
-        this.date = new Date();;
-        this.idProduct = idProduct;
-    }
-
-    //Help needed Notification
-    public Notification(Integer type, long nifClient, Integer state) {
-        this.type = type;
-        this.date = new Date();;
-        this.nifClient = nifClient;
-        this.state = state;
-    }
-
 
 
 }
