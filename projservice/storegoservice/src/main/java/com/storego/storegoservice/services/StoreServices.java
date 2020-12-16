@@ -1,5 +1,6 @@
 package com.storego.storegoservice.services;
 import com.storego.storegoservice.model.Notification;
+import com.storego.storegoservice.model.PersonType;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,15 @@ public class StoreServices {
 
     @Autowired
     private PersonRepository personRepository;
+
     private Set<Person> clientsInStore;
 
     public StoreServices() {
         this.clientsInStore = new HashSet<>();
+    }
+
+    public Set<Person> getClientsInStore() {
+        return clientsInStore;
     }
 
     // Annotation required to listen
