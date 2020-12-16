@@ -80,14 +80,16 @@ const CustomerList = () => {
 		axios
 			.get("http://localhost:8080/api/persons_in_store/")
 			.then((response) => {
-				setCustomers(response.data);
+				// Sort by enter time
+				setCustomers(response.data.sort((a,b) => new Date(a['last_visit']) - new Date(b['last_visit'])));
 				setLoading(false);
 			});
 		setInterval(function() {
 			axios
 				.get("http://localhost:8080/api/persons_in_store/")
 				.then((response) => {
-					setCustomers(response.data);
+					// Sort by enter time
+					setCustomers(response.data.sort((a,b) => new Date(a['last_visit']) - new Date(b['last_visit'])));
 				});
 		}, 1000);
 	}, []);
