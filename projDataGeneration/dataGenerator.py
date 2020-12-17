@@ -157,4 +157,3 @@ class dataGenerator:
             elif action == "ask_for_help":
                 t = threading.Thread(target=self.askForHelp, args=[client_nif])
                 t.start()
-            elif action == "wait":
