@@ -1,0 +1,18 @@
+// Enumns as attributes
+https://www.baeldung.com/jpa-persisting-enums-in-jpa
+
+// @OneToMany and @ManyToOne
+https://www.baeldung.com/hibernate-one-to-many
+https://tenmilesquare.com/spring-boot-jpa-relationship-quick-guide/
+
+// @OneToOne
+https://www.baeldung.com/jpa-one-to-one
+
+// @JoinColumn
+https://www.baeldung.com/jpa-join-column
+
+// Many to many
+https://www.baeldung.com/jpa-many-to-many
+
+// Dates and times
+https://www.baeldung.com/hibernate-date-time
