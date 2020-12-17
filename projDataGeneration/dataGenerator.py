@@ -30,7 +30,6 @@ class dataGenerator:
             self.sendMessage(topic, msg)
 
     def getClients(self):
-        print(self.clients)
         return self.clients
 
     def getRandomClient(self):
@@ -38,18 +37,15 @@ class dataGenerator:
 
     def setPeopleLimit(self, peopleLimit):
         self.peopleLimit = peopleLimit
-        print(self.peopleLimit)
 
     def newProduct(self, pid, stock):
         self.products[pid] = stock
-        print(str(pid) + ": " + str(self.products[pid]))
 
     def eraseProduct(self, pid):
         del self.products[pid]
 
     def restock(self, pid, stock):
         self.products[pid] += stock
-        print(str(pid) + ": " + str(self.products[pid]))
 
     def wasHelped(self, client_nif):
         if self.clients[client_nif][0] == 2:
@@ -79,7 +75,7 @@ class dataGenerator:
             qty = 1
         else:
             # choosing a random quantity that has to be less than the existing stock
-            qty = random.randint(1, self.products[product]+1)
+            qty = random.randint(1, self.products[product])
 
         client_cart = self.clients[client_nif][1]
         if product not in client_cart:                  # adding product + quantity to client cart
@@ -88,10 +84,6 @@ class dataGenerator:
 
         self.products[product] -= qty
 
-        print("client " + str(client_nif) + " adding product " +
-              str(product) + " in quantity " + str(qty))
-        print(self.clients)
-        print(self.products)
         msg = {"type": "adding-product",
                "nif": client_nif, "idProduct": product, "qty": qty}
         self.sendMessage('costumer-events', msg)
@@ -106,7 +98,7 @@ class dataGenerator:
         elif client_cart[product] == 1:
             qty = 1
         else:
-            qty = random.randint(1, client_cart[product]+1)
+            qty = random.randint(1, client_cart[product])
 
         # if we chose to remove the full quantity, then delete product from the cart
         if qty == client_cart[product]:
@@ -115,10 +107,6 @@ class dataGenerator:
             client_cart[product] -= qty
 
         self.products[product] += qty
-        print("client " + str(client_nif) + " deleting product " +
-              str(product) + " in quantity " + str(qty))
-        print(self.clients)
-        print(self.products)
         msg = {"type": "removing-product",
                "nif": client_nif, "idProduct": product, "qty": qty}
         self.sendMessage('costumer-events', msg)
@@ -131,15 +119,12 @@ class dataGenerator:
         # clients wait for the employee for a few time
         waiting_time = random.randint(5, 10)
         time.sleep(waiting_time)
-        print("timeout for " + str(client_nif))
         # after that, if their request still hasn't been attended they leave the store without any product
         if self.clients[client_nif][0] == 2:
             client_cart = self.clients[client_nif][1]
             self.clients[client_nif] = (3, client_cart)
             self.emptyCart(client_nif)
             self.leaveStore(client_nif)
-            print("client " + str(client_nif) + " angerily leaving store")
-            print(self.clients)
 
     def emptyCart(self, client_nif):
         client_cart = self.clients[client_nif][1]
@@ -157,8 +142,6 @@ class dataGenerator:
         if client_status == 0 and self.peopleInStore < self.peopleLimit:    # if client is outside a not-full store
             # the client can only enter the store
             self.enterStore(client_nif)
-            print("client " + str(client_nif) + " entering the store")
-            print(self.clients)
         elif client_status == 1 or client_status == 2:             # if client is inside the store
             choices = ["leave", "add_product", "remove_product", "wait"]
             if client_status == 1:
@@ -166,8 +149,6 @@ class dataGenerator:
             action = random.choice(choices)  # chooses a pseudo-random action
             if action == "leave":           # the client can leave the store
                 self.leaveStore(client_nif)
-                print("client " + str(client_nif) + " leaving the store")
-                print(self.clients)
             elif action == "add_product":   # the client could also add a product to the cart
                 self.addProduct(client_nif)
             # the client can only remove a product from the cart if it's not empty
@@ -176,6 +157,3 @@ class dataGenerator:
             elif action == "ask_for_help":
                 t = threading.Thread(target=self.askForHelp, args=[client_nif])
                 t.start()
-                print("client " + str(client_nif) + " asked for help")
-            elif action == "wait":
-                print("waiting")
