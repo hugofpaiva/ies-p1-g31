@@ -1,6 +1,7 @@
 package com.storego.storegoservice.services.messaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.storego.storegoservice.model.NotificationType;
 import com.storego.storegoservice.services.StoreServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -37,6 +38,7 @@ public class Consumer {
                 break;
             case "help-needed":
                 System.out.println("help-needed - " + result);
+                service.notifyHelpNeeded(Long.valueOf((Integer) result.get("nif")), NotificationType.HELP);
                 break;
             default:
                 System.out.println("Event not supported!");

@@ -3,6 +3,7 @@ import com.storego.storegoservice.model.*;
 import com.storego.storegoservice.repository.CartProductRepository;
 import com.storego.storegoservice.repository.CartRepository;
 import com.storego.storegoservice.repository.ProductRepository;
+import com.storego.storegoservice.repository.NotificationRepository;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,9 @@ public class StoreServices {
 
     @Autowired
     private CartProductRepository cartProductRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     private Set<Person> clientsInStore;
 
@@ -79,6 +83,13 @@ public class StoreServices {
         Product p = productRepository.findById(prod_id).orElseThrow(() -> new EntityNotFoundException("Product not found!"));
         Integer stock = p.getStock_current();
         p.setStock_current(stock - quantity);
+    }
+
+    public void notifyHelpNeeded(Long nif, NotificationType type){
+        Person p = personRepository.findByNif(nif);
+        Notification n = new Notification(p.getNif(), type);
+        notificationRepository.insert(n);
+        System.out.println("NOTIFICATION REPO.: \n"+notificationRepository.findByNif(n.getNif()));
     }
 
 }

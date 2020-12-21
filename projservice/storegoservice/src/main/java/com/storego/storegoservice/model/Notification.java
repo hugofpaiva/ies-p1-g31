@@ -38,5 +38,22 @@ public class Notification {
     // Constructor
     public Notification() {}
 
+    // Constructor for 'Help Needed' notification
+    public Notification(long nif, NotificationType type){
+        this.nif = nif;
+        this.type = type;
+        this.date = new Date();
+        this.state = HelpNeededState.PENDING;
+    }
 
+    @Override
+    public String toString() {
+        return "Notification{" +
+                "id='" + id + '\'' +
+                ", type=" + type +
+                ", date=" + date +
+                ", nif=" + nif +
+                ", state=" + state +
+                '}';
+    }
 }
