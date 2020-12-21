@@ -4,6 +4,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Date;
 
@@ -13,7 +14,7 @@ import java.util.Date;
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne
@@ -24,7 +25,7 @@ public class Transaction {
     @CreationTimestamp
     private Date date;
 
-    @OneToMany(mappedBy="transaction")
+    @OneToMany(mappedBy="transaction", cascade = CascadeType.ALL)
     Set<TransactionProduct> products;
 
     public Transaction() {
@@ -36,4 +37,16 @@ public class Transaction {
         this.date = date;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

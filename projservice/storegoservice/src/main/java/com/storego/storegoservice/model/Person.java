@@ -35,9 +35,7 @@ public class Person {
     private PersonType type;
 
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
     private Cart cart;
-
 
     // Constructors
     public Person() {

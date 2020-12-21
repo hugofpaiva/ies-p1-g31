@@ -38,5 +38,7 @@ public class Notification {
     // Constructor
     public Notification() {}
 
+    public Notification(NotificationType type) {}
+
 
 }

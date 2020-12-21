@@ -31,9 +31,19 @@ public class Consumer {
                 break;
             case "adding-product":
                 System.out.println("adding-product - " + result);
+                try {
+                    service.addProductToCart(Long.valueOf((Integer) result.get("nif")), Long.valueOf((Integer) result.get("idProduct")), (Integer) result.get("qty"));
+                } catch (Exception e){
+                    System.err.println(e.getMessage());
+                }
                 break;
             case "removing-product":
                 System.out.println("removing-product - " + result);
+                try {
+                    service.removeProductFromCart(Long.valueOf((Integer) result.get("nif")), Long.valueOf((Integer) result.get("id")), (Integer) result.get("qty"));
+                } catch (Exception e){
+                    System.err.println(e.getMessage());
+                }
                 break;
             case "help-needed":
                 System.out.println("help-needed - " + result);
