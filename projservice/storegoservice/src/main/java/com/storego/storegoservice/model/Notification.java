@@ -38,7 +38,9 @@ public class Notification {
     // Constructor
     public Notification() {}
 
-    public Notification(NotificationType type) {}
+    public Notification(NotificationType type) {
+        this.type = type;
+    }
 
 
 }

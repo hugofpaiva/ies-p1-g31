@@ -16,15 +16,15 @@ services:
     volumes:
       - ~/docker/mysql:/var/lib/mysql
 
+# MONGODB_USER, MONGODB_PASSWORD and MONGODB_DATABASE not supported anymore!
+# https://stackoverflow.com/questions/42912755/how-to-create-a-db-for-mongodb-container-on-start-up/42917632#42917632
   mongodb:
     image: mongo
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: 'root'
       MONGO_INITDB_ROOT_PASSWORD: 'rootpass'
-      MONGODB_USER: 'spring'
-      MONGODB_PASSWORD: 'springpass'
-      MONGODB_DATABASE: 'ies'
+      MONGO_INITDB_DATABASE: 'ies'
     ports:
       - "27017:27017"
     volumes:
