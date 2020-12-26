@@ -47,28 +47,42 @@ public class StoreServices {
 
     public void enterStore(Long nif){
         Person p = personRepository.findByNif(nif);
-        Cart c = new Cart(p);
-        cartRepository.save(c);
-        p.setCart(c);
-        p.setLast_visit(new Date());
-        personRepository.save(p);
+        String format = "Entered the store!";
+        // Create cart on database
+        if (cartRepository.findByPersonNif(nif) == null) {
+            Cart c = new Cart(p);
+            cartRepository.save(c);
+            p.setCart(c);
+            p.setLast_visit(new Date());
+            personRepository.save(p);
+        } else {
+            format = "ERROR! Entered but was already in store!";
+        }
+        // Add client to in store list
         clientsInStore.add(p);
+        // Output fedback
+        System.out.println(String.format("%d (%s) " + format, nif, p.getName()));
     }
 
     public void leaveStore(Long nif){
         Person p = personRepository.findByNif(nif);
-        Cart c = cartRepository.findByPersonNif(nif);
-            cartRepository.deleteById(c.getId());
+        String format = "Left the store!";
+        // Delete cart from database
+        if (cartRepository.findByPersonNif(nif) != null) {
+            p.setCart(null);
+            personRepository.save(p);
+            cartRepository.delete(c);
+            cartRepository.flush();
             if (cartRepository.findByPersonNif(nif) != null) {
                 System.out.println("ERRRRRROOOOOORRR! Removed but still on database!");
-    }
+            }
         } else {
             format = "ERROR! Left but was not in store!";
-            }
+        }
         // Remove client from in store list
         clientsInStore.remove(p);
         // Output feedback
         System.out.println(String.format("%d (%s) " + format, nif, p.getName()));
-            }
+    }
 
 }
