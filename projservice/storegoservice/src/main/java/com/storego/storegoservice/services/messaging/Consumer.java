@@ -27,6 +27,22 @@ public class Consumer {
             case "leaving-store":
                 service.leaveStore(Long.valueOf((Integer) result.get("nif")));
                 break;
+            case "adding-product":
+                System.out.println("adding-product - " + result);
+                try {
+                    service.addProductToCart(Long.valueOf((Integer) result.get("nif")), Long.valueOf((Integer) result.get("idProduct")), (Integer) result.get("qty"));
+                } catch (Exception e){
+                    System.err.println(e.getMessage());
+                }
+                break;
+            case "removing-product":
+                System.out.println("removing-product - " + result);
+                try {
+                    service.removeProductFromCart(Long.valueOf((Integer) result.get("nif")), Long.valueOf((Integer) result.get("id")), (Integer) result.get("qty"));
+                } catch (Exception e){
+                    System.err.println(e.getMessage());
+                }
+                break;
             case "help-needed":
                 break;
             default:
