@@ -16,8 +16,6 @@ services:
     volumes:
       - ~/docker/mysql:/var/lib/mysql
 
-# MONGODB_USER, MONGODB_PASSWORD and MONGODB_DATABASE not supported anymore!
-# https://stackoverflow.com/questions/42912755/how-to-create-a-db-for-mongodb-container-on-start-up/42917632#42917632
   mongodb:
     image: mongo
     restart: unless-stopped
@@ -28,4 +26,5 @@ services:
     ports:
       - "27017:27017"
     volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ~/docker/mongodb:/data/db
