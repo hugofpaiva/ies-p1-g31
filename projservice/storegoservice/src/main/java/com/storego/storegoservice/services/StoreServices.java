@@ -13,11 +13,9 @@ import java.util.HashSet;
 
 // Connection to DB
 import org.springframework.beans.factory.annotation.Autowired;
-import com.storego.storegoservice.exception.ResourceNotFoundException;
+
 import com.storego.storegoservice.repository.PersonRepository;
 
-import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
 
 @Service
 public class StoreServices {
@@ -34,40 +32,34 @@ public class StoreServices {
     @Autowired
     private CartRepository cartRepository;
 
-    private Set<Person> clientsInStore;
-
 
     public StoreServices() {
-        this.clientsInStore = new HashSet<>();
-    }
 
-    public Set<Person> getClientsInStore() {
-        return clientsInStore;
     }
 
     public void enterStore(Long nif){
         Person p = personRepository.findByNif(nif);
         Cart c = new Cart(p);
         cartRepository.save(c);
-        p.setCart(c);
         p.setLast_visit(new Date());
         personRepository.save(p);
-        clientsInStore.add(p);
     }
 
     public void leaveStore(Long nif){
-        Person p = personRepository.findByNif(nif);
+        Set<CartProduct> products = cartProductRepository.findByCartPersonNif(nif);
+        for(CartProduct p: products){
+            cartProductRepository.delete(p);
+        }
         Cart c = cartRepository.findByPersonNif(nif);
         cartRepository.delete(c);
-        System.out.println(p.getName());
-        clientsInStore.remove(p);
     }
 
     public void removeProductFromCart(Long nif, Long prod_id, Integer quantity) throws Exception{
-        CartProduct cp = cartProductRepository.findByCart_PersonNifAndProductId(nif, prod_id);
+        CartProduct cp = cartProductRepository.findByCartPersonNifAndProductId(nif, prod_id);
+
         Product product = productRepository.findById(prod_id).orElseThrow(() -> new Exception("Product not found!"));
 
-        if (cp == null) {
+        if (cp != null) {
             Integer units = cp.getUnits();
             if (units > quantity) {
                 cp.setUnits(units - quantity);
@@ -78,19 +70,20 @@ public class StoreServices {
             Integer stock = product.getStock_current();
             product.setStock_current(stock - quantity);
         } else {
-            throw new Exception("User hasn't got that product!");
+            throw(new Exception("User hasn't got that product!"));
         }
     }
 
     public void addProductToCart(Long nif, Long prod_id, Integer quantity) throws Exception{
-        CartProduct cp = cartProductRepository.findByCart_PersonNifAndProductId(nif, prod_id);
+        CartProduct cp = cartProductRepository.findByCartPersonNifAndProductId(nif, prod_id);
         Product product = productRepository.findById(prod_id).orElseThrow(() -> new Exception("Product not found!"));
 
         if (cp == null) {
             Cart cart = cartRepository.findByPersonNif(nif);
-            if (cart == null) throw new Exception("Cart of client not found!");
-            CartProduct new_cp = new CartProduct(cart, product, quantity);
-            cartProductRepository.save(new_cp);
+            if (cart == null) throw(new Exception("Cart of client not found!"));
+            cp = new CartProduct(cart, product, quantity);
+            cartProductRepository.save(cp);
+
         } else {
             Integer cp_units = cp.getUnits();
             Integer stock = product.getStock_current();
@@ -100,7 +93,7 @@ public class StoreServices {
                 product.setStock_current(stock - quantity);
                 productRepository.save(product);
             } else {
-                throw new Exception("Stock is not enough!");
+                throw(new Exception("Stock is not enough!"));
             }
         }
     }

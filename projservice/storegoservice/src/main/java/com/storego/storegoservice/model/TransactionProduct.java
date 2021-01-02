@@ -3,24 +3,25 @@ package com.storego.storegoservice.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Data
 @Table(name = "transaction_has_product")
-public class TransactionProduct {
+public class TransactionProduct implements Serializable {
 
     @EmbeddedId
     private TransactionProductKey id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @MapsId("transactionId")
-    @JoinColumn(name = "transaction_id")
+    @JoinColumn(name = "transaction_id", nullable = false)
     private Transaction transaction;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @MapsId("productId")
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @Column(name = "units", nullable = false)
