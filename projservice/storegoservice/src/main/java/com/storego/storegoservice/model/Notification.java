@@ -46,6 +46,11 @@ public class Notification {
         this.state = HelpNeededState.PENDING;
     }
 
+    public Notification(NotificationType type){
+        this.type = type;
+        this.date = new Date();
+    }
+
     @Override
     public String toString() {
         return "Notification{" +
