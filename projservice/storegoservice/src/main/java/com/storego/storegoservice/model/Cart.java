@@ -3,25 +3,40 @@ package com.storego.storegoservice.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.*;
 
 @Entity
 @Data
 @Table(name = "cart")
-public class Cart {
+public class Cart implements Serializable {
 
     @Id
-    @Column(name = "person_id")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "person_id")
+    @OneToOne(optional = false)
+    @JoinColumn(name = "person_id", referencedColumnName = "nif", nullable = false)
     private Person person;
 
-    @OneToMany(mappedBy="cart")
-    Set<CartProduct> products;
 
     public Cart() {}
 
+    public Cart(Person person) {
+        this.person = person;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cart cart = (Cart) o;
+        return id == cart.id &&
+                person.equals(cart.person);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, person);
+    }
 }

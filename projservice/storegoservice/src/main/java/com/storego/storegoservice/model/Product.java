@@ -3,15 +3,16 @@ package com.storego.storegoservice.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Data
 @Table(name = "product")
-public class Product {
+public class Product implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "price", nullable = false)
@@ -38,6 +39,16 @@ public class Product {
     public Product() { }
 
     public Product(double price, String name, String description, int stock_current, int stock_minimum, ProductCategory category) {
+        this.price = price;
+        this.name = name;
+        this.description = description;
+        this.stock_current = stock_current;
+        this.stock_minimum = stock_minimum;
+        this.category = category;
+    }
+
+    public Product(long id, double price, String name, String description, int stock_current, int stock_minimum, ProductCategory category) {
+        this.id = id;
         this.price = price;
         this.name = name;
         this.description = description;

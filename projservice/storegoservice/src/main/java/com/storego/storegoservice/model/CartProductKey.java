@@ -8,10 +8,10 @@ import java.util.Objects;
 
 @Embeddable
 @Data
-class CartProductKey implements Serializable {
+public class CartProductKey implements Serializable {
 
     @Column(name = "cart_id")
-    private int cartId;
+    private long cartId;
 
     @Column(name = "product_id")
     private long productId;

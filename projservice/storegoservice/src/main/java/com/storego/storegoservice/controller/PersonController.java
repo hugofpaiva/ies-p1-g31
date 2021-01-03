@@ -39,10 +39,10 @@ public class PersonController {
     }
 
 
-    @GetMapping("/persons_in_store")
+    /*@GetMapping("/persons_in_store")
     public Set<Person> getPersonsInStore() {
         return service.getClientsInStore();
-    }
+    }*/
 
     @GetMapping("/persons/{id}")
     public ResponseEntity<Person> getPersonById(@PathVariable(value = "id") Long personId)
