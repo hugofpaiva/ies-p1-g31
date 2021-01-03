@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Embeddable
 @Data
-class TransactionProductKey implements Serializable {
+public class TransactionProductKey implements Serializable {
 
     @Column(name = "transaction_id")
     private long transactionId;

@@ -75,8 +75,10 @@ O restante simula a adição de dados caso a tabela de testes ainda não tenha s
 A base de dados deverá de ficar disponível na porta 27017 do localhost.
 
 ```bash
-# Exemplo para autenticação com o utilizador 'root' com palavra-passe 'password'
+# Autenticação com o utilizador 'root' com palavra-passe 'password'
 $ mongo --port 27017 --username root --password password --authenticationDatabase admin
+# Autenticação com dados de acesso do spring boot
+$ mongo ies --port 27017 --username spring --password springpass
 ```
 
 Para testar o seu funcionamento, pode ser feita a importação da coleção de amostra com restaurantes, disponível [aqui](https://github.com/ozlerhakan/mongodb-json-files/blob/master/datasets/restaurant.json).
