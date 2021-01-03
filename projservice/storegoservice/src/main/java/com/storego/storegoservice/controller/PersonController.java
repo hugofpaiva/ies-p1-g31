@@ -33,7 +33,7 @@ public class PersonController {
     @Autowired
     private StoreServices service;
 
-    @GetMapping("/persons")
+    @GetMapping("/work/persons")
     public List<Person> getAllPersons() {
         return personRepository.findAll();
     }
