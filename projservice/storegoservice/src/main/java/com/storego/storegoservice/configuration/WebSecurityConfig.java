@@ -55,10 +55,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.cors().and().csrf().disable()
                 // dont authenticate this particular request
                 .authorizeRequests()
-                .antMatchers("/api/admin/**").hasAuthority(PersonType.MANAGER.name())
-                .antMatchers("/api/employee/**").hasAuthority(PersonType.EMPLOYEE.name())
-                .antMatchers("/api/work/**").hasAnyAuthority(PersonType.MANAGER.name(),PersonType.EMPLOYEE.name())
-                .antMatchers("/api/login").permitAll().
+                .antMatchers("/admin/**").hasAuthority(PersonType.MANAGER.name())
+                .antMatchers("/employee/**").hasAuthority(PersonType.EMPLOYEE.name())
+                .antMatchers("/work/**").hasAnyAuthority(PersonType.MANAGER.name(),PersonType.EMPLOYEE.name())
+                .antMatchers("/login").permitAll().
                 // all other requests need to be authenticated
                         anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to
