@@ -3,14 +3,10 @@ import com.storego.storegoservice.model.*;
 import com.storego.storegoservice.repository.CartProductRepository;
 import com.storego.storegoservice.repository.CartRepository;
 import com.storego.storegoservice.repository.ProductRepository;
-import org.springframework.expression.ExpressionException;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Set;
-import java.util.HashSet;
-
 // Connection to DB
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,7 +37,7 @@ public class StoreServices {
         Person p = personRepository.findByNif(nif);
         Cart c = new Cart(p);
         cartRepository.save(c);
-        p.setLast_visit(new Date());
+        p.setLastVisit(new Date());
         personRepository.save(p);
     }
 

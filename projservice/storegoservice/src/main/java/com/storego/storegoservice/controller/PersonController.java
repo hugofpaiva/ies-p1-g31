@@ -3,6 +3,7 @@ package com.storego.storegoservice.controller;
 import com.storego.storegoservice.exception.ResourceNotFoundException;
 import com.storego.storegoservice.model.Notification;
 import com.storego.storegoservice.model.Person;
+import com.storego.storegoservice.repository.CartRepository;
 import com.storego.storegoservice.repository.NotificationRepository;
 import com.storego.storegoservice.repository.PersonRepository;
 import com.storego.storegoservice.services.StoreServices;
@@ -19,11 +20,14 @@ import java.util.Map;
 import java.util.Set;
 
 @EnableMongoRepositories(basePackageClasses = NotificationRepository.class)
-@EnableJpaRepositories(basePackageClasses = {PersonRepository.class})
+@EnableJpaRepositories(basePackageClasses = {PersonRepository.class, CartRepository.class})
 @RestController
 public class PersonController {
     @Autowired
     private PersonRepository personRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
 
     @Autowired
     private NotificationRepository notificationRepository;
@@ -37,10 +41,22 @@ public class PersonController {
     }
 
 
-    /*@GetMapping("/persons_in_store")
+    @GetMapping("work/persons_in_store")
     public Set<Person> getPersonsInStore() {
-        return service.getClientsInStore();
-    }*/
+        return cartRepository.findDistinctPerson();
+    }
+
+    @GetMapping("work/num_persons_in_store")
+    public Integer getNumPersonsInStore() {
+        return cartRepository.countDistinctPerson();
+    }
+
+    @GetMapping("work/last_persons_in_store")
+    public Set<Person> getLastPersonsInStore() {
+        return personRepository.findDistinctTop10ByLastVisitIsNotNullOrderByLastVisitDesc();
+    }
+
+
 
     @GetMapping("/persons/{id}")
     public ResponseEntity<Person> getPersonById(@PathVariable(value = "id") Long personId)
@@ -48,11 +64,6 @@ public class PersonController {
         Person person = personRepository.findById(personId)
                 .orElseThrow(() -> new ResourceNotFoundException("Person not found for this id :: " + personId));
         return ResponseEntity.ok().body(person);
-    }
-
-    @PostMapping("/persons")
-    public Person createPerson(@Valid @RequestBody Person person) {
-        return personRepository.save(person);
     }
 
 
