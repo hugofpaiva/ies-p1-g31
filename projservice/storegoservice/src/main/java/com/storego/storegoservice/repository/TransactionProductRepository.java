@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface TransactionProductRepository extends JpaRepository<TransactionProduct, Long> {
     List<TransactionProduct> findByTransactionId(long id);
+    List<TransactionProduct> findTop10ByTransaction_DateOrderByTransaction_DateDesc();
 
 }
