@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends MongoRepository<Notification, String> {
     public List<Notification> findByTypeAndAndState(Integer type, HelpNeededState state);
-    public Notification findByNif(long nif);
+    public List<Notification> findByNif(long nif);
 
 }

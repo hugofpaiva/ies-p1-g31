@@ -147,7 +147,9 @@ public class StoreServices {
         Person p = personRepository.findByNif(nif);
         Notification n = new Notification(p.getNif(), type);
         notificationRepository.insert(n);
-        System.out.println("NOTIFICATION REPO. WORKING: \n"+notificationRepository.findByNif(n.getNif()));
+        //System.out.println("NOTIFICATION REPO. WORKING: \n"+notificationRepository.findByNif(n.getNif()));
+        return;
     }
+
 
 }

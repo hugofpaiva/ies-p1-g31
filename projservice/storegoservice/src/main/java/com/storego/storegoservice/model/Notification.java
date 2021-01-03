@@ -46,6 +46,7 @@ public class Notification {
         this.state = HelpNeededState.PENDING;
     }
 
+    // Constructor for 'Store Full' notification
     public Notification(NotificationType type){
         this.type = type;
         this.date = new Date();
@@ -53,12 +54,21 @@ public class Notification {
 
     @Override
     public String toString() {
-        return "Notification{" +
-                "id='" + id + '\'' +
-                ", type=" + type +
-                ", date=" + date +
-                ", nif=" + nif +
-                ", state=" + state +
-                '}';
+        if (type.toString() == "HELP") {
+            return "Notification{" +
+                    "id='" + id + '\'' +
+                    ", type=" + type +
+                    ", date=" + date +
+                    ", nif=" + nif +
+                    ", state=" + state +
+                    '}';
+        }
+        else {
+            return "Notification{" +
+                    "id='" + id + '\'' +
+                    ", type=" + type +
+                    ", date=" + date  +
+                    '}';
+        }
     }
 }
