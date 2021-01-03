@@ -4,6 +4,7 @@ import lombok.Data;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ import java.util.Objects;
 @Entity // This tells Hibernate to make a table out of this class
 @Data
 @Table(name = "person")
-public class Person {
+public class Person implements Serializable {
 
     // Attributes
     @Id
@@ -33,9 +34,6 @@ public class Person {
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private PersonType type;
-
-    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
-    private Cart cart;
 
     // Constructors
     public Person() {

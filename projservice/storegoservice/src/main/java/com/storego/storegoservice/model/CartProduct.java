@@ -4,24 +4,25 @@ import lombok.Data;
 import org.springframework.data.annotation.Transient;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Data
 @Table(name = "cart_has_product")
-public class CartProduct {
+public class CartProduct implements Serializable {
 
     @EmbeddedId
     private CartProductKey id = new CartProductKey();
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @MapsId("cartId")
-    @JoinColumn(name = "cart_id")
+    @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @MapsId("productId")
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @Column(name = "units", nullable = false)

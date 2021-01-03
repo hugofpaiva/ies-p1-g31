@@ -38,7 +38,7 @@ public class Consumer {
             case "removing-product":
                 System.out.println("removing-product - " + result);
                 try {
-                    service.removeProductFromCart(Long.valueOf((Integer) result.get("nif")), Long.valueOf((Integer) result.get("id")), (Integer) result.get("qty"));
+                    service.removeProductFromCart(Long.valueOf((Integer) result.get("nif")), Long.valueOf((Integer) result.get("idProduct")), (Integer) result.get("qty"));
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }

@@ -9,11 +9,12 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import java.io.Serializable;
 import java.util.Date;
 
 @Document(collection = "Notifications")
 @Data
-public class Notification {
+public class Notification implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
