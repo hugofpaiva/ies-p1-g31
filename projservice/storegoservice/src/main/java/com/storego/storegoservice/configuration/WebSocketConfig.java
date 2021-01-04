@@ -8,18 +8,17 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketConfig extends
-        AbstractWebSocketMessageBrokerConfigurer {
+public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/user/queue/specific-user");
-        config.setApplicationDestinationPrefixes("/spring-security-mvc-socket");
-        config.setUserDestinationPrefix("/user");
+        config.enableSimpleBroker("/topic");
+        config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/room").withSockJS();
+        registry.addEndpoint("/alarms");
+        registry.addEndpoint("/alarms").withSockJS();
     }
 }

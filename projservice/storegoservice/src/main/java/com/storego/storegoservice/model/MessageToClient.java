@@ -1,8 +1,12 @@
 package com.storego.storegoservice.model;
 
+import lombok.Data;
+
+@Data
 public class MessageToClient {
-    public class MessageFromClient {
-        private long to_nif;
-        private Notification notification;
+    private Notification notification;
+
+    public MessageToClient(Notification notification) {
+        this.notification = notification;
     }
 }
