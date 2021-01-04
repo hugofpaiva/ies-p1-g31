@@ -1,6 +1,9 @@
 package com.storego.storegoservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 import javax.persistence.*;
@@ -22,14 +25,15 @@ public class Person implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "last_visit")
-    private Date last_visit;
+    private Date lastVisit;
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.ORDINAL)

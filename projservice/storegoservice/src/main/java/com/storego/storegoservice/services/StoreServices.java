@@ -11,9 +11,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Set;
-import java.util.HashSet;
-
+import java.util.List;
 // Connection to DB
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -68,7 +66,7 @@ public class StoreServices {
         if (cartRepository.findByPersonNif(nif) == null) {
             Cart c = new Cart(p);
             cartRepository.save(c);
-            p.setLast_visit(new Date());
+            p.setLastVisit(new Date());
             personRepository.save(p);
         } else {
             format += "\nERROR! Entered but was already in store!";
@@ -84,7 +82,7 @@ public class StoreServices {
         String format = "Left the store!";
 
         // Get cart products
-        Set<CartProduct> products = cartProductRepository.findByCartPersonNif(nif);
+        List<CartProduct> products = cartProductRepository.findByCartPersonNif(nif);
         // If cart has products
         if (products.size() > 0) {
             format += " (With " + products.size() + " products)";
@@ -164,5 +162,14 @@ public class StoreServices {
             }
         }
     }
+
+    public void notifyHelpNeeded(Long nif, NotificationType type){
+        Person p = personRepository.findByNif(nif);
+        Notification n = new Notification(p.getNif(), type);
+        notificationRepository.insert(n);
+        //System.out.println("NOTIFICATION REPO. WORKING: \n"+notificationRepository.findByNif(n.getNif()));
+        return;
+    }
+
 
 }

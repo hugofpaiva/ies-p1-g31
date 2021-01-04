@@ -12,5 +12,6 @@ import java.util.Set;
 @Repository
 public interface CartProductRepository extends JpaRepository<CartProduct, CartProductKey> {
     public CartProduct findByCartPersonNifAndProductId(long nif, long product_id);
-    public Set<CartProduct> findByCartPersonNif(long nif);
+    public List<CartProduct> findByCartPersonNif(long nif);
+    public List<CartProduct> findByCartId(long id);
 }
