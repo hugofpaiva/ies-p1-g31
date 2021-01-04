@@ -6,6 +6,7 @@ import com.storego.storegoservice.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 // Connection to DB
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class StoreServices {
     }
 
     public void leaveStore(Long nif){
-        Set<CartProduct> products = cartProductRepository.findByCartPersonNif(nif);
+        List<CartProduct> products = cartProductRepository.findByCartPersonNif(nif);
         for(CartProduct p: products){
             cartProductRepository.delete(p);
         }
