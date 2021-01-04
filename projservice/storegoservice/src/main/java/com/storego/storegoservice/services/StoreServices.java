@@ -1,9 +1,12 @@
 package com.storego.storegoservice.services;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.storego.storegoservice.model.*;
 import com.storego.storegoservice.repository.CartProductRepository;
 import com.storego.storegoservice.repository.CartRepository;
 import com.storego.storegoservice.repository.ProductRepository;
 import com.storego.storegoservice.services.notifications.NotificationSocketsService;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -31,7 +34,6 @@ public class StoreServices {
 
     @Autowired
     private CartRepository cartRepository;
-
 
     public StoreServices() {
 

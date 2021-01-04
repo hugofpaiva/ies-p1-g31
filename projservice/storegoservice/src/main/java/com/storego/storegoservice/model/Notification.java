@@ -39,7 +39,9 @@ public class Notification implements Serializable {
     // Constructor
     public Notification() {}
 
-    public Notification(NotificationType type) {}
+    public Notification(NotificationType type) {
+        this.type = type;
+    }
 
 
 }

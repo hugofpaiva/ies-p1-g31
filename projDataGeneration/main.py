@@ -10,7 +10,7 @@ def readMessages(generator):
     consumer = None
     while consumer is None:
         try:
-            consumer = KafkaConsumer('storego-events', bootstrap_servers=['kafka:29092'],
+            consumer = KafkaConsumer('storego-events', bootstrap_servers=['localhost:9092'],
                                      auto_offset_reset='earliest',
                                      enable_auto_commit=True, value_deserializer=lambda x: json.loads(x.decode('utf-8')))
         except:
