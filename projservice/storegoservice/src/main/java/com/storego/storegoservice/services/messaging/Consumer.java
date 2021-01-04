@@ -1,6 +1,7 @@
 package com.storego.storegoservice.services.messaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.storego.storegoservice.model.NotificationType;
 import com.storego.storegoservice.services.StoreServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -18,15 +19,13 @@ public class Consumer {
 
     @KafkaListener(topics="costumer-events")
     public void consume(String message) throws IOException {
-        Map<String,Object> result =
-                new ObjectMapper().readValue(message, HashMap.class);
+        Map<String,Object> result = new ObjectMapper().readValue(message, HashMap.class);
+        System.out.println("\n" + result.toString());
         switch ((String) result.get("type")){
             case "entering-store":
-                System.out.println(result);
                 service.enterStore(Long.valueOf((Integer) result.get("nif")));
                 break;
             case "leaving-store":
-                System.out.println(result);
                 service.leaveStore(Long.valueOf((Integer) result.get("nif")));
                 break;
             case "adding-product":
@@ -47,6 +46,7 @@ public class Consumer {
                 break;
             case "help-needed":
                 System.out.println("help-needed - " + result);
+                service.notifyHelpNeeded(Long.valueOf((Integer) result.get("nif")), NotificationType.HELP);
                 break;
             default:
                 System.out.println("Event not supported!");
