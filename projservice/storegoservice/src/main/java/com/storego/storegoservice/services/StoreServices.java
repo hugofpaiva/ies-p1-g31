@@ -86,7 +86,7 @@ public class StoreServices {
         if (products.size() > 0) {
             format += " (With " + products.size() + " products)";
             // Create transaction
-            Transaction t = new Transaction(p, new Date());
+            Transaction t = new Transaction(p);
             transactionRepository.save(t);
             // Foreach product, add to transaction and delete from cart
             for(CartProduct cp: products){

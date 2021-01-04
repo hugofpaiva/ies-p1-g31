@@ -31,9 +31,8 @@ public class Transaction implements Serializable {
 
     }
 
-    public Transaction(Person client, Date date) {
+    public Transaction(Person client) {
         this.client = client;
-        this.date = date;
     }
 
     @Override
