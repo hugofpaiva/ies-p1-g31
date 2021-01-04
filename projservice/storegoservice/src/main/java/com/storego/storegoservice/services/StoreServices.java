@@ -3,6 +3,9 @@ import com.storego.storegoservice.model.*;
 import com.storego.storegoservice.repository.CartProductRepository;
 import com.storego.storegoservice.repository.CartRepository;
 import com.storego.storegoservice.repository.ProductRepository;
+import com.storego.storegoservice.repository.NotificationRepository;
+import org.springframework.expression.ExpressionException;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -29,26 +32,19 @@ public class StoreServices {
     @Autowired
     private CartRepository cartRepository;
 
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     public StoreServices() {
 
     }
 
     public void enterStore(Long nif){
-        Person p = personRepository.findByNif(nif);
-        Cart c = new Cart(p);
-        cartRepository.save(c);
-        p.setLastVisit(new Date());
-        personRepository.save(p);
+
     }
 
     public void leaveStore(Long nif){
-        List<CartProduct> products = cartProductRepository.findByCartPersonNif(nif);
-        for(CartProduct p: products){
-            cartProductRepository.delete(p);
-        }
-        Cart c = cartRepository.findByPersonNif(nif);
-        cartRepository.delete(c);
+
     }
 
     public void removeProductFromCart(Long nif, Long prod_id, Integer quantity) throws Exception{
@@ -94,5 +90,14 @@ public class StoreServices {
             }
         }
     }
+
+    public void notifyHelpNeeded(Long nif, NotificationType type){
+        Person p = personRepository.findByNif(nif);
+        Notification n = new Notification(p.getNif(), type);
+        notificationRepository.insert(n);
+        //System.out.println("NOTIFICATION REPO. WORKING: \n"+notificationRepository.findByNif(n.getNif()));
+        return;
+    }
+
 
 }
