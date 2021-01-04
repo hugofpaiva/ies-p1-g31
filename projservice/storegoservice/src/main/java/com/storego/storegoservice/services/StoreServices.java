@@ -4,6 +4,8 @@ import com.storego.storegoservice.repository.CartProductRepository;
 import com.storego.storegoservice.repository.CartRepository;
 import com.storego.storegoservice.repository.ProductRepository;
 import com.storego.storegoservice.repository.NotificationRepository;
+import com.storego.storegoservice.repository.TransactionRepository;
+import com.storego.storegoservice.repository.TransactionProductRepository;
 import org.springframework.expression.ExpressionException;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -36,17 +38,23 @@ public class StoreServices {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    private Set<Person> clientsInStore;
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
+    private TransactionProductRepository transactionProductRepository;
+
     private int maxClients;
 
     public StoreServices() {
-        this.clientsInStore = new HashSet<>();
         this.maxClients = 5;
     }
 
-    }
-
     public void enterStore(Long nif){
+        // Get person
+        Person p = personRepository.findByNif(nif);
+        String format = "Entered the store!";
+
         // Check if max number of clients has been reached
         if (cartRepository.count() > this.maxClients) {
             System.out.println("MAX NUMBER OF CLIENTS HAS BEEN REACHED!");
@@ -55,53 +63,60 @@ public class StoreServices {
             notificationRepository.save(n);
             return;
         }
-        Person p = personRepository.findByNif(nif);
-        Cart c = new Cart(p);
-        cartRepository.save(c);
-        p.setLast_visit(new Date());
-        personRepository.save(p);
-        String format = "Entered the store!";
+
         // Create cart on database
         if (cartRepository.findByPersonNif(nif) == null) {
             Cart c = new Cart(p);
             cartRepository.save(c);
-            p.setCart(c);
             p.setLast_visit(new Date());
             personRepository.save(p);
         } else {
-            format = "ERROR! Entered but was already in store!";
+            format += "\nERROR! Entered but was already in store!";
         }
-        // Add client to in store list
-        clientsInStore.add(p);
+
         // Output fedback
         System.out.println(String.format("%d (%s) " + format, nif, p.getName()));
     }
 
-    public void leaveStore(Long nif){
-        Set<CartProduct> products = cartProductRepository.findByCartPersonNif(nif);
-        for(CartProduct p: products){
-            cartProductRepository.delete(p);
-        }
-        Cart c = cartRepository.findByPersonNif(nif);
-        cartRepository.delete(c);
+    public void leaveStore(Long nif) {
+        // Get person
         Person p = personRepository.findByNif(nif);
         String format = "Left the store!";
+
+        // Get cart products
+        Set<CartProduct> products = cartProductRepository.findByCartPersonNif(nif);
+        // If cart has products
+        if (products.size() > 0) {
+            format += " (With " + products.size() + " products)";
+            // Create transaction
+            Transaction t = new Transaction(p, new Date());
+            transactionRepository.save(t);
+            // Foreach product, add to transaction and delete from cart
+            for(CartProduct cp: products){
+                // Create transaction product
+                Product product = cp.getProduct();
+                int units = cp.getUnits();
+                TransactionProduct tp = new TransactionProduct(t, product, units);
+                transactionProductRepository.save(tp);
+                // Delete product from cart
+                cartProductRepository.delete(cp);
+            }
+        } else {
+            format += " (Without products)";
+        }
+
         // Delete cart from database
         if (cartRepository.findByPersonNif(nif) != null) {
             Cart c = cartRepository.findByPersonNif(nif);
             System.out.println(c.getId());
-            p.setCart(null);
-            personRepository.save(p);
             cartRepository.delete(c);
-            cartRepository.flush();
             if (cartRepository.findByPersonNif(nif) != null) {
-                System.out.println("ERRRRRROOOOOORRR! Removed but still on database!");
+                format += "\nERROR! Cart removeed but still on database!";
             }
         } else {
-            format = "ERROR! Left but was not in store!";
+            format += "\nERROR! Left but was not in store!";
         }
-        // Remove client from in store list
-        clientsInStore.remove(p);
+
         // Output feedback
         System.out.println(String.format("%d (%s) " + format, nif, p.getName()));
     }
