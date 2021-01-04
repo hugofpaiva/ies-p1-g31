@@ -59,7 +59,6 @@ public class StoreServices {
             Notification n = new Notification(NotificationType.STORE_FULL);
             System.out.println(n);
             notificationRepository.save(n);
-            return;
         }
 
         // Create cart on database
