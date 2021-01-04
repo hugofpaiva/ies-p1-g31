@@ -4,6 +4,8 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Date;
@@ -11,22 +13,19 @@ import java.util.Date;
 @Entity
 @Data
 @Table(name = "transaction")
-public class Transaction {
+public class Transaction implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "nif_cliente", nullable = false)
     private Person client;
 
     @Column(name = "date", nullable = false)
     @CreationTimestamp
     private Date date;
-
-    @OneToMany(mappedBy="transaction", cascade = CascadeType.ALL)
-    Set<TransactionProduct> products;
 
     public Transaction() {
 

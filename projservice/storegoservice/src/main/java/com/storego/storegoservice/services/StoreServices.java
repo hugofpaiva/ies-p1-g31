@@ -14,11 +14,9 @@ import java.util.HashSet;
 
 // Connection to DB
 import org.springframework.beans.factory.annotation.Autowired;
-import com.storego.storegoservice.exception.ResourceNotFoundException;
+
 import com.storego.storegoservice.repository.PersonRepository;
 
-import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
 
 @Service
 public class StoreServices {
@@ -38,74 +36,24 @@ public class StoreServices {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    private Set<Person> clientsInStore;
-    private int maxClients;
-
-
     public StoreServices() {
-        this.clientsInStore = new HashSet<>();
-        this.maxClients = 5;
-    }
 
-    public Set<Person> getClientsInStore() {
-        return clientsInStore;
     }
 
     public void enterStore(Long nif){
-        // Check if max number of clients has been reached
-        if (cartRepository.count() > this.maxClients) {
-            System.out.println("MAX NUMBER OF CLIENTS HAS BEEN REACHED!");
-            Notification n = new Notification(NotificationType.STORE_FULL);
-            System.out.println(n);
-            notificationRepository.save(n);
-            return;
-        }
-        Person p = personRepository.findByNif(nif);
-        String format = "Entered the store!";
-        // Create cart on database
-        if (cartRepository.findByPersonNif(nif) == null) {
-            Cart c = new Cart(p);
-            cartRepository.save(c);
-            p.setCart(c);
-            p.setLast_visit(new Date());
-            personRepository.save(p);
-        } else {
-            format = "ERROR! Entered but was already in store!";
-        }
-        // Add client to in store list
-        clientsInStore.add(p);
-        // Output fedback
-        System.out.println(String.format("%d (%s) " + format, nif, p.getName()));
+
     }
 
     public void leaveStore(Long nif){
-        Person p = personRepository.findByNif(nif);
-        String format = "Left the store!";
-        // Delete cart from database
-        if (cartRepository.findByPersonNif(nif) != null) {
-            Cart c = cartRepository.findByPersonNif(nif);
-            System.out.println(c.getId());
-            p.setCart(null);
-            personRepository.save(p);
-            cartRepository.delete(c);
-            cartRepository.flush();
-            if (cartRepository.findByPersonNif(nif) != null) {
-                System.out.println("ERRRRRROOOOOORRR! Removed but still on database!");
-            }
-        } else {
-            format = "ERROR! Left but was not in store!";
-        }
-        // Remove client from in store list
-        clientsInStore.remove(p);
-        // Output feedback
-        System.out.println(String.format("%d (%s) " + format, nif, p.getName()));
+
     }
 
     public void removeProductFromCart(Long nif, Long prod_id, Integer quantity) throws Exception{
-        CartProduct cp = cartProductRepository.findByCart_PersonNifAndProductId(nif, prod_id);
+        CartProduct cp = cartProductRepository.findByCartPersonNifAndProductId(nif, prod_id);
+
         Product product = productRepository.findById(prod_id).orElseThrow(() -> new Exception("Product not found!"));
 
-        if (cp == null) {
+        if (cp != null) {
             Integer units = cp.getUnits();
             if (units > quantity) {
                 cp.setUnits(units - quantity);
@@ -116,19 +64,20 @@ public class StoreServices {
             Integer stock = product.getStock_current();
             product.setStock_current(stock - quantity);
         } else {
-            throw new Exception("User hasn't got that product!");
+            throw(new Exception("User hasn't got that product!"));
         }
     }
 
     public void addProductToCart(Long nif, Long prod_id, Integer quantity) throws Exception{
-        CartProduct cp = cartProductRepository.findByCart_PersonNifAndProductId(nif, prod_id);
+        CartProduct cp = cartProductRepository.findByCartPersonNifAndProductId(nif, prod_id);
         Product product = productRepository.findById(prod_id).orElseThrow(() -> new Exception("Product not found!"));
 
         if (cp == null) {
             Cart cart = cartRepository.findByPersonNif(nif);
-            if (cart == null) throw new Exception("Cart of client not found!");
-            CartProduct new_cp = new CartProduct(cart, product, quantity);
-            cartProductRepository.save(new_cp);
+            if (cart == null) throw(new Exception("Cart of client not found!"));
+            cp = new CartProduct(cart, product, quantity);
+            cartProductRepository.save(cp);
+
         } else {
             Integer cp_units = cp.getUnits();
             Integer stock = product.getStock_current();
@@ -138,7 +87,7 @@ public class StoreServices {
                 product.setStock_current(stock - quantity);
                 productRepository.save(product);
             } else {
-                throw new Exception("Stock is not enough!");
+                throw(new Exception("Stock is not enough!"));
             }
         }
     }

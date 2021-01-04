@@ -21,8 +21,6 @@ import java.util.Set;
 @EnableMongoRepositories(basePackageClasses = NotificationRepository.class)
 @EnableJpaRepositories(basePackageClasses = {PersonRepository.class})
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
-@RequestMapping("/api")
 public class PersonController {
     @Autowired
     private PersonRepository personRepository;
@@ -33,16 +31,16 @@ public class PersonController {
     @Autowired
     private StoreServices service;
 
-    @GetMapping("/persons")
+    @GetMapping("/work/persons")
     public List<Person> getAllPersons() {
         return personRepository.findAll();
     }
 
 
-    @GetMapping("/persons_in_store")
+    /*@GetMapping("/persons_in_store")
     public Set<Person> getPersonsInStore() {
         return service.getClientsInStore();
-    }
+    }*/
 
     @GetMapping("/persons/{id}")
     public ResponseEntity<Person> getPersonById(@PathVariable(value = "id") Long personId)

@@ -1,9 +1,13 @@
 package com.storego.storegoservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
@@ -11,7 +15,7 @@ import java.util.Objects;
 @Entity // This tells Hibernate to make a table out of this class
 @Data
 @Table(name = "person")
-public class Person {
+public class Person implements Serializable {
 
     // Attributes
     @Id
@@ -21,9 +25,10 @@ public class Person {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -33,9 +38,6 @@ public class Person {
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private PersonType type;
-
-    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
-    private Cart cart;
 
     // Constructors
     public Person() {
