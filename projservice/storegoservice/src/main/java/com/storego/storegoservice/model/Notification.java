@@ -38,5 +38,37 @@ public class Notification {
     // Constructor
     public Notification() {}
 
+    // Constructor for 'Help Needed' notification
+    public Notification(long nif, NotificationType type){
+        this.nif = nif;
+        this.type = type;
+        this.date = new Date();
+        this.state = HelpNeededState.PENDING;
+    }
 
+    // Constructor for 'Store Full' notification
+    public Notification(NotificationType type){
+        this.type = type;
+        this.date = new Date();
+    }
+
+    @Override
+    public String toString() {
+        if (type.toString() == "HELP") {
+            return "Notification{" +
+                    "id='" + id + '\'' +
+                    ", type=" + type +
+                    ", date=" + date +
+                    ", nif=" + nif +
+                    ", state=" + state +
+                    '}';
+        }
+        else {
+            return "Notification{" +
+                    "id='" + id + '\'' +
+                    ", type=" + type +
+                    ", date=" + date  +
+                    '}';
+        }
+    }
 }

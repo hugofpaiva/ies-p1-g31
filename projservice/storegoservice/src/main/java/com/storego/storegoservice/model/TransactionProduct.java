@@ -3,6 +3,7 @@ package com.storego.storegoservice.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -27,4 +28,18 @@ public class TransactionProduct {
 
     public TransactionProduct() {}
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TransactionProduct that = (TransactionProduct) o;
+        return id.equals(that.id) &&
+                transaction.equals(that.transaction) &&
+                product.equals(that.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, transaction, product);
+    }
 }

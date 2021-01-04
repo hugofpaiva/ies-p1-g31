@@ -1,8 +1,10 @@
 package com.storego.storegoservice.model;
 
 import lombok.Data;
+import org.springframework.data.annotation.Transient;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -10,7 +12,7 @@ import javax.persistence.*;
 public class CartProduct {
 
     @EmbeddedId
-    private CartProductKey id;
+    private CartProductKey id = new CartProductKey();
 
     @ManyToOne
     @MapsId("cartId")
@@ -27,4 +29,24 @@ public class CartProduct {
 
     public CartProduct() {}
 
+    public CartProduct(Cart cart, Product product, int units) {
+        this.cart = cart;
+        this.product = product;
+        this.units = units;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CartProduct that = (CartProduct) o;
+        return id.equals(that.id) &&
+                cart.equals(that.cart) &&
+                product.equals(that.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, cart, product);
+    }
 }
