@@ -1,5 +1,6 @@
 package com.storego.storegoservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.Transient;
 
@@ -13,9 +14,11 @@ import java.util.Objects;
 public class CartProduct implements Serializable {
 
     @EmbeddedId
+    @JsonIgnore
     private CartProductKey id = new CartProductKey();
 
     @ManyToOne(optional = false)
+    @JsonIgnore
     @MapsId("cartId")
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;

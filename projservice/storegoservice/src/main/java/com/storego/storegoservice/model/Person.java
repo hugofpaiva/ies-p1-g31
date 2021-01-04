@@ -33,7 +33,7 @@ public class Person implements Serializable {
     private String password;
 
     @Column(name = "last_visit")
-    private Date last_visit;
+    private Date lastVisit;
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.ORDINAL)

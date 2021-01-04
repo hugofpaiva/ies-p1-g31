@@ -9,9 +9,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
-
 // Connection to DB
 import org.springframework.beans.factory.annotation.Autowired;
 

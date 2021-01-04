@@ -1,5 +1,6 @@
 package com.storego.storegoservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -12,10 +13,12 @@ import java.util.Objects;
 public class TransactionProduct implements Serializable {
 
     @EmbeddedId
+    @JsonIgnore
     private TransactionProductKey id;
 
     @ManyToOne(optional = false)
     @MapsId("transactionId")
+    @JsonIgnore
     @JoinColumn(name = "transaction_id", nullable = false)
     private Transaction transaction;
 
