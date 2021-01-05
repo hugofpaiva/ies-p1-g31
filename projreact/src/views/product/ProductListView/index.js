@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Container, Grid, makeStyles } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import Page from "src/components/Page";
@@ -20,7 +20,8 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductList = (props) => {
 	const classes = useStyles();
-	const [products] = useState(data);
+	// Inicializar o estado products
+	const [products, setProducts] = useState([]);
 	const itemsPerPage = 6;
 	const [page, setPage] = React.useState(1);
 	const [noOfPages] = React.useState(
@@ -30,6 +31,22 @@ const ProductList = (props) => {
 	const handleChange = (event, value) => {
 		setPage(value);
 	};
+
+	// Fazer chamada à API para obter produtos
+	useEffect(async() => {
+		const requestOptions = {
+			method: 'get',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			}
+		};
+		const response = await fetch('http://127.0.0.1:8080/api/work/products', requestOptions);
+		const data = await response.json();
+		console.log("GOT DATA");
+		console.log(data);
+		setProducts(data['products']);
+	}, []);
 
 	return (
 		<Page className={classes.root} title="Products">

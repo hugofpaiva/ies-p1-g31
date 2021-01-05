@@ -52,24 +52,13 @@ const ProductCard = ({ persona, className, product, ...rest }) => {
       {...rest}
     >
       <CardContent>
-        <Box
-          display="flex"
-          justifyContent="center"
-          mb={3}
-        >
-          <Avatar
-            alt="Product"
-            style={{ height: '75px', width: '75px' }}
-            src={product.media}
-          />
-        </Box>
         <Typography
           align="center"
           color="textPrimary"
           gutterBottom
           variant="h4"
         >
-          {product.title}
+          {product.name}
         </Typography>
         <Typography
           align="center"
@@ -130,7 +119,7 @@ const ProductCard = ({ persona, className, product, ...rest }) => {
               display="inline"
               variant="body2"
             >
-              {product.category}
+              {product.category.name}
             </Typography>
           </Grid>
           <Grid
@@ -142,7 +131,7 @@ const ProductCard = ({ persona, className, product, ...rest }) => {
               display="inline"
               variant="body2"
             >
-              {product.stock}
+              {product.stock_current}
               {' '}
               in Stock
             </Typography>
