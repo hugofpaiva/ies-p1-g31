@@ -91,7 +91,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/admin/product/{id}")
-    public Map<String, Boolean> deletePerson(@PathVariable(value = "id") Long productId)
+    public Map<String, Boolean> deleteProduct(@PathVariable(value = "id") Long productId)
             throws ResourceNotFoundException {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found for this id: " + productId));
