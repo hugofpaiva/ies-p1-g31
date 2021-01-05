@@ -31,12 +31,12 @@ public class PersonController {
     }
 
 
-    @GetMapping("work/last_persons_in_store")
+    @GetMapping("/work/last_persons_in_store")
     public Set<Person> getLastPersonsInStore() {
         return personRepository.findDistinctTop10ByLastVisitIsNotNullOrderByLastVisitDesc();
     }
 
-    @GetMapping("admin/persons/{nif}")
+    @GetMapping("/admin/persons/{nif}")
     public ResponseEntity<Person> getPersonById(@PathVariable(value = "nif") Long personNif)
             throws ResourceNotFoundException {
         Person person = personRepository.findById(personNif)

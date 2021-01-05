@@ -95,7 +95,7 @@ public class TransactionController {
     }
 
 
-    @GetMapping("admin/purchases/{nif}")
+    @GetMapping("/admin/purchases/{nif}")
     public ResponseEntity<Map<String, Object>> getPurchaseByPersonNif(@PathVariable(value = "nif") Long personNif,
                                                              @RequestParam(defaultValue = "0") int page,
                                                              @RequestParam(defaultValue = "10") int size){
@@ -137,7 +137,7 @@ public class TransactionController {
         }
     }
 
-    @GetMapping("admin/purchases/")
+    @GetMapping("/admin/purchases/")
     public ResponseEntity<Map<String, Object>> getPurchases(
                                                                       @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "10") int size){
