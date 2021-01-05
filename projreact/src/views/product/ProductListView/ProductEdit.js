@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import { 
     TextField,
-    TextareaAutosize, 
+    Typography,
 } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -31,6 +31,7 @@ import {
 
 export default function FormDialog(props) {
     const [open, setOpen] = React.useState(false);
+    const [error, setError] = React.useState(false);
     const [product, setProduct] = React.useState(props.product);
 
     const handleClickOpen = () => {
@@ -55,16 +56,16 @@ export default function FormDialog(props) {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
-            body: product
+            body: JSON.stringify(product)
         };
         const url = 'http://127.0.0.1:8080/api/admin/product/' + product.id;
         const response = await fetch(url, requestOptions);
-        console.log(response);
-        const data = await response.json();
-        console.log(data);
-        setOpen(false);
-        alert("Not implemented yet! CORS does not work :/");
-        // TODO CORS IS NOT WORKING
+        if (response.status == 200) {
+            props.update();
+            setOpen(false);
+        } else {
+            setError(true);
+        }
     }
 
     return (
@@ -79,6 +80,16 @@ export default function FormDialog(props) {
                     <DialogContentText>
                         Fill this form to edit the product data.
                     </DialogContentText>
+                    {
+                        error && 
+                        <Typography
+                            color="error"
+                            display="inline"
+                            variant="body2"
+                            >
+                            There was an error! :/ Please, try again.
+                        </Typography>
+                    }
                     <TextField
                         autoFocus
                         margin="dense"

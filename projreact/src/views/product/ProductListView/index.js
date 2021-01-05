@@ -74,6 +74,7 @@ const ProductList = (props) => {
 									className={classes.productCard}
 									product={product}
 									persona={props.persona}
+									update={updateProducts}
 								/>
 							</Grid>
 						))}

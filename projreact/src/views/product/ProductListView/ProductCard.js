@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ProductCard = ({ persona, className, product, ...rest }) => {
+const ProductCard = ({update, persona, className, product, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -78,7 +78,7 @@ const ProductCard = ({ persona, className, product, ...rest }) => {
               display="flex"
               justifyContent="space-around"
               mb={1}>
-              <ProductEdit product={product} />
+              <ProductEdit product={product} update={update} />
               <Button color={colors.common.red} variant="contained">
                 <XCircle className={classes.icon} size="20" />
                 <span className={classes.title}>Delete</span>
