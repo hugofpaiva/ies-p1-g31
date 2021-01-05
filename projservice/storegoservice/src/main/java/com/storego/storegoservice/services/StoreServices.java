@@ -107,7 +107,7 @@ public class StoreServices {
         if (c != null) {
             cartRepository.delete(c);
             if (cartRepository.findByPersonNif(nif) != null) {
-                format += "\nERROR! Cart removeed but still on database!";
+                format += "\nERROR! Cart removed but still on database!";
             }
         } else {
             format += "\nERROR! Left but was not in store!";
@@ -164,7 +164,7 @@ public class StoreServices {
             }
         } else {
             Integer cp_units = cp.getUnits();
-            if (stock >= cp_units + quantity) {
+            if (stock >= quantity) {
                 cp.setUnits(cp_units + quantity);
                 cartProductRepository.save(cp);
                 product.setStock_current(stock - quantity);
