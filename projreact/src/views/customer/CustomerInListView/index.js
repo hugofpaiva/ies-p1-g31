@@ -80,7 +80,7 @@ const CustomerList = () => {
 		axios
 			.get("http://localhost:8080/api/work/persons_in_store/",{
 				headers: {
-				  'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpc2FAdWEucHQiLCJleHAiOjE2MDk4MTI1MDksImlhdCI6MTYwOTc5NDUwOX0.C7WmXdJi2T_QUpU1nzKIa-6oCZNR31QqxXnE23x8Dx7DqT2ticilaIvS79lwm80w2uqETrIY9Vl849Qqht_Q3A'
+				  'Authorization': `Bearer ${localStorage.getItem('token')}`
 				}
 			  })
 			.then((response) => {
@@ -93,7 +93,7 @@ const CustomerList = () => {
 			axios
 				.get("http://localhost:8080/api/work/persons_in_store/", {
 					headers: {
-					  'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpc2FAdWEucHQiLCJleHAiOjE2MDk4MTI1MDksImlhdCI6MTYwOTc5NDUwOX0.C7WmXdJi2T_QUpU1nzKIa-6oCZNR31QqxXnE23x8Dx7DqT2ticilaIvS79lwm80w2uqETrIY9Vl849Qqht_Q3A'
+					  'Authorization': `Bearer ${localStorage.getItem('token')}`
 					}
 				  })
 				.then((response) => {
