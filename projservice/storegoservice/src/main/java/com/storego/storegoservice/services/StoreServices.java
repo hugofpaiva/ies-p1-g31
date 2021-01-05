@@ -48,7 +48,7 @@ public class StoreServices {
         this.maxClients = 5;
     }
 
-    public void enterStore(Long nif){
+    public void enterStore(Long nif) throws Exception{
         // Get person
         Person p = personRepository.findByNif(nif);
         String format = "Entered the store!";
@@ -75,7 +75,7 @@ public class StoreServices {
         System.out.println(String.format("%d (%s) " + format, nif, p.getName()));
     }
 
-    public void leaveStore(Long nif) {
+    public void leaveStore(Long nif) throws Exception{
         // Get person
         Person p = personRepository.findByNif(nif);
         String format = "Left the store!";
@@ -180,7 +180,7 @@ public class StoreServices {
         }
     }
 
-    public void notifyHelpNeeded(Long nif, NotificationType type){
+    public void notifyHelpNeeded(Long nif, NotificationType type) throws Exception{
         Person p = personRepository.findByNif(nif);
         Notification n = new Notification(p.getNif(), type);
         notificationRepository.save(n);
