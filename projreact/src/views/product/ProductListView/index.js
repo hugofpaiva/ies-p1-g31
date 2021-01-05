@@ -24,29 +24,43 @@ const ProductList = (props) => {
 	const [products, setProducts] = useState([]);
 	const itemsPerPage = 6;
 	const [page, setPage] = React.useState(1);
-	const [noOfPages] = React.useState(
+	const [nPages, setNPages] = React.useState(
 		Math.ceil(products.length / itemsPerPage)
 	);
 
 	const handleChange = (event, value) => {
 		setPage(value);
+		updateProducts();
 	};
 
 	// Fazer chamada à API para obter produtos
 	useEffect(async() => {
+		updateProducts();
+	}, []);
+
+	async function updateProducts() {
 		const requestOptions = {
-			method: 'get',
+			method: 'GET',
 			headers: { 
 				'Content-Type': 'application/json',
 				'Authorization': 'Bearer ' + localStorage.getItem('token')
 			}
 		};
-		const response = await fetch('http://127.0.0.1:8080/api/work/products', requestOptions);
+		let pageN = page - 1;
+		let url = "http://127.0.0.1:8080/api/work/products?page=" + pageN + "&size=" + itemsPerPage;
+		const response = await fetch(url, requestOptions);
 		const data = await response.json();
+
 		console.log("GOT DATA");
 		console.log(data);
+
+		// Update products 
 		setProducts(data['products']);
-	}, []);
+		// Update number of pages
+		setNPages(data['totalPages']);
+		// Update page
+		setPage(data['currentPage']+1);
+	}
 
 	return (
 		<Page className={classes.root} title="Products">
@@ -68,7 +82,7 @@ const ProductList = (props) => {
 				<Box mt={3} display="flex" justifyContent="center">
 					<Pagination
 						color="primary"
-						count={noOfPages}
+						count={nPages}
 						page={page}
 						defaultPage={1}
 						showFirstButton
