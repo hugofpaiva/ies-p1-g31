@@ -22,6 +22,7 @@ const ProductList = (props) => {
 	const classes = useStyles();
 	// Inicializar o estado products
 	const [products, setProducts] = useState([]);
+	const [search, setSearch] = useState("");
 	const itemsPerPage = 6;
 	const [page, setPage] = React.useState(1);
 	const [nPages, setNPages] = React.useState(
@@ -29,8 +30,7 @@ const ProductList = (props) => {
 	);
 
 	const handleChange = (event, value) => {
-		setPage(value);
-		updateProducts();
+		setPage(value, updateProducts());
 	};
 
 	// Fazer chamada à API para obter produtos
@@ -48,6 +48,9 @@ const ProductList = (props) => {
 		};
 		let pageN = page - 1;
 		let url = "http://127.0.0.1:8080/api/work/products?page=" + pageN + "&size=" + itemsPerPage;
+		if (search.trim() != "") {
+			url += "&name=" + search;
+		}
 		const response = await fetch(url, requestOptions);
 		const data = await response.json();
 
@@ -62,10 +65,17 @@ const ProductList = (props) => {
 		setPage(data['currentPage']+1);
 	}
 
+	function searchFunc(keyword) {
+		setSearch(keyword, updateProducts());
+	}
+
 	return (
 		<Page className={classes.root} title="Products">
 			<Container maxWidth={false}>
-				<Toolbar persona={props.persona} />
+				<Toolbar 
+					persona={props.persona} 
+					search={searchFunc}
+				/>
 				<Box mt={3}>
 					<Grid container spacing={3}>
 						{products.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((product) => (

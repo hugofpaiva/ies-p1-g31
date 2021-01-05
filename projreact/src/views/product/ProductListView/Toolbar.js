@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Toolbar = ({ persona, className, ...rest }) => {
+const Toolbar = ({ search, persona, className, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -65,6 +65,7 @@ const Toolbar = ({ persona, className, ...rest }) => {
                 }}
                 placeholder="Search product"
                 variant="outlined"
+                onChange={val => search(val.target.value)}
               />
             </Box>
           </CardContent>
