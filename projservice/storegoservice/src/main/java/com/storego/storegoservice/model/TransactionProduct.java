@@ -2,6 +2,7 @@ package com.storego.storegoservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.data.annotation.Transient;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,7 +15,7 @@ public class TransactionProduct implements Serializable {
 
     @EmbeddedId
     @JsonIgnore
-    private TransactionProductKey id;
+    private TransactionProductKey id = new TransactionProductKey();
 
     @ManyToOne(optional = false)
     @MapsId("transactionId")
@@ -31,6 +32,12 @@ public class TransactionProduct implements Serializable {
     private int units;
 
     public TransactionProduct() {}
+
+    public TransactionProduct(Transaction transaction, Product product, int units) {
+        this.transaction = transaction;
+        this.product = product;
+        this.units = units;
+    }
 
     @Override
     public boolean equals(Object o) {
