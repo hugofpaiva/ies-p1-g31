@@ -39,9 +39,43 @@ public class Notification implements Serializable {
     // Constructor
     public Notification() {}
 
-    public Notification(NotificationType type) {
+    // Constructor for 'Help Needed' notification
+    public Notification(long nif, NotificationType type){
+        this.nif = nif;
+        this.type = type;
+        this.state = HelpNeededState.PENDING;
+    }
+
+    // Constructor for 'Restock' notification
+    public Notification(long idProduct, int qty, NotificationType type){
+        this.idProduct = idProduct;
+        this.qty = qty;
+        this.type = type;
+
+    }
+
+    // Constructor for 'Store Full' notification
+    public Notification(NotificationType type){
         this.type = type;
     }
 
-
+    @Override
+    public String toString() {
+        if (type.toString() == "HELP") {
+            return "Notification{" +
+                    "id='" + id + '\'' +
+                    ", type=" + type +
+                    ", date=" + date +
+                    ", nif=" + nif +
+                    ", state=" + state +
+                    '}';
+        }
+        else {
+            return "Notification{" +
+                    "id='" + id + '\'' +
+                    ", type=" + type +
+                    ", date=" + date  +
+                    '}';
+        }
+    }
 }
