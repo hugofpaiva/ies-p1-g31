@@ -14,10 +14,10 @@ import {
   Button
 } from '@material-ui/core';
 import {
-  Edit,
   XCircle,
   RefreshCcw
 } from "react-feather";
+import ProductEdit from './ProductEdit';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,7 +58,7 @@ const ProductCard = ({ persona, className, product, ...rest }) => {
           gutterBottom
           variant="h4"
         >
-          {product.name}
+          {product.name} | {product.price} €
         </Typography>
         <Typography
           align="center"
@@ -68,7 +68,6 @@ const ProductCard = ({ persona, className, product, ...rest }) => {
         >
           {product.description}
         </Typography>
-        <br></br>
         <Box
           display="flex"
           justifyContent="space-around"
@@ -79,10 +78,7 @@ const ProductCard = ({ persona, className, product, ...rest }) => {
               display="flex"
               justifyContent="space-around"
               mb={1}>
-              <Button color={colors.common.yellow} variant="contained">
-                <Edit className={classes.icon} size="20" />
-                <span className={classes.title}>Edit</span>
-              </Button>
+              <ProductEdit product={product} />
               <Button color={colors.common.red} variant="contained">
                 <XCircle className={classes.icon} size="20" />
                 <span className={classes.title}>Delete</span>
