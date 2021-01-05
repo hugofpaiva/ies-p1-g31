@@ -18,6 +18,7 @@ import {
   RefreshCcw
 } from "react-feather";
 import ProductEdit from './ProductEdit';
+import ProductDelete from './ProductDelete';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,11 +79,14 @@ const ProductCard = ({update, persona, className, product, ...rest }) => {
               display="flex"
               justifyContent="space-around"
               mb={1}>
-              <ProductEdit product={product} update={update} />
-              <Button color={colors.common.red} variant="contained">
-                <XCircle className={classes.icon} size="20" />
-                <span className={classes.title}>Delete</span>
-              </Button>
+              <ProductEdit 
+                product={product} 
+                update={update} 
+              />
+              <ProductDelete
+                product={product} 
+                update={update} 
+              />
               <Button color={colors.common.yellow} variant="contained">
                 <RefreshCcw className={classes.icon} size="20" />
                 <span className={classes.title}>Restock</span>
