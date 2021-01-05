@@ -28,21 +28,51 @@ const LoginView = () => {
 	const navigate = useNavigate();
 
 	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
 	const [loginError, setLoginError] = useState(false);
-
-	const login = () => {
-		setLoginError(false);
-		console.log("LOGGING")
-		if (email=="amelia.rodrigues@gostore.com")
-			navigate("/admin", { replace: true });
-		else if (email=="pedro.paulo@gostore.com")
-			navigate("/employee", { replace: true });
-		else
-			setLoginError(true);
+	
+	function redirectUser() {
+		// Validate that token was created 
+		if (localStorage.getItem('token') != null) {
+			// If so, redirect
+			if (localStorage.getItem('authority') == 'MANAGER') {
+				window.location.href = "/admin";
+				return false;
+			} else if (localStorage.getItem('authority') == 'EMPLOYEE') {
+				window.location.href = "/employee";
+				return false;
+			} 
+		}
 		return true;
 	}
 
-	return (
+	async function login() {
+		// Make request to auth API
+		// Based on https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples
+		const requestOptions = {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ username: email, password: password })
+		};
+		const response = await fetch('http://127.0.0.1:8080/api/login', requestOptions);
+		const data = await response.json();
+		
+		// Process response
+		// If error, show error warning
+		if ('status' in data && data['status'] != 200) {
+			setLoginError(true);
+			return false;
+		}
+		// Otherwise, register user token
+		if ('token' in data) {
+			localStorage.setItem('token', data['token']);
+			localStorage.setItem('authority', data['type']['authority']);
+			// Redirect user to dashboard main page
+			redirectUser();
+		}
+	}
+
+	return redirectUser() && (
 		<Page className={classes.root} title="Login">
 			<Box
 				display="flex"
@@ -53,8 +83,8 @@ const LoginView = () => {
 				<Container maxWidth="sm">
 					<Formik
 						initialValues={{
-							email: "demo@storego.pt",
-							password: "Password123",
+							email: "gmatos.ferreira@sapo.pt",
+							password: "dasdfgh",
 						}}
 						validationSchema={Yup.object().shape({
 							email: Yup.string()
@@ -90,7 +120,7 @@ const LoginView = () => {
 										color="textSecondary"
 										variant="caption"
 									>
-										Use amelia.rodrigues@gostore.com for Manager and pedro.paulo@gostore.com for Employee.
+										Use amelia.rodrigues@gostore.com for Manager and pedro.paulo@gostore.com for Employee. The password is "abc" for both.
 									</Typography>
 									<br />
 									{ 
@@ -131,9 +161,9 @@ const LoginView = () => {
 									margin="normal"
 									name="password"
 									onBlur={handleBlur}
-									onChange={handleChange}
+									onChange={(event) => setPassword(event.target.value)}
 									type="password"
-									value={values.password}
+									value={password}
 									variant="outlined"
 								/>
 								<Box my={2}>

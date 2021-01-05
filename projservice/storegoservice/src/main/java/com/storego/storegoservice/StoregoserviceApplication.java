@@ -43,6 +43,8 @@ public class StoregoserviceApplication implements CommandLineRunner {
 		personRepository.save(new Person(411383247, "Filomena Malato", "f.malato@ua.pt", bcryptEncoder.encode("abc"), PersonType.CLIENT));
 		personRepository.save(new Person(630114163, "José Matos", "jose.m@ua.pt", bcryptEncoder.encode("abc"), PersonType.CLIENT));
 		personRepository.save(new Person(111900377, "Catarina Paiva", "cata@ua.pt", bcryptEncoder.encode("abc"), PersonType.CLIENT));
+		personRepository.save(new Person(894552452, "Amélia Rodrigues", "amelia.rodrigues@gostore.com", bcryptEncoder.encode("abc"), PersonType.MANAGER));
+		personRepository.save(new Person(894552453, "Pedro Paulo", "pedro.paulo@gostore.com", bcryptEncoder.encode("abc"), PersonType.EMPLOYEE));
 
 		ProductCategory pc1 = new ProductCategory("Categoria1");
 		ProductCategory pc2 = new ProductCategory("Categoria2");
