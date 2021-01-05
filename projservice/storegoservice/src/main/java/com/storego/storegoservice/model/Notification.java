@@ -43,14 +43,20 @@ public class Notification implements Serializable {
     public Notification(long nif, NotificationType type){
         this.nif = nif;
         this.type = type;
-        this.date = new Date();
         this.state = HelpNeededState.PENDING;
+    }
+
+    // Constructor for 'Restock' notification
+    public Notification(long idProduct, int qty, NotificationType type){
+        this.idProduct = idProduct;
+        this.qty = qty;
+        this.type = type;
+
     }
 
     // Constructor for 'Store Full' notification
     public Notification(NotificationType type){
         this.type = type;
-        this.date = new Date();
     }
 
     @Override

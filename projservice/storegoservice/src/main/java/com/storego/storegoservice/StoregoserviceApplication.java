@@ -2,6 +2,7 @@ package com.storego.storegoservice;
 
 import com.storego.storegoservice.model.*;
 import com.storego.storegoservice.repository.*;
+import com.storego.storegoservice.services.notifications.NotificationSocketsService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -25,9 +26,6 @@ public class StoregoserviceApplication implements CommandLineRunner {
 
 	@Autowired
 	private PasswordEncoder bcryptEncoder;
-
-	@Autowired
-	private NotificationRepository notificationRepository;
 
 	@Autowired
 	private ProductCategoryRepository productCategoryRepository;

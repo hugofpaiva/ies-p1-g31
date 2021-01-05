@@ -23,10 +23,18 @@ public class Consumer {
         System.out.println("\n" + result.toString());
         switch ((String) result.get("type")){
             case "entering-store":
+                try{
                 service.enterStore(Long.valueOf((Integer) result.get("nif")));
+                } catch (Exception e){
+                    System.err.println(e.getMessage());
+                }
                 break;
             case "leaving-store":
+                try{
                 service.leaveStore(Long.valueOf((Integer) result.get("nif")));
+                } catch (Exception e){
+                    System.err.println(e.getMessage());
+                }
                 break;
             case "adding-product":
                 System.out.println("adding-product - " + result);
@@ -45,11 +53,14 @@ public class Consumer {
                 }
                 break;
             case "help-needed":
-                System.out.println("help-needed - " + result);
+                try{
                 service.notifyHelpNeeded(Long.valueOf((Integer) result.get("nif")), NotificationType.HELP);
+                } catch (Exception e){
+                    System.err.println(e.getMessage());
+                }
                 break;
             default:
-                System.out.println("Event not supported!");
+                System.err.println("Event not supported!");
                 break;
         }
     }

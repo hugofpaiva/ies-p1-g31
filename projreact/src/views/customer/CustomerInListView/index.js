@@ -78,15 +78,24 @@ const CustomerList = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get("http://localhost:8080/api/persons_in_store/")
+			.get("http://localhost:8080/api/work/persons_in_store/",{
+				headers: {
+				  'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpc2FAdWEucHQiLCJleHAiOjE2MDk4MTI1MDksImlhdCI6MTYwOTc5NDUwOX0.C7WmXdJi2T_QUpU1nzKIa-6oCZNR31QqxXnE23x8Dx7DqT2ticilaIvS79lwm80w2uqETrIY9Vl849Qqht_Q3A'
+				}
+			  })
 			.then((response) => {
 				// Sort by enter time
 				setCustomers(response.data.sort((a,b) => new Date(a['last_visit']) - new Date(b['last_visit'])));
+				console.log(response.data);
 				setLoading(false);
 			});
 		setInterval(function() {
 			axios
-				.get("http://localhost:8080/api/persons_in_store/")
+				.get("http://localhost:8080/api/work/persons_in_store/", {
+					headers: {
+					  'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpc2FAdWEucHQiLCJleHAiOjE2MDk4MTI1MDksImlhdCI6MTYwOTc5NDUwOX0.C7WmXdJi2T_QUpU1nzKIa-6oCZNR31QqxXnE23x8Dx7DqT2ticilaIvS79lwm80w2uqETrIY9Vl849Qqht_Q3A'
+					}
+				  })
 				.then((response) => {
 					// Sort by enter time
 					setCustomers(response.data.sort((a,b) => new Date(a['last_visit']) - new Date(b['last_visit'])));

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -59,6 +60,7 @@ if (isAdmin) {
   ]
 }
 
+
 const TopBar = ({
   className,
   onMobileNavOpen,
@@ -69,6 +71,7 @@ const TopBar = ({
   const [admin] = useState(isAdmin);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [clientRef, setclientRef] = React.useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -82,6 +85,21 @@ const TopBar = ({
     handleClose();
 
   };
+
+  useEffect(() => {
+    const socket = new SockJS('http://localhost:8080/api/ws');
+    const stompClient = Stomp.over(socket);
+    const headers = {};
+  
+    stompClient.connect(headers, () => {
+      stompClient.subscribe('/topic/help', function(messageOutput) {
+        console.log("OKKK");
+        console.log(JSON.parse(messageOutput.body));
+    });
+    });
+  
+    return () => stompClient && stompClient.disconnect();
+  }, []);
 
   return (
     <AppBar
