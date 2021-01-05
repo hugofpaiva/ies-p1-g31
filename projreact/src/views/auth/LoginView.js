@@ -30,6 +30,21 @@ const LoginView = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [loginError, setLoginError] = useState(false);
+	
+	function redirectUser() {
+		// Validate that token was created 
+		if (localStorage.getItem('token') != null) {
+			// If so, redirect
+			if (localStorage.getItem('authority') == 'MANAGER') {
+				window.location.href = "/admin";
+				return false;
+			} else if (localStorage.getItem('authority') == 'EMPLOYEE') {
+				window.location.href = "/employee";
+				return false;
+			} 
+		}
+		return true;
+	}
 
 	async function login() {
 		// Make request to auth API
@@ -52,19 +67,12 @@ const LoginView = () => {
 		if ('token' in data) {
 			localStorage.setItem('token', data['token']);
 			localStorage.setItem('authority', data['type']['authority']);
-			// Validate that token was created 
-			if (localStorage.getItem('token') != null) {
-				// If so, redirect
-				if (localStorage.getItem('authority') == 'MANAGER') {
-					navigate("/admin", { replace: true });
-				} else if (localStorage.getItem('authority') == 'EMPLOYEE') {
-					navigate("/employee", { replace: true });
-				} 
-			}
+			// Redirect user to dashboard main page
+			redirectUser();
 		}
 	}
 
-	return (
+	return redirectUser() && (
 		<Page className={classes.root} title="Login">
 			<Box
 				display="flex"
