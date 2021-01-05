@@ -19,6 +19,7 @@ import {
 } from "react-feather";
 import ProductEdit from './ProductEdit';
 import ProductDelete from './ProductDelete';
+import ProductRestock from './ProductRestock';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,10 +88,10 @@ const ProductCard = ({update, persona, className, product, ...rest }) => {
                 product={product} 
                 update={update} 
               />
-              <Button color={colors.common.yellow} variant="contained">
-                <RefreshCcw className={classes.icon} size="20" />
-                <span className={classes.title}>Restock</span>
-              </Button>
+              <ProductRestock 
+                product={product} 
+                update={update} 
+              />
             </Box>
           }
           {
