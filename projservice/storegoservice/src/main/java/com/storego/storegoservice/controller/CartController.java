@@ -24,12 +24,12 @@ public class CartController {
     @Autowired
     private CartProductRepository cartProductRepository;
 
-    @GetMapping("work/persons_in_store")
+    @GetMapping("/work/persons_in_store")
     public Set<Person> getPersonsInStore() {
         return cartRepository.findDistinctPerson();
     }
 
-    @GetMapping("work/num_persons_in_store")
+    @GetMapping("/work/num_persons_in_store")
     public Map<String, Integer> getNumPersonsInStore() {
         Map<String, Integer> response = new HashMap<>();
         response.put("persons_in_store",cartRepository.countDistinctPerson());
@@ -37,7 +37,7 @@ public class CartController {
     }
 
 
-    @GetMapping("admin/cart/{nif}")
+    @GetMapping("/admin/cart/{nif}")
     public ResponseEntity<Map<String, Object>> getCartByPersonNif(@PathVariable(value = "nif") Long personNif) throws ResourceNotFoundException {
         Cart cart = cartRepository.findByPersonNif(personNif);
 
