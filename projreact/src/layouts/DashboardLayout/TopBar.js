@@ -101,6 +101,12 @@ const TopBar = ({
     return () => stompClient && stompClient.disconnect();
   }, []);
 
+  const logOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("authority");
+    window.location.href = "/";
+  }
+
   return (
     <AppBar
       className={clsx(classes.root, className)}
@@ -122,7 +128,7 @@ const TopBar = ({
             </Badge>
           </IconButton>
           <IconButton color="inherit">
-            <InputIcon onClick={() => { window.location.href = "/" }} />
+            <InputIcon onClick={() => logOut()} />
           </IconButton>
           <Menu
             id="simple-menu"
