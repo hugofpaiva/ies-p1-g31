@@ -29,7 +29,8 @@ const Dashboard = () => {
   const [notificationsStock, setNotificationsStock] = useState([]);
 
   useEffect(async () => {
-    setInterval(updateNotifications, 1000);
+    const loop = setInterval(updateNotifications, 1000);
+    return () => clearInterval(loop);
   }, []);
 
   function updateNotifications() {

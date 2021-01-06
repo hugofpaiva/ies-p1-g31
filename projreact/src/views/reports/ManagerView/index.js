@@ -34,7 +34,8 @@ const Dashboard = () => {
 
   // Fazer chamada à API para obter produtos
 	useEffect(async() => {
-    updateValues();
+    const loop = updateValues();
+    return () => clearInterval(loop);
 	}, []);
 
 	async function updateValues() {
@@ -72,7 +73,7 @@ const Dashboard = () => {
     setLastProducts(data);
     
     // Refresh the most dynamic every second
-    setInterval(async function() {
+    return setInterval(async function() {
       // Update costumers in store
       url = "http://127.0.0.1:8080/api/work/num_persons_in_store";
       response = await fetch(url, requestOptions);
