@@ -54,7 +54,6 @@ const CustomerListView = () => {
 					</Box>
 				) : (
 					<div>
-						<Toolbar />
 						<Box mt={3}>
 							<Results customers={customers} />
 						</Box>
