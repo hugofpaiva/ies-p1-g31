@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Grid,
@@ -8,7 +8,10 @@ import Page from 'src/components/Page';
 import Help from './Help';
 import LowStock from './LowStock';
 import EntriesOut from './EntriesOut';
-
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
+import InputIcon from '@material-ui/icons/Input';
+import GroupIcon from '@material-ui/icons/Group';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -22,6 +25,33 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard = () => {
   const classes = useStyles();
+  const [notificationsHelp, setNotificationsHelp] = useState([]);
+  const [notificationsStock, setNotificationsStock] = useState([]);
+
+  useEffect(async () => {
+    setInterval(updateNotifications, 1000);
+  }, []);
+
+  function updateNotifications() {
+    const nots = localStorage.getItem("notifications") != null ? JSON.parse(localStorage.getItem("notifications"))['notifications'] : [];
+    setNotificationsHelp(nots.filter(not => not['update'].indexOf("help") > 0).map(not => ({...not, icon: <AssignmentIcon />})));    
+    setNotificationsStock(nots.filter(not => not['update'].indexOf("restock") > 0).map(not => ({...not, icon: <ShoppingBasketIcon />})));    
+    /*
+    setNotifications(nots.map(not => {
+      // Correct icon
+      if (not['update'].indexOf("help") > 0) {
+        not['icon'] = <AssignmentIcon />;
+      } else if (not['update'].indexOf("restock") > 0) {
+        not['icon'] = <ShoppingBasketIcon />;
+      } else if (not['update'].indexOf("full") > 0) {
+        not['icon'] = <GroupIcon />;
+      }
+      return not;
+    }
+    )
+    );
+    */
+  }
 
   return (
     <Page
@@ -33,7 +63,7 @@ const Dashboard = () => {
           container
           spacing={3}
         >
-          
+
           <Grid
             item
             lg={6}
@@ -41,7 +71,7 @@ const Dashboard = () => {
             xl={6}
             xs={12}
           >
-            <Help />
+            <Help notificationsArray={notificationsHelp} />
           </Grid>
           <Grid
             item
@@ -50,7 +80,7 @@ const Dashboard = () => {
             xl={6}
             xs={12}
           >
-            <LowStock />
+            <LowStock notificationsArray={notificationsStock} />
           </Grid>
           <Grid
             item

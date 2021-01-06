@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
 import { v4 as uuid } from 'uuid';
@@ -22,45 +22,6 @@ import {
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
-const data = [
-  {
-    id: uuid(),
-    product: 'NETGEAR Wi-Fi Range Extender EX3700',
-    stock: 2,
-    createdAt: 1555016400000,
-  },
-  {
-    id: uuid(),
-    product: 'PlayStation 4 Pro 1TB',
-    stock: 3,
-    createdAt: 1555016400000,
-  },
-  {
-    id: uuid(),
-    product: 'Sonos Play:1',
-    stock: 1,
-    createdAt: 1555016400000,
-  },
-  {
-    id: uuid(),
-    product: 'Monster Energy Zero Ultra, Sugar Free Energy Drink',
-    stock: 2,
-    createdAt: 1555016400000,
-  },
-  {
-    id: uuid(),
-    product: 'Silk Unsweetened Organic Soymilk',
-    stock: 1,
-    createdAt: 1555016400000,
-  },
-  {
-    id: uuid(),
-    product: 'Horizon Organic 1 % Low Fat Milk',
-    stock: 4,
-    createdAt: 1555016400000,
-  }
-];
-
 const useStyles = makeStyles(() => ({
   root: {},
   actions: {
@@ -68,9 +29,14 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const LowStock = ({ className, ...rest }) => {
+const LowStock = ({ notificationsArray, className, ...rest }) => {
   const classes = useStyles();
-  const [stock] = useState(data);
+  const [notifications, setNotifications] = useState([]);
+
+  // Initialize and update every time props change
+  useEffect(() => {
+    setNotifications(notificationsArray.sort(not => not['timestamp']).slice(0, 10));
+  }, [notificationsArray]);
 
   return (
     <Card
@@ -108,19 +74,19 @@ const LowStock = ({ className, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {stock.map((stock) => (
+              {notifications.map(stock => (
                 <TableRow
                   hover
-                  key={stock.id}
+                  key={stock.key}
                 >
                   <TableCell>
-                    {stock.product}
+                    {stock.idProduct}
                   </TableCell>
                   <TableCell>
-                  {moment(stock.createdAt).format('DD/MM/YYYY, h:mm:ss')}
+                    {moment(stock.timestam).format('DD/MM/YYYY, HH:mm:ss')}
                   </TableCell>
                   <TableCell>
-                  {stock.stock}
+                    {stock.qty}
                   </TableCell>
                 </TableRow>
               ))}

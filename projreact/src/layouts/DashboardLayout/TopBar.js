@@ -61,6 +61,7 @@ const TopBar = ({
   onMobileNavOpen,
   ...rest
 }) => {
+  // localStorage.removeItem("notifications");
   const classes = useStyles();
   const [admin] = useState(isAdmin);
 
@@ -80,7 +81,7 @@ const TopBar = ({
     let counter = 0;
     setNotifications(oldArray => {
       const newArray = oldArray.map((not, i) => {
-        if (!not['seen'] && counter<10) {
+        if (!not['seen'] && counter < 10) {
           not['seen'] = true;
           counter += 1;
         }
@@ -117,56 +118,84 @@ const TopBar = ({
     const stompClient = Stomp.over(socket);
     const headers = {};
 
-    // Subscribe topics for user authority
+    // Employee only subscribes to help
     if (localStorage.getItem('authority') == 'EMPLOYEE') {
       stompClient.connect(headers, () => {
         stompClient.subscribe('/topic/help', function (messageOutput) {
           const not = JSON.parse(messageOutput.body);
           setNotifications(oldArray => {
             const newArray = [...oldArray, {
+              ...not,
               "key": not["id"],
               "update": `Client ${not['nif']} needs help!`,
               "timestamp": Date.now(),
               "icon": <AssignmentIcon />,
               "link": "/employee/help",
               "seen": false,
+              "employee": true,
+              "manager": false,
             }];
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
             return newArray;
           })
         });
       });
-    } else if (localStorage.getItem('authority') == 'MANAGER') {
+    }
+    // Manager subscribes to all
+    else if (localStorage.getItem('authority') == 'MANAGER') {
       stompClient.connect(headers, () => {
         stompClient.subscribe('/topic/restock', function (messageOutput) {
           const not = JSON.parse(messageOutput.body);
           setNotifications(oldArray => {
             const newArray = [...oldArray, {
+              ...not,
               "key": not["id"],
               "update": `Product ${not['idProduct']} needs restock!`,
               "timestamp": Date.now(),
               "icon": <ShoppingBasketIcon />,
               "link": "/admin/products",
               "seen": false,
+              "employee": false,
+              "manager": true,
             }];
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
             return newArray;
           })
         });
-      });
-      stompClient.connect(headers, () => {
         stompClient.subscribe('/topic/store_full', function (messageOutput) {
           const not = JSON.parse(messageOutput.body);
           setNotifications(oldArray => {
             const newArray = [...oldArray, {
+              ...not,
               "key": not["id"],
               "update": `Store is full!`,
               "timestamp": Date.now(),
               "icon": <GroupIcon />,
               "link": "/admin/customers/in_store",
               "seen": false,
+              "employee": false,
+              "manager": true,
             }];
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+            return newArray;
+          })
+        });
+        stompClient.subscribe('/topic/help', function (messageOutput) {
+          const not = JSON.parse(messageOutput.body);
+          setNotifications(oldArray => {
+            const newArray = [...oldArray, {
+              ...not,
+              "key": not["id"],
+              "update": `Client ${not['nif']} needs help!`,
+              "timestamp": Date.now(),
+              "icon": <AssignmentIcon />,
+              "link": "/employee/help",
+              "seen": false,
+              "employee": true,
+              "manager": false,
+            }];
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+            console.log(JSON.parse(localStorage.getItem("notifications")));
             return newArray;
           })
         });
