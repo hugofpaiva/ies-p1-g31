@@ -25,8 +25,8 @@ const CustomerListView = () => {
   const totalItems = 1000;
   const [page, setPage] = React.useState(1);
   const [nPages, setNPages] = React.useState(
-		Math.ceil(transactions.length / itemsPerPage)
-	);
+    Math.ceil(transactions.length / itemsPerPage)
+  );
 
   // Fazer chamada à API para obter produtos
   useEffect(async () => {
@@ -42,7 +42,11 @@ const CustomerListView = () => {
       }
     };
     let pageN = page - 1;
-    let url = "http://127.0.0.1:8080/api/admin/purchases/?page=" + pageN + "&size=" + totalItems;
+    let url = "http://127.0.0.1:8080/api/admin/purchases/";
+    const nif = new URLSearchParams(window.location.search).get("nif");
+    if (nif != null) {
+      url += nif;
+    }
     const response = await fetch(url, requestOptions);
     const data = await response.json();
 
