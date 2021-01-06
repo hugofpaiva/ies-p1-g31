@@ -1,17 +1,20 @@
 package com.storego.storegoservice.services.messaging;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationConfig;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.storego.storegoservice.model.NotificationType;
 import com.storego.storegoservice.services.InitScriptGenerator;
 import com.storego.storegoservice.services.StoreServices;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -63,11 +66,20 @@ public class Consumer {
 
     @KafkaListener(topics="initialization")
     public void consumeInit(String message) throws Exception {
-        Map<String,Object> result = new ObjectMapper().readValue(message, HashMap.class);
-        System.out.println("\n" + result.toString());
-        switch ((String) result.get("type")){
+        JSONObject obj = new JSONObject(message);
+        System.out.println("INITIALIZING: " +obj.getString("type"));
+        //System.out.println("DAMMIT" +obj.getJSONObject("data"));
+        JSONObject data = obj.getJSONObject("data");
+        Map<String, Object> result = new ObjectMapper().readValue(data.toString(), HashMap.class);
+
+        /*
+        for(Map.Entry<String, Object> r : result.entrySet()){
+            System.out.println("JSON-DATA: "+r.getKey() + " - values: " +r.getValue());
+        }
+         */
+        switch (obj.getString("type")){
             case "initialize-people-request":
-                System.out.println("initialize-people-req - " + result);
+                System.out.println("initialize-people-req");
                 try {
                     init.initPeopleReq();
                 } catch (Exception e){
@@ -75,7 +87,7 @@ public class Consumer {
                 }
                 break;
             case "initialize-products-request":
-                System.out.println("initialize-products-req - " + result);
+                System.out.println("initialize-products-req");
                 try {
                     init.initProductsReq();
                 } catch (Exception e){
@@ -83,7 +95,9 @@ public class Consumer {
                 }
                 break;
             case "initialize-people":
-                Map<Long,Object> people = new ObjectMapper().readValue((String) result.get("data"), HashMap.class);
+                JSONObject data_ppl = obj.getJSONObject("data");
+                Map<String, Object> people = new ObjectMapper().readValue(data_ppl.toString(), HashMap.class);
+                System.out.println("FUCK THAT SHIT: "+people);
                 System.out.println("initialize-people - " + people);
                 try {
                     init.initPeople(people);
@@ -102,9 +116,10 @@ public class Consumer {
                 }
                 break;
             case "initialize-products":
-                Map<Long,Object> products = new ObjectMapper().readValue((String) result.get("data"), HashMap.class);
+                JSONObject data_prod = obj.getJSONObject("data");
+                Map<String, Object> products = new ObjectMapper().readValue(data_prod.toString(), HashMap.class);
+                System.out.println("FUCK THAT SHIT: "+products);
                 System.out.println("initialize-products - " + products);
-                System.out.println("WTFUUUUUCK"+products);
                 try {
                     init.initProducts(products);
                 } catch (Exception e){

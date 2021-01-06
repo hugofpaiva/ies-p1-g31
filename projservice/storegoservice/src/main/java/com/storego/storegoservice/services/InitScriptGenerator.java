@@ -54,14 +54,16 @@ public class InitScriptGenerator {
         producer.sendMessage(message);
     }
 
-    public void initPeople(Map<Long,Object> result) {
-        for (Map.Entry<Long, Object> r : result.entrySet()){
-            String[] person = ((String) r.getValue()).split(",");
-            String name = (String) person[0];
-            String email = (String) person[1];
-            String password = (String) person[2];
-            personRepository.save(new Person(r.getKey(), name, email, password, PersonType.CLIENT));
-            System.out.println("INIT PERSON:" + personRepository.findByNif(r.getKey()));
+
+    public void initPeople(Map<String,Object> result) {
+        for (Map.Entry<String, Object> r : result.entrySet()){
+            String[] person = r.getValue().toString().split(",");
+            String name = person[0].substring(1);
+            String email = person[1];
+            String password = person[2].substring(0, person[2].length()-1);
+            System.out.println("PERSON: " + r.getKey() + " - " + name + " - " + email + " - " + password);
+            personRepository.save(new Person(Long.parseLong(r.getKey()), name, email, password, PersonType.CLIENT));
+            System.out.println("INIT PERSON:" + personRepository.findByNif(Long.parseLong(r.getKey())) + "\n\n");
         }
     }
 
@@ -72,18 +74,20 @@ public class InitScriptGenerator {
         }
     }
 
-    public void initProducts(Map<Long,Object> result) {
-        for (Map.Entry<Long, Object> r : result.entrySet()){
-            String[] product = ((String) r.getValue()).split(",");
-            System.out.print("PRODUCTTTT-> "+product);
-            double price = Double.parseDouble(product[0]);
-            String name = (String) product[1];
-            String description = (String) product[2];
-            int stock = Integer.parseInt(product[3]);
-            int min_stock = Integer.parseInt(product[4]);
-            ProductCategory category = new ProductCategory(product[5]);
-            productRepository.save(new Product(r.getKey(), price, name, description, stock, min_stock,category));
+    public void initProducts(Map<String, Object> result) {
+        for (Map.Entry<String, Object> r : result.entrySet()){
+            String[] product = r.getValue().toString().split(",");
+            double price = Double.parseDouble(product[0].substring(1));
+            String name = product[1];
+            String description = product[2];
+            int stock = Integer.parseInt(product[3].strip());
+            int min_stock = Integer.parseInt(product[4].strip());
+            ProductCategory category = new ProductCategory(product[5].substring(0,product[5].length()-1));
+            productCategoryRepository.save(category);
+            System.out.println("PRODUCT: " + r.getKey() + " - " + name + " - " + description + " - " + stock +  " - " + min_stock +  " - " + category.toString());
+            productRepository.save(new Product(Long.parseLong(r.getKey()), price, name, description, stock, min_stock,category));
+            System.out.println("INIT PRODUCT:" + productRepository.findById(Long.parseLong(r.getKey())) + "\n\n");
         }
-
     }
+
 }
