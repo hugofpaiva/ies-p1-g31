@@ -54,7 +54,6 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-let notificationsList = [];
 const isAdmin = window.location.href.indexOf("admin") > 0;
 
 const TopBar = ({
@@ -68,7 +67,7 @@ const TopBar = ({
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [clientRef, setclientRef] = React.useState(null);
 
-  const [notifications, setNotifications] = React.useState(notificationsList);
+  const [notifications, setNotifications] = React.useState([]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -80,10 +79,26 @@ const TopBar = ({
 
   const openTasks = (event) => {
     handleClose();
-
   };
 
   useEffect(() => {
+    // Notifications on local storage
+    const nots = localStorage.getItem("notifications") != null ? JSON.parse(localStorage.getItem("notifications"))['notifications'] : [];
+    setNotifications(nots.map(not => {
+      // Correct icon
+      if (not['update'].indexOf("help") > 0) {
+        not['icon'] = <AssignmentIcon />;
+      } else if (not['update'].indexOf("restock") > 0) {
+        not['icon'] = <ShoppingBasketIcon />;
+      } else if (not['update'].indexOf("full") > 0) {
+        not['icon'] = <GroupIcon />;
+      }
+      return not;
+    }
+    )
+    );
+
+    // Sockets
     const socket = new SockJS('http://localhost:8080/api/ws');
     const stompClient = Stomp.over(socket);
     const headers = {};
@@ -93,35 +108,53 @@ const TopBar = ({
       stompClient.connect(headers, () => {
         stompClient.subscribe('/topic/help', function (messageOutput) {
           const not = JSON.parse(messageOutput.body);
-          setNotifications([...notifications, {
-            "update": `Client ${not['nif']} needs help!`,
-            "timestamp": Date.now(),
-            "icon": <AssignmentIcon />,
-            "link": "/employee/help"
+          setNotifications(oldArray => {
+            const newArray = [...oldArray, {
+              "key": not["id"],
+              "update": `Client ${not['nif']} needs help!`,
+              "timestamp": Date.now(),
+              "icon": <AssignmentIcon />,
+              "link": "/employee/help",
           }])
+            }];
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+            return newArray;
+          })
         });
       });
     } else if (localStorage.getItem('authority') == 'MANAGER') {
       stompClient.connect(headers, () => {
         stompClient.subscribe('/topic/restock', function (messageOutput) {
           const not = JSON.parse(messageOutput.body);
-          setNotifications([...notifications, {
-            "update": `Product ${not['idProduct']} needs restock!`,
-            "timestamp": Date.now(),
-            "icon": <ShoppingBasketIcon />,
-            "link": "/admin/products"
+          setNotifications(oldArray => {
+            const newArray = [...oldArray, {
+              "key": not["id"],
+              "update": `Product ${not['idProduct']} needs restock!`,
+              "timestamp": Date.now(),
+              "icon": <ShoppingBasketIcon />,
+              "link": "/admin/products",
           }])
+            }];
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+            return newArray;
+          })
         });
       });
       stompClient.connect(headers, () => {
         stompClient.subscribe('/topic/store_full', function (messageOutput) {
           const not = JSON.parse(messageOutput.body);
-          setNotifications([...notifications, {
-            "update": `Store is full!`,
-            "timestamp": Date.now(),
-            "icon": <GroupIcon />,
-            "link": "/admin/customers/in_store"
+          setNotifications(oldArray => {
+            const newArray = [...oldArray, {
+              "key": not["id"],
+              "update": `Store is full!`,
+              "timestamp": Date.now(),
+              "icon": <GroupIcon />,
+              "link": "/admin/customers/in_store",
           }])
+            }];
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+            return newArray;
+          })
         });
       });
     }
@@ -167,16 +200,18 @@ const TopBar = ({
             menuAlign={{ lg: 'right' }}
           >
             <MenuList>
-              {notifications.map((n) => (
-                <MenuItem
-                  onClick={() => { window.location.href = n.link; }}
-                >
-                  <ListItemIcon fontSize="small">
-                    {n.icon}
-                  </ListItemIcon>
-                  <Typography>{n.update}</Typography>
-                </MenuItem>
-              ))}
+              {
+                  <MenuItem
+                    onClick={() => { window.location.href = n.link; }}
+                  >
+                    <ListItemIcon fontSize="small">
+                      {n.icon}
+                    </ListItemIcon>
+                    <Typography>{n.update}</Typography>
+                  </MenuItem>
+                )
+                )
+              }
               {
                 admin &&
                 <MenuItem onClick={() => { window.location.href = "/admin/notifications/" }} style={{ color: "blue", fontSize: "small", align: "center" }}>
