@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ProductCard = ({update, persona, className, product, ...rest }) => {
+const ProductCard = ({categories, update, persona, className, product, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -83,6 +83,7 @@ const ProductCard = ({update, persona, className, product, ...rest }) => {
               <ProductEdit 
                 product={product} 
                 update={update} 
+                categories={categories}
               />
               <ProductDelete
                 product={product} 

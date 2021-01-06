@@ -53,6 +53,11 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/work/productscategories")
+    public List<ProductCategory> getCategories() {
+        return productCategoryRepository.findAll();
+    }
+
     //Use for edit and restock, it is possible to only send the information needed to update
     @PutMapping("/admin/product/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable(value = "id") long productId,

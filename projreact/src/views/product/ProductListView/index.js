@@ -22,6 +22,7 @@ const ProductList = (props) => {
 	const classes = useStyles();
 	// Inicializar o estado products
 	const [products, setProducts] = useState([]);
+	const [categories, setCategories] = useState([]);
 	const [search, setSearch] = useState("");
 	const itemsPerPage = 6;
 	const [page, setPage] = React.useState(1);
@@ -36,6 +37,7 @@ const ProductList = (props) => {
 	// Fazer chamada à API para obter produtos
 	useEffect(async() => {
 		updateProducts();
+		updateCategories();
 	}, []);
 
 	async function updateProducts() {
@@ -65,6 +67,23 @@ const ProductList = (props) => {
 		setPage(data['currentPage']+1);
 	}
 
+	async function updateCategories() {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			}
+		};
+		let url = "http://127.0.0.1:8080/api/work/productscategories";
+		const response = await fetch(url, requestOptions);
+		const data = await response.json();
+		console.log("GOT CATEGORIES");
+		console.log(data);
+		// Update categories 
+		setCategories(data);
+	}
+
 	function searchFunc(keyword) {
 		setSearch(keyword, updateProducts());
 	}
@@ -85,6 +104,7 @@ const ProductList = (props) => {
 									product={product}
 									persona={props.persona}
 									update={updateProducts}
+									categories={categories}
 								/>
 							</Grid>
 						))}

@@ -9,6 +9,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 import {
     Edit
@@ -114,11 +119,40 @@ export default function FormDialog(props) {
                         margin="dense"
                         id="price"
                         label="Price"
-                        type="text"
+                        type="number"
                         value={product.price}
                         onChange={val => setProduct({ ...product, price: val.target.value })}
                         fullWidth
                     />
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="min_stock"
+                        label="Minimum stock"
+                        type="number"
+                        value={product.stock_minimum}
+                        onChange={val => setProduct({ ...product, stock_minimum: val.target.value })}
+                        fullWidth
+                    />
+                    <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={product.category.id}
+                            onChange={val => {
+                                props.categories.map(cat => {
+                                    if (cat.id == val.target.value)
+                                        setProduct({ ...product, category: cat});  
+                                });
+                            }}
+                            fullWidth
+                        >
+                        {props.categories.map(cat => (
+                            <MenuItem value={cat.id} index={0}>{cat.name}</MenuItem>
+                        ))}
+                        </Select>
+                    </FormControl>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
