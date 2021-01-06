@@ -23,25 +23,30 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const SalesByType = ({ className, ...rest }) => {
+const SalesByType = ({ sales, className, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
+
+  const salesList = Object.keys(sales).map(tag => {
+    return {
+      'title': tag,
+      'value': sales[tag],
+      'color': '#'+Math.floor(Math.random()*16777215).toString(16)
+    }
+  });
+  console.log();
 
   const data = {
     datasets: [
       {
-        data: [63, 15, 22],
-        backgroundColor: [
-          colors.indigo[500],
-          colors.red[600],
-          colors.orange[600]
-        ],
+        data: salesList.map(sale => sale['value']),
+        backgroundColor: salesList.map(sale => sale['color']),
         borderWidth: 8,
         borderColor: colors.common.white,
         hoverBorderColor: colors.common.white
       }
     ],
-    labels: ['Dairy', 'Technology', 'Vegetables']
+    labels: salesList.map(sale => sale['title'])
   };
 
   const options = {
@@ -66,24 +71,6 @@ const SalesByType = ({ className, ...rest }) => {
     }
   };
 
-  const devices = [
-    {
-      title: 'Drinks',
-      value: 63,
-      color: colors.indigo[500]
-    },
-    {
-      title: 'Technology',
-      value: 15,
-      color: colors.red[600]
-    },
-    {
-      title: 'Dairy',
-      value: 23,
-      color: colors.orange[600]
-    }
-  ];
-
   return (
     <Card
       className={clsx(classes.root, className)}
@@ -104,9 +91,10 @@ const SalesByType = ({ className, ...rest }) => {
         <Box
           display="flex"
           justifyContent="center"
+          flexWrap="wrap"
           mt={2}
         >
-          {devices.map(({
+          {salesList.map(({
             color,
             title,
             value

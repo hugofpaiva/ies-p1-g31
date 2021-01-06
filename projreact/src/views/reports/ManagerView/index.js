@@ -28,14 +28,14 @@ const Dashboard = () => {
   const [maxCustomers, setMaxCustomers] = useState(0);
   const [inStore, setInStore] = useState(0);
   const [inLine, setInLine] = useState(0);
+  const [sales, setSales] = useState([]);
 
   // Fazer chamada à API para obter produtos
 	useEffect(async() => {
-    updateMontlyProfit();
-		// update();
+    updateValues();
 	}, []);
 
-	async function updateMontlyProfit() {
+	async function updateValues() {
 		const requestOptions = {
 			method: 'GET',
 			headers: { 
@@ -43,16 +43,17 @@ const Dashboard = () => {
 				'Authorization': 'Bearer ' + localStorage.getItem('token')
 			}
 		};
+    // Update month profit
 		let url = "http://127.0.0.1:8080/api/admin/monthly_profit";
-		const response = await fetch(url, requestOptions);
-		const data = await response.json();
-
-		console.log("GOT DATA");
-    console.log(data);
-
-    // Update state
+		let response = await fetch(url, requestOptions);
+		let data = await response.json();
     setProfit(data['last_month_total']); 
-	}
+    // Update sales by type
+		url = "http://127.0.0.1:8080/api/admin/monthly_sale_by_category";
+		response = await fetch(url, requestOptions);
+    data = await response.json();
+    setSales(data);
+  }
 
   return (
     <Page
@@ -119,7 +120,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <SalesByType />
+            <SalesByType sales={sales} />
           </Grid>
           <Grid
             item
