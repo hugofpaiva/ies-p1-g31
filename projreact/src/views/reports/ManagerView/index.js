@@ -60,11 +60,25 @@ const Dashboard = () => {
 		response = await fetch(url, requestOptions);
     data = await response.json();
     setLastPersons(data);
-    // Update last both products
+    // Update last bought products
     url = "http://127.0.0.1:8080/api/work/last_bought_products";
 		response = await fetch(url, requestOptions);
     data = await response.json();
     setLastProducts(data);
+    
+    // Refresh the most dynamic every second
+    setInterval(async function() {
+      // Update last persons in store
+      url = "http://127.0.0.1:8080/api/work/last_persons_in_store";
+      response = await fetch(url, requestOptions);
+      data = await response.json();
+      setLastPersons(data);
+      // Update last bought products
+      url = "http://127.0.0.1:8080/api/work/last_bought_products";
+      response = await fetch(url, requestOptions);
+      data = await response.json();
+      setLastProducts(data);
+    }, 1000);
   }
 
   return (
