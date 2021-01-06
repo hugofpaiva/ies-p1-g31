@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import {
   Container,
   Grid,
@@ -24,6 +24,43 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard = () => {
   const classes = useStyles();
+  const [customers_in_store, set_customers_in_store] = useState(0);
+  const [latest_products, set_latest_products] = useState([]);
+
+  // See how many people are inside the store
+  useEffect(async() => {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			},
+		};
+		const response = await fetch('http://127.0.0.1:8080/api/work/num_persons_in_store', requestOptions);
+		const data = await response.json();
+		console.log("GOT DATA");
+    console.log(data);
+    set_customers_in_store(data['persons_in_store'])
+	}, []);
+
+  // See the latest bought products
+  useEffect(async() => {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			},
+    };
+    
+		const response = await fetch('http://127.0.0.1:8080/api/work/last_bought_products', requestOptions);
+		const data = await response.json();
+		console.log("GOT LATEST PRODUCTS");
+    console.log(data);
+    set_latest_products(data)
+	}, []);
+
+	
 
   return (
     <Page
@@ -53,7 +90,7 @@ const Dashboard = () => {
             xs={12}
             style={{height: '80%'}}
           >
-            <CostumersInStore />
+            <CostumersInStore persons_in_store = {customers_in_store}/>
           </Grid>
           <Grid
             item
@@ -99,7 +136,7 @@ const Dashboard = () => {
             xl={12}
             xs={12}
           >
-            <LatestProducts />
+            <LatestProducts latest_products = {latest_products}/>
           </Grid>
         </Grid>
       </Container>

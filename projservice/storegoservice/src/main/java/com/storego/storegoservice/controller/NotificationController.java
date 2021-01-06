@@ -4,6 +4,8 @@ package com.storego.storegoservice.controller;
 import com.storego.storegoservice.exception.ResourceNotFoundException;
 import com.storego.storegoservice.model.Notification;
 import com.storego.storegoservice.model.NotificationType;
+import com.storego.storegoservice.model.Transaction;
+import com.storego.storegoservice.model.TransactionProduct;
 import com.storego.storegoservice.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class NotificationController {
@@ -121,6 +120,33 @@ public class NotificationController {
 
         Notification updatedNot = notificationRepository.save(notification);
         return ResponseEntity.ok(updatedNot);
+    }
+
+    @GetMapping("/work/monthly_help_requests_stats")
+    public Map<String, Integer> getMonthlyHelpRequests() {
+        Map<String, Integer> help_stats = new HashMap<>();
+        double total = 0;
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        Date result = cal.getTime();
+        List<Notification> notifications = notificationRepository.findByDateIsGreaterThanEqualAndType(result, NotificationType.HELP);
+        for (Notification notif: notifications){
+            total = total +1;
+            String notif_state =notif.getState().name();
+            Integer value = help_stats.get(notif_state);
+            if (value != null) {
+                help_stats.put(notif_state, value + 1);
+            } else {
+                help_stats.put(notif_state, 1);
+            }
+        }
+
+        for (String type: help_stats.keySet()){
+            Integer value = help_stats.get(type);
+            help_stats.put(type, (int) Math.round(value * 100 /total));
+        }
+
+        return help_stats;
     }
 
 

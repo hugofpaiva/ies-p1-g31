@@ -63,9 +63,9 @@ const useStyles = makeStyles(({
   }
 }));
 
-const LatestProducts = ({ className, ...rest }) => {
+const LatestProducts = ({ className, latest_products, ...rest }) => {
   const classes = useStyles();
-  const [products] = useState(data);
+  const [products] = useState(latest_products);
 
   return (
     <Card
@@ -78,30 +78,34 @@ const LatestProducts = ({ className, ...rest }) => {
       />
       <Divider />
       <List>
-        {products.map((product, i) => (
-          <ListItem
-            divider={i < products.length - 1}
-            key={product.id}
-          >
-            <ListItemAvatar>
-              <img
-                alt="Product"
-                className={classes.image}
-                src={product.imageUrl}
-              />
-            </ListItemAvatar>
-            <ListItemText
-              primary={product.name}
-              secondary={`Bought ${product.updatedAt.fromNow()}`}
-            />
-            <IconButton
-              edge="end"
-              size="small"
+        {products.map((product, i) => {
+          const key = Object.keys(product);
+          return (
+          
+            <ListItem
+              divider={i < products.length - 1}
             >
-              <MoreVertIcon />
-            </IconButton>
-          </ListItem>
-        ))}
+              <ListItemAvatar>
+                <img
+                  alt="Product"
+                  className={classes.image}
+                  src={product.imageUrl}
+                />
+              </ListItemAvatar>
+              <ListItemText
+                primary={key}
+                secondary={`Bought ${moment() - product.key}`}
+              />
+              <IconButton
+                edge="end"
+                size="small"
+              >
+                <MoreVertIcon />
+              </IconButton>
+            </ListItem>
+          )
+           
+      })}
       </List>
       <Divider />
       <Box

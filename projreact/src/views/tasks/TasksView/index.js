@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -19,7 +19,22 @@ const useStyles = makeStyles((theme) => ({
 
 const CustomerListView = () => {
   const classes = useStyles();
-  const [tasks] = useState(data);
+  const [tasks, setTasks ] = useState(data);
+
+  useEffect(async() => {
+    const requestOptions = {
+        method: 'get',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+    };
+    const response = await fetch('http://127.0.0.1:8080/api/work/notifications_help', requestOptions);
+    const data = await response.json();
+    console.log("GOT DATA");
+    console.log(data);
+    setTasks(data['notifications']);
+}, []);
 
   return (
     <Page
