@@ -24,6 +24,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LoginView = () => {
+	// When openned, delete local storage if not already
+	localStorage.removeItem("notifications");
+	localStorage.removeItem("token");
+	localStorage.removeItem("authority");
+
 	const classes = useStyles();
 	const navigate = useNavigate();
 
@@ -72,7 +77,7 @@ const LoginView = () => {
 		}
 	}
 
-	return redirectUser() && (
+	return (
 		<Page className={classes.root} title="Login">
 			<Box
 				display="flex"
