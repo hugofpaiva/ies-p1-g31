@@ -14,7 +14,7 @@ services:
       MYSQL_PASSWORD: 'springpass'
       MYSQL_DATABASE: 'ies'
     volumes:
-      - ~/docker/mysql:/var/lib/mysql
+      - ./docker/mysql:/var/lib/mysql
 
   mongodb_db:
     image: mongo
@@ -28,7 +28,7 @@ services:
       MONGO_INITDB_DATABASE: 'ies'
     volumes:
       - ./projDB/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-      - ~/docker/mongodb:/data/db
+      - ./docker/mongodb:/data/db
 
   zookeeper:
     image: confluentinc/cp-zookeeper:6.0.1
