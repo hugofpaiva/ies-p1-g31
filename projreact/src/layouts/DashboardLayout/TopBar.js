@@ -179,6 +179,7 @@ const TopBar = ({
   const logOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("authority");
+    localStorage.removeItem("notifications");
     window.location.href = "/";
   }
 
