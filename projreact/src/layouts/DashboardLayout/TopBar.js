@@ -98,7 +98,8 @@ const TopBar = ({
 
   useEffect(() => {
     // Notifications on local storage
-    const nots = localStorage.getItem("notifications") != null ? JSON.parse(localStorage.getItem("notifications"))['notifications'] : [];
+    let nots = localStorage.getItem("notifications") != null ? JSON.parse(localStorage.getItem("notifications"))['notifications'] : [];
+    // Put them on view
     setNotifications(nots.map(not => {
       // Correct icon
       if (not['update'].indexOf("help") > 0) {
@@ -246,7 +247,16 @@ const TopBar = ({
             <MenuList>
               {
                 // Only show notifications not seen yet
-                notifications.filter(n => !n['seen']).map((n) => (
+                // Only show those that meet the authority
+                notifications.filter(
+                  n => !n['seen']
+                  &&
+                  (
+                    (localStorage.getItem('authority') == 'EMPLOYEE'  && n['employee'])
+                    || 
+                    (localStorage.getItem('authority') == 'MANAGER'  && n['manager'])
+                  )
+                ).map((n) => (
                   <MenuItem
                     onClick={() => { window.location.href = n.link; }}
                   >
