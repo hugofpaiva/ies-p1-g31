@@ -56,4 +56,9 @@ public class Product {
         this.category = category;
     }
 
+    @Override
+    public String toString() {
+        return id + ": [" + price + ",\"" + name + "\", \"" + description + "\", " + stock_current + "," + stock_minimum +
+                ", \"" + category.getName() +"\"]";
+    }
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class Producer {
 
-    private static final String TOPIC = "update-data";
+    private static final String TOPIC = "initialization";
 
     /*
     Supressed Warning as advised in:
