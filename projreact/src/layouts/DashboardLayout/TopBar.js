@@ -74,7 +74,21 @@ const TopBar = ({
   };
 
   const handleClose = () => {
+    // Close notifications
     setAnchorEl(null);
+    // Mark 10 first notifications as seen
+    let counter = 0;
+    setNotifications(oldArray => {
+      const newArray = oldArray.map((not, i) => {
+        if (!not['seen'] && counter<10) {
+          not['seen'] = true;
+          counter += 1;
+        }
+        return not;
+      });
+      localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+      return newArray;
+    });
   };
 
   const openTasks = (event) => {
@@ -115,7 +129,7 @@ const TopBar = ({
               "timestamp": Date.now(),
               "icon": <AssignmentIcon />,
               "link": "/employee/help",
-          }])
+              "seen": false,
             }];
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
             return newArray;
@@ -133,7 +147,7 @@ const TopBar = ({
               "timestamp": Date.now(),
               "icon": <ShoppingBasketIcon />,
               "link": "/admin/products",
-          }])
+              "seen": false,
             }];
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
             return newArray;
@@ -150,7 +164,7 @@ const TopBar = ({
               "timestamp": Date.now(),
               "icon": <GroupIcon />,
               "link": "/admin/customers/in_store",
-          }])
+              "seen": false,
             }];
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
             return newArray;
@@ -182,7 +196,7 @@ const TopBar = ({
         <Hidden mdDown>
           <IconButton color="inherit" onClick={handleClick}>
             <Badge
-              badgeContent={notifications.length}
+              badgeContent={notifications.filter(n => !n['seen']).length}
               color="error"
             >
               <NotificationsIcon />
@@ -201,6 +215,8 @@ const TopBar = ({
           >
             <MenuList>
               {
+                // Only show notifications not seen yet
+                notifications.filter(n => !n['seen']).map((n) => (
                   <MenuItem
                     onClick={() => { window.location.href = n.link; }}
                   >
