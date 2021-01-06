@@ -103,7 +103,7 @@ const Results = ({ className, transactions, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {transactions.slice(0, limit).map((transaction) => (
+              {transactions.slice(page*limit, page*limit+limit).map((transaction) => (
                 <TableRow
                   hover
                   key={transaction.transaction.id}

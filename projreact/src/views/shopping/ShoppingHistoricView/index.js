@@ -21,7 +21,8 @@ const useStyles = makeStyles((theme) => ({
 const CustomerListView = () => {
   const classes = useStyles();
   const [transactions, setTransactions] = useState([]);
-  const itemsPerPage = 6;
+  const itemsPerPage = 20;
+  const totalItems = 1000;
   const [page, setPage] = React.useState(1);
   const [nPages, setNPages] = React.useState(
 		Math.ceil(transactions.length / itemsPerPage)
@@ -41,7 +42,7 @@ const CustomerListView = () => {
       }
     };
     let pageN = page - 1;
-    let url = "http://127.0.0.1:8080/api/admin/purchases/?page=" + pageN + "&size=" + itemsPerPage;
+    let url = "http://127.0.0.1:8080/api/admin/purchases/?page=" + pageN + "&size=" + totalItems;
     const response = await fetch(url, requestOptions);
     const data = await response.json();
 
