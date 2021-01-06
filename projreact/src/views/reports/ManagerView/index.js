@@ -50,6 +50,11 @@ const Dashboard = () => {
 		let response = await fetch(url, requestOptions);
 		let data = await response.json();
     setProfit(data['last_month_total']); 
+    // Update costumers in store
+		url = "http://127.0.0.1:8080/api/work/num_persons_in_store";
+		response = await fetch(url, requestOptions);
+    data = await response.json();
+    setInStore(data['persons_in_store']);
     // Update sales by type
 		url = "http://127.0.0.1:8080/api/admin/monthly_sale_by_category";
 		response = await fetch(url, requestOptions);
@@ -68,6 +73,11 @@ const Dashboard = () => {
     
     // Refresh the most dynamic every second
     setInterval(async function() {
+      // Update costumers in store
+      url = "http://127.0.0.1:8080/api/work/num_persons_in_store";
+      response = await fetch(url, requestOptions);
+      data = await response.json();
+      setInStore(data['persons_in_store']);
       // Update last persons in store
       url = "http://127.0.0.1:8080/api/work/last_persons_in_store";
       response = await fetch(url, requestOptions);
