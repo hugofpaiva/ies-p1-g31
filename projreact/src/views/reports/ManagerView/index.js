@@ -29,6 +29,7 @@ const Dashboard = () => {
   const [inStore, setInStore] = useState(0);
   const [inLine, setInLine] = useState(0);
   const [sales, setSales] = useState([]);
+  const [lastPersons, setLastPersons] = useState([]);
 
   // Fazer chamada à API para obter produtos
 	useEffect(async() => {
@@ -53,6 +54,11 @@ const Dashboard = () => {
 		response = await fetch(url, requestOptions);
     data = await response.json();
     setSales(data);
+    // Update last persons in store
+    url = "http://127.0.0.1:8080/api/work/last_persons_in_store";
+		response = await fetch(url, requestOptions);
+    data = await response.json();
+    setLastPersons(data);
   }
 
   return (
@@ -111,7 +117,7 @@ const Dashboard = () => {
             xl={9}
             xs={12}
           >
-            <CurrentCostumers />
+            <CurrentCostumers persons={lastPersons.slice(0,6)} />
           </Grid>
           <Grid
             item
