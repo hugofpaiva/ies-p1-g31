@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Grid,
@@ -24,6 +24,35 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard = () => {
   const classes = useStyles();
+  const [profit, setProfit] = useState(0);
+  const [maxCustomers, setMaxCustomers] = useState(0);
+  const [inStore, setInStore] = useState(0);
+  const [inLine, setInLine] = useState(0);
+
+  // Fazer chamada à API para obter produtos
+	useEffect(async() => {
+    updateMontlyProfit();
+		// update();
+	}, []);
+
+	async function updateMontlyProfit() {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			}
+		};
+		let url = "http://127.0.0.1:8080/api/admin/monthly_profit";
+		const response = await fetch(url, requestOptions);
+		const data = await response.json();
+
+		console.log("GOT DATA");
+    console.log(data);
+
+    // Update state
+    setProfit(data['last_month_total']); 
+	}
 
   return (
     <Page
@@ -43,7 +72,7 @@ const Dashboard = () => {
             xs={12}
             style={{height: '80%'}}
           >
-            <CostumersInLine />
+            <CostumersInLine value={inLine} />
           </Grid>
           <Grid
             item
@@ -53,7 +82,7 @@ const Dashboard = () => {
             xs={12}
             style={{height: '80%'}}
           >
-            <CostumersInStore />
+            <CostumersInStore value={inStore} />
           </Grid>
           <Grid
             item
@@ -63,7 +92,7 @@ const Dashboard = () => {
             xs={12}
             style={{height: '80%'}}
           >
-            <TotalCustomers />
+            <TotalCustomers value={maxCustomers} />
           </Grid>
           <Grid
             item
@@ -72,7 +101,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <TotalProfit />
+            <TotalProfit value={profit} />
           </Grid>
           <Grid
             item
