@@ -22,6 +22,29 @@ import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import InputIcon from '@material-ui/icons/Input';
+import GroupIcon from '@material-ui/icons/Group';
+
+/*
+{
+  "id": "5ff5de724b3bb169f3a9b6fd",
+  "type": "HELP",
+  "date": null,
+  "idProduct": 0,
+  "qty": 0,
+  "nif": 111900377,
+  "state": "PENDING"
+}
+
+{
+  "id": "5ff5e01b4b3bb169f3a9b798",
+  "type": "STORE_FULL",
+  "date": null,
+  "idProduct": 0,
+  "qty": 0,
+  "nif": 0,
+  "state": null
+}
+*/
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -34,44 +57,18 @@ const useStyles = makeStyles(() => ({
 let notificationsList = [];
 const isAdmin = window.location.href.indexOf("admin") > 0;
 
-if (isAdmin) {
-  notificationsList = [
-    {
-      "update": "Low Stock on Milk",
-      "timestamp": 1606905012000,
-      "icon": <ShoppingBasketIcon />,
-      "link": "/admin/products/"
-    },
-    {
-      "update": "Store is Full",
-      "timestamp": 1606905192000,
-      "icon": <ShoppingBasketIcon />,
-      "link": "/admin/customers/in_store"
-    }
-  ]
-} else {
-  notificationsList = [
-    {
-      "update": "Help needed by João",
-      "timestamp": 1606905312000,
-      "icon": <AssignmentIcon />,
-      "link": "/employee/help"
-    }
-  ]
-}
-
-
 const TopBar = ({
   className,
   onMobileNavOpen,
   ...rest
 }) => {
   const classes = useStyles();
-  const [notifications] = useState(notificationsList);
   const [admin] = useState(isAdmin);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [clientRef, setclientRef] = React.useState(null);
+
+  const [notifications, setNotifications] = React.useState(notificationsList);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -90,14 +87,45 @@ const TopBar = ({
     const socket = new SockJS('http://localhost:8080/api/ws');
     const stompClient = Stomp.over(socket);
     const headers = {};
-  
-    stompClient.connect(headers, () => {
-      stompClient.subscribe('/topic/help', function(messageOutput) {
-        console.log("OKKK");
-        console.log(JSON.parse(messageOutput.body));
-    });
-    });
-  
+
+    // Subscribe topics for user authority
+    if (localStorage.getItem('authority') == 'EMPLOYEE') {
+      stompClient.connect(headers, () => {
+        stompClient.subscribe('/topic/help', function (messageOutput) {
+          const not = JSON.parse(messageOutput.body);
+          setNotifications([...notifications, {
+            "update": `Client ${not['nif']} needs help!`,
+            "timestamp": Date.now(),
+            "icon": <AssignmentIcon />,
+            "link": "/employee/help"
+          }])
+        });
+      });
+    } else if (localStorage.getItem('authority') == 'MANAGER') {
+      stompClient.connect(headers, () => {
+        stompClient.subscribe('/topic/restock', function (messageOutput) {
+          const not = JSON.parse(messageOutput.body);
+          setNotifications([...notifications, {
+            "update": `Product ${not['idProduct']} needs restock!`,
+            "timestamp": Date.now(),
+            "icon": <ShoppingBasketIcon />,
+            "link": "/admin/products"
+          }])
+        });
+      });
+      stompClient.connect(headers, () => {
+        stompClient.subscribe('/topic/store_full', function (messageOutput) {
+          const not = JSON.parse(messageOutput.body);
+          setNotifications([...notifications, {
+            "update": `Store is full!`,
+            "timestamp": Date.now(),
+            "icon": <GroupIcon />,
+            "link": "/admin/customers/in_store"
+          }])
+        });
+      });
+    }
+
     return () => stompClient && stompClient.disconnect();
   }, []);
 
