@@ -94,6 +94,8 @@ const ProductList = (props) => {
 				<Toolbar 
 					persona={props.persona} 
 					search={searchFunc}
+					categories={categories}
+					update={updateProducts}
 				/>
 				<Box mt={3}>
 					<Grid container spacing={3}>

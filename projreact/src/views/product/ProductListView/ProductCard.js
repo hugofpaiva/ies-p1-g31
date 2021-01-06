@@ -84,6 +84,7 @@ const ProductCard = ({categories, update, persona, className, product, ...rest }
                 product={product} 
                 update={update} 
                 categories={categories}
+                edit={true}
               />
               <ProductDelete
                 product={product} 

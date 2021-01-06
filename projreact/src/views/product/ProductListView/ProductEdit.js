@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import { 
+import {
     TextField,
     Typography,
 } from '@material-ui/core';
@@ -37,7 +37,24 @@ import {
 export default function FormDialog(props) {
     const [open, setOpen] = React.useState(false);
     const [error, setError] = React.useState(false);
-    const [product, setProduct] = React.useState(props.product);
+    let p = null;
+    if (props.edit) {
+        p = props.product;
+    } else {
+        p = {
+            "id": 0,
+            "price": 0,
+            "name": "",
+            "description": "",
+            "stock_current": 0,
+            "stock_minimum": 0,
+            "category": {
+                "id": 1,
+                "name": ""
+            }
+        }
+    }
+    const [product, setProduct] = React.useState(p);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -52,18 +69,23 @@ export default function FormDialog(props) {
     }
 
     async function updateProduct() {
-        // Make request 
-        console.log("UPDATE");
+        // Make request
+        if (props.edit)
+            console.log("UPDATE");
+        else
+            console.log("NEW PRODUCT");
         console.log(product);
+        if (!product)
+            return;
         const requestOptions = {
-            method: 'PUT',
-            headers: { 
+            method: props.edit ? 'PUT' : 'POST',
+            headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             body: JSON.stringify(product)
         };
-        const url = 'http://127.0.0.1:8080/api/admin/product/' + product.id;
+        const url = props.edit ? 'http://127.0.0.1:8080/api/admin/product/' + product.id : 'http://127.0.0.1:8080/api/admin/products';
         const response = await fetch(url, requestOptions);
         if (response.status == 200) {
             props.update();
@@ -75,25 +97,59 @@ export default function FormDialog(props) {
 
     return (
         <div>
-            <Button variant="contained" onClick={handleClickOpen}>
-                <Edit size="20" />
-                <span>Edit</span>
-            </Button>
+            {
+                props.edit ?
+                    <Button variant="contained" onClick={handleClickOpen}>
+                        <Edit size="20" />
+                        <span>Edit</span>
+                    </Button>
+                    :
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={handleClickOpen}
+                    >
+                        Add product
+                </Button>
+            }
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Edit product</DialogTitle>
+                <DialogTitle id="form-dialog-title">
+                    {
+                        props.edit ?
+                            "Edit product"
+                            : "Add product"
+                    }
+                </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Fill this form to edit the product data.
+                        {
+                            props.edit ?
+                                "Fill this form to edit the product data."
+                                : "Fill this form to add a new product"
+                        }
                     </DialogContentText>
                     {
-                        error && 
+                        error &&
                         <Typography
                             color="error"
                             display="inline"
                             variant="body2"
-                            >
+                        >
                             There was an error! :/ Please, try again.
                         </Typography>
+                    }
+                    {
+                        !props.edit &&
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="id"
+                            label="ID"
+                            type="number"
+                            value={product.id}
+                            onChange={val => setProduct({ ...product, id: val.target.value })}
+                            fullWidth
+                        />
                     }
                     <TextField
                         autoFocus
@@ -143,14 +199,14 @@ export default function FormDialog(props) {
                             onChange={val => {
                                 props.categories.map(cat => {
                                     if (cat.id == val.target.value)
-                                        setProduct({ ...product, category: cat});  
+                                        setProduct({ ...product, category: cat });
                                 });
                             }}
                             fullWidth
                         >
-                        {props.categories.map(cat => (
-                            <MenuItem value={cat.id} index={0}>{cat.name}</MenuItem>
-                        ))}
+                            {props.categories.map(cat => (
+                                <MenuItem value={cat.id} index={0}>{cat.name}</MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </DialogContent>
@@ -159,8 +215,12 @@ export default function FormDialog(props) {
                         Cancel
           </Button>
                     <Button onClick={handleSubmit} color="primary">
-                        Edit
-          </Button>
+                        {
+                            props.edit ?
+                                "Edit"
+                                : "Save"
+                        }
+                    </Button>
                 </DialogActions>
             </Dialog>
         </div>

@@ -12,6 +12,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 import { Search as SearchIcon } from 'react-feather';
+import ProductEdit from './ProductEdit';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Toolbar = ({ search, persona, className, ...rest }) => {
+const Toolbar = ({ update, categories, search, persona, className, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -37,12 +38,12 @@ const Toolbar = ({ search, persona, className, ...rest }) => {
       >
         {
           persona == "admin" &&
-          <Button
-            color="primary"
-            variant="contained"
-          >
-            Add product
-          </Button>
+          <ProductEdit
+            product={null}
+            categories={categories}
+            edit={false}
+            update={update}
+          />
         }
       </Box>
       <Box mt={3}>
