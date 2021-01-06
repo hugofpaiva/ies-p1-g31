@@ -11,8 +11,6 @@ import { Pagination } from "@material-ui/lab";
 import Page from "src/components/Page";
 import Toolbar from "./Toolbar";
 import CustomerCard from "./CustomerCard";
-import { withStyles } from "@material-ui/core/styles";
-import ProductCard from "./ProductCard";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogContent from "@material-ui/core/DialogContent";
@@ -36,20 +34,6 @@ const useStyles = makeStyles((theme) => ({
 		color: theme.palette.grey[500],
 	},
 }));
-
-const DialogContent = withStyles((theme) => ({
-	root: {
-		maxHeight: "1000px",
-		paddingBottom: theme.spacing(2),
-	},
-}))(MuiDialogContent);
-
-const DialogActions = withStyles((theme) => ({
-	root: {
-		margin: 0,
-		padding: theme.spacing(1),
-	},
-}))(MuiDialogActions);
 
 const CustomerList = () => {
 	const classes = useStyles();
@@ -92,15 +76,6 @@ const CustomerList = () => {
 		}, 1000);
 	}, []);
 
-	const [open, setOpen] = React.useState(false);
-
-	const handleClickOpen = () => {
-		setOpen(true);
-	};
-	const handleClose = () => {
-		setOpen(false);
-	};
-
 	return (
 		<Page className={classes.root} title="Customers in Store">
 			<Container maxWidth={false}>
@@ -123,7 +98,6 @@ const CustomerList = () => {
 										<CustomerCard
 											className={classes.customerCard}
 											customer={customer}
-											onnclick={handleClickOpen}
 										/>
 									</Grid>
 								))}
@@ -132,45 +106,6 @@ const CustomerList = () => {
 					</div>
 				)}
 			</Container>
-			<Dialog
-				onClose={handleClose}
-				aria-labelledby="customized-dialog-title"
-				open={open}
-			>
-				<DialogContent dividers>
-					<Box>
-						<Typography
-							variant="h1"
-							style={{ letterSpacing: "1px" }}
-						>
-							Cart
-						</Typography>
-					</Box>
-					<Box mt={3}>
-						<Grid container spacing={3}>
-							{products.map((product) => (
-								<Grid
-									item
-									key={product.id}
-									lg={12}
-									md={12}
-									xs={12}
-								>
-									<ProductCard
-										className={classes.productCard}
-										product={product}
-									/>
-								</Grid>
-							))}
-						</Grid>
-					</Box>
-				</DialogContent>
-				<DialogActions>
-					<Button autoFocus onClick={handleClose} color="primary">
-						Close
-					</Button>
-				</DialogActions>
-			</Dialog>
 		</Page>
 	);
 };
