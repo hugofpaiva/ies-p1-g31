@@ -55,3 +55,14 @@ const data = await response.json();
 ```
 
 > Based on https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples
+
+This request must be done when the component renders. To do so, use the `useEffect` method.
+
+```react
+import React, { useState, useEffect } from "react";
+
+useEffect(async() => {
+    apiCall();
+}, []);
+```
+
