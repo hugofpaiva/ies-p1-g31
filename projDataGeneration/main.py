@@ -69,14 +69,14 @@ def main():
     people_consumer = None
     while people_consumer is None:
         try:
-            people_consumer = KafkaConsumer('initialization', bootstrap_servers=['kafka:29092'],
+            people_consumer = KafkaConsumer('storego-events', bootstrap_servers=['kafka:29092'],
                                     auto_offset_reset='latest', value_deserializer=lambda x: (x.decode('utf-8')))
         except:
             print('\033[95m' + "[People Consumer] Kafka Broker is not available!"+ '\033[0m')
             time.sleep(5)
 
     first_message = {"type": "initialize-people-request"}
-    sendMessage(producer, "initialization", first_message)
+    sendMessage(producer, "costumer-events", first_message)
     isInitializer = 1
     for record in people_consumer:
         try:
@@ -138,14 +138,14 @@ def main():
                             "type": "initialize-products",
                             "data": product_to_send
                         }
-        sendMessage(producer, "initialization", message_people)
-        sendMessage(producer, "initialization", message_category)
-        sendMessage(producer, "initialization", message_product)
+        sendMessage(producer, "costumer-events", message_people)
+        sendMessage(producer, "costumer-events", message_category)
+        sendMessage(producer, "costumer-events", message_product)
     else:
         product_consumer = None
         while product_consumer is None:
             try:
-                product_consumer = KafkaConsumer('initialization', bootstrap_servers=['kafka:29092'],
+                product_consumer = KafkaConsumer('storego-events', bootstrap_servers=['kafka:29092'],
                                         auto_offset_reset='latest',
                                         enable_auto_commit=True, value_deserializer=lambda x: (x.decode('utf-8')))
             except:
@@ -153,7 +153,7 @@ def main():
                 time.sleep(5)
         
         second_message = {"type": "initialize-products-request"}
-        sendMessage(producer, "initialization", second_message)
+        sendMessage(producer, "costumer-events", second_message)
 
         for record in product_consumer:
             try:

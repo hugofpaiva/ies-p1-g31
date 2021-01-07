@@ -1,4 +1,4 @@
-### Initializing generator's data sets:
+# Initializing generator's data sets:
 
 **Script sends the following message:**
 ```json
@@ -90,8 +90,6 @@
 }
 ```
 
-# Check with the team
-
 **When the employee wants to confirm that they restocked a product:**
 ```json
 {
@@ -110,7 +108,6 @@
 ```
 
 # Possible JSON messages published in topic 'costumer-events':
-
 
 **When a costumer enters the store:**
 ```json
