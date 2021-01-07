@@ -40,4 +40,4 @@ A disponibilização do sistema foi feita através da _Google Cloud Platform_ e 
 
 A informação relativa ao _deploy_ de cada componente do sistema encontra-se na sua pasta sendo que foi utilizado um [ficheiro](./docker-compose.yml) _Docker Compose_ para definir e correr os múltiplos _Docker Containers_ dos componentes do sistema.
 
-**Aplicação Web disponível em:** (35.246.117.113)[35.246.117.113]
+**Aplicação Web disponível em:** [35.246.117.113](35.246.117.113)
