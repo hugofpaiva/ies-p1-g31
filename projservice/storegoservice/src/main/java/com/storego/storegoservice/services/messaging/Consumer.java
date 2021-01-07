@@ -53,11 +53,7 @@ public class Consumer {
                 }
                 break;
             case "help-needed":
-                try{
                 service.notifyHelpNeeded(Long.valueOf((Integer) result.get("nif")), NotificationType.HELP);
-                } catch (Exception e){
-                    System.err.println(e.getMessage());
-                }
                 break;
             default:
                 System.err.println("Event not supported!");
