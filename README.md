@@ -36,7 +36,7 @@ Está a ser utilizado o _Jira_ para planear e documentar o projeto. É possível
 
 ## _Deploy_ do sistema
 
-A disponibilização do sistema foi feita através da _Google Cloud Platform_ e de acordo com [este guião](https://cloud.google.com/community/tutorials/docker-compose-on-container-optimized-os), utilizando o _free tier_.
+A disponibilização do sistema foi feita através da _Google Cloud Platform_ e de acordo com [este guião](https://cloud.google.com/community/tutorials/docker-compose-on-container-optimized-os), utilizando o _free tier_. Resumidamente, foi criada uma _VM_, clonado o repositório e executado o _Docker Compose_ de acordo com o guião e com a versão _1.27.4_ para suportar a versão _3.8_ do ficheiro _Compose_.
 
 A informação relativa ao _deploy_ de cada componente do sistema encontra-se na sua pasta sendo que foi utilizado um [ficheiro](./docker-compose.yml) _Docker Compose_ para definir e correr os múltiplos _Docker Containers_ dos componentes do sistema.
 
