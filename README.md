@@ -2,29 +2,30 @@
 
 **Group:** G31
 
-The application has the purpose of managing an automated store, that is, an establishment that provides a shopping experience without payment boxes, by recognizing the products that a customer removed from the shelf and charging the moment he leaves the store.
+O sistema tem a finalidade de simular a gestão de uma loja automatizada, ou seja, um estabelecimento que proporciona uma experiência de compras sem caixas de pagamento, ao reconhecer os produtos que um cliente retirou da prateleira e efetuar a cobrança no momento em que ele deixa a loja.
 
-Upon arriving at the supermarket, your entry into the store is detected and through the sensors distributed throughout the space, products are added to your virtual cart or removed if it lands again. After shopping is finished, there is nothing to do: just leave the store. Once outside the store the purchase is finalized.
+Ao chegar ao supermercado é detetada a sua entrada na loja e, através dos sensores distribuídos pelo espaço, são adicionados produtos ao seu carrinho virtual ou removidos se este os voltar a pousar. Terminadas as compras, não é preciso fazer nada: apenas sair da loja. Uma vez do lado de fora da loja a compra é finalizada.
 
-This application is similar to Amazon's smart supermarket with the “Just Walk Out“ concept, with no queues and no checkouts.
-All of this will be viewed through the web application for Employees and Managers, each with different permissions and possible actions.
+> Todos os dados referidos anteriormente, no contexto da disciplina de IES, são simulados e gerados automaticamente.
+
+Esta aplicação é similar ao supermercado inteligente da Amazon com o conceito “Just Walk Out“, sem filas e sem ​checkouts​.
 
 
 ## Backlog 
-We are using Jira to plan and document our project. You can find it at the links below.
+Está a ser utilizado o _Jira_ para planear e documentar o projeto. É possível encontrar informação nos links abaixo:
 
-`Jira` (for planning) https://hugofpaiva.atlassian.net/browse/IES
+`Jira` (planeamento) https://hugofpaiva.atlassian.net/browse/IES
 
-`Confluence` (for documenting) https://hugofpaiva.atlassian.net/wiki/spaces
+`Confluence` (documentação) https://hugofpaiva.atlassian.net/wiki/spaces
 
-> [`/Project: IES`](https://hugofpaiva.atlassian.net/wiki/spaces/IES) The project folder
+> [`/Project: IES`](https://hugofpaiva.atlassian.net/wiki/spaces/IES) Pasta do projeto
 >
-> [`/Iteration 1`](https://hugofpaiva.atlassian.net/wiki/spaces/I1/overview) Docs related with iteration 1 
+> [`/Iteration 1`](https://hugofpaiva.atlassian.net/wiki/spaces/I1/overview) Documentos relacionados com a iteração 1 
 
-## Architecture
+## Aquitetura
 
 ![architecture](./reports/images/architecture.png)
 
-### Components
+### Componentes
 
 - [**Web Application**](./projreact)
