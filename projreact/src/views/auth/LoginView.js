@@ -60,6 +60,7 @@ const LoginView = () => {
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ username: email, password: password })
 		};
+		console.log(Url + '/api/login');
 		const response = await fetch(Url + '/api/login', requestOptions);
 		const data = await response.json();
 		
