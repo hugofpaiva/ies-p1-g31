@@ -149,5 +149,18 @@ public class NotificationController {
         return help_stats;
     }
 
-
+    @GetMapping("/work/todays_attended_requests")
+    public Integer getTodaysAttendedRequests() {
+        Integer todays_reqs;
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        Date result = cal.getTime();
+        List<Notification> notifications = notificationRepository.findByDateIsGreaterThanEqualAndType(result, NotificationType.HELP);
+        Integer total = 0;
+        for (Notification notif: notifications) {
+            if (notif.getState().name().equals("RESOLVED"))
+                total = total + 1;
+        }
+        return total;
+    }
 }

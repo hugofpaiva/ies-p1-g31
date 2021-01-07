@@ -85,13 +85,6 @@ const LatestProducts = ({ className, latest_products, ...rest }) => {
             <ListItem
               divider={i < products.length - 1}
             >
-              <ListItemAvatar>
-                <img
-                  alt="Product"
-                  className={classes.image}
-                  src={product.imageUrl}
-                />
-              </ListItemAvatar>
               <ListItemText
                 primary={key}
                 secondary={`Bought ${moment() - product.key}`}

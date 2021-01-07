@@ -26,6 +26,24 @@ const Dashboard = () => {
   const classes = useStyles();
   const [customers_in_store, set_customers_in_store] = useState(0);
   const [latest_products, set_latest_products] = useState([]);
+  const [maxValue, set_max_value] = useState(5);
+  const [todays_attended_requests, set_todays_attended_requests] = useState(0);
+
+  // See the max number of people that can be inside the store
+  useEffect(async() => {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			},
+		};
+		const response = await fetch('http://127.0.0.1:8080/api/work/max_persons', requestOptions);
+		const data = await response.json();
+		console.log("GOT MAX");
+    console.log(data);
+    set_max_value(data)
+  }, []);
 
   // See how many people are inside the store
   useEffect(async() => {
@@ -41,7 +59,23 @@ const Dashboard = () => {
 		console.log("GOT DATA");
     console.log(data);
     set_customers_in_store(data['persons_in_store'])
-	}, []);
+  }, []);
+  
+  // See how many help requests have been attended
+  useEffect(async() => {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			},
+		};
+		const response = await fetch('http://127.0.0.1:8080/api/work/todays_attended_requests', requestOptions);
+		const data = await response.json();
+		console.log("GOT TODAYS ATTENDED REQUESTS");
+    console.log(data);
+    set_todays_attended_requests(data)
+  }, []);
 
   // See the latest bought products
   useEffect(async() => {
@@ -100,7 +134,7 @@ const Dashboard = () => {
             xs={12}
             style={{height: '80%'}}
           >
-            <TotalCustomers />
+            <TotalCustomers maxValue = {maxValue}/>
           </Grid>
           <Grid
             item
@@ -109,7 +143,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <RequestsAttended />
+            <RequestsAttended todays_attended_requests = {todays_attended_requests}/>
           </Grid>
           <Grid
             item

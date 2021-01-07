@@ -44,6 +44,11 @@ public class PersonController {
         return ResponseEntity.ok().body(person);
     }
 
+    @GetMapping("/work/max_persons")
+    public Integer getMaxPersons(){
+        return service.getMaxClients();
+    }
+
 
 
 }

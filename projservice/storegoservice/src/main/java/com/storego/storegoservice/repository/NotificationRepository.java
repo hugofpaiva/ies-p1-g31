@@ -19,5 +19,6 @@ public interface NotificationRepository extends MongoRepository<Notification, St
     List<Notification> findByNif(long nif);
     Page<Notification> findAllByTypeOrderByDateDesc(NotificationType type, Pageable pageable);
     List<Notification> findByDateIsGreaterThanEqualAndType(Date date, NotificationType type);
+    List<Notification> findByDateAndType(Date date, NotificationType type);
 
 }

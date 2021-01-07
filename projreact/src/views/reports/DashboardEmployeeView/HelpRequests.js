@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import moment from 'moment';
@@ -34,7 +34,23 @@ const useStyles = makeStyles(() => ({
 
 const HelpRequests = ({ className, ...rest }) => {
   const classes = useStyles();
-  const [tasks] = useState(data);
+  const [tasks, updateTasks] = useState([]);
+
+  useEffect(async() => {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			},
+    };
+    
+		const response = await fetch('http://127.0.0.1:8080/api/work/notifications_help', requestOptions);
+		const data = await response.json();
+		console.log("GOT DATA");
+    console.log(data);
+    updateTasks(data["notifications"])
+	}, []);
 
   return (
     <Card
@@ -48,20 +64,6 @@ const HelpRequests = ({ className, ...rest }) => {
           <Table>
             <TableHead>
               <TableRow>
-
-                <TableCell>
-                  <Tooltip
-                    enterDelay={300}
-                    title="Sort"
-                  >
-                    <TableSortLabel
-                      active
-                      direction="desc"
-                    >
-                      Section
-                    </TableSortLabel>
-                  </Tooltip>
-                </TableCell>
                 <TableCell sortDirection="desc">
                   <Tooltip
                     enterDelay={300}
@@ -82,20 +84,17 @@ const HelpRequests = ({ className, ...rest }) => {
             </TableHead>
             <TableBody>
               {tasks.map((task) => {
-                if (task.status == "Pending") {
+                if (task.state == "Pending") {
                   return (
                     <TableRow
                       hover
                       key={task.id}
                     >
                       <TableCell>
-                        {task.place}
+                        {moment(task.date_ts).format('DD/MM/YYYY, h:mm:ss')}
                       </TableCell>
                       <TableCell>
-                        {moment(task.createdAt).format('DD/MM/YYYY, h:mm:ss')}
-                      </TableCell>
-                      <TableCell>
-                        {task.customer.name}
+                        {task.nif}
                       </TableCell>
                     </TableRow>
                   )

@@ -48,6 +48,8 @@ public class StoreServices {
         this.maxClients = 5;
     }
 
+    public Integer getMaxClients(){return this.maxClients;}
+
     public void enterStore(Long nif) throws Exception{
         // Get person
         Person p = personRepository.findByNif(nif);
