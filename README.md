@@ -1,4 +1,4 @@
-# StoreGO
+# [StoreGO](35.246.117.113)
 
 **Grupo:** G31
 
@@ -39,3 +39,5 @@ Está a ser utilizado o _Jira_ para planear e documentar o projeto. É possível
 A disponibilização do sistema foi feita através da _Google Cloud Platform_ e de acordo com [este guião](https://cloud.google.com/community/tutorials/docker-compose-on-container-optimized-os), utilizando o _free tier_.
 
 A informação relativa ao _deploy_ de cada componente do sistema encontra-se na sua pasta sendo que foi utilizado um [ficheiro](./docker-compose.yml) _Docker Compose_ para definir e correr os múltiplos _Docker Containers_ dos componentes do sistema.
+
+**Aplicação Web disponível em:** (35.246.117.113)[35.246.117.113]
