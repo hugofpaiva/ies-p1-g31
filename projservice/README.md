@@ -1,6 +1,6 @@
 # Serviço StoreGO
 
-Para construir esta aplicação recorremos à *framework* _Spring Boot_.
+Para construir esta aplicação recorreu-se à *framework* _Spring Boot_.
 
 ## Correr aplicação
 
@@ -27,3 +27,11 @@ Posteriormente é necessário compilar o código e gerar o seu _jar_:
 $ mvn -DskipTests clean package
 ```
 > Foi utilizada a opção `-DskipTests` para ignorar os testes neste caso pois estes iriam falhar devido aos serviços não estarem disponíveis no _urL_ especificado pois a máquina não está no _Docker Compose_
+
+
+> **Referências**
+>
+> [Spring Boot Docker](https://spring.io/guides/topicals/spring-boot-docker/)
+>
+> [Skipping Tests with Maven](https://www.baeldung.com/maven-skipping-tests)
+
