@@ -94,7 +94,7 @@ public class NotificationController {
 
             Page<Notification> pageNots;
 
-            pageNots = notificationRepository.findAllByTypeAndTypeOrderByDateDesc(NotificationType.ENTERED_STORE, NotificationType.EXITED_STORE, paging);
+            pageNots = notificationRepository.findAllByTypeOrTypeOrderByDateDesc(NotificationType.ENTERED_STORE, NotificationType.EXITED_STORE, paging);
 
             notifications = pageNots.getContent();
 
