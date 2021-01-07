@@ -4,7 +4,7 @@ Para construir esta aplicação recorreu-se à *framework* _Spring Boot_.
 
 ## Correr aplicação
 
-Antes de correr a aplicação, é necessário garantir que as bases de dados _MySQL_ e _MongoDB_ estão a correr e disponíveis nas respetivas portas. É também necessário que vefificar que o _Spring Boot_ está a utilizar os _urls_ corretos destes serviços em `application.properties`.
+Antes de correr a aplicação, é necessário garantir que as bases de dados _MySQL_ e _MongoDB_ estão a correr e disponíveis nas respetivas portas. É também necessário verificar que o _Spring Boot_ está a utilizar os _urls_ corretos destes serviços em `application.properties`.
 
 > Para saber como estas podem ser inicializadas, recomenda-se a consulta do ficheiro `/projDB/readme.md`.
 
