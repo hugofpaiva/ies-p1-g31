@@ -1,10 +1,10 @@
 # Serviço StoreGO
 
-Para construir esta aplicação recorremos à *framework* Spring Boot.
+Para construir esta aplicação recorremos à *framework* _Spring Boot_.
 
 ## Correr aplicação
 
-Antes de correr a aplicação, é necessário garantir que as bases de dados MySQL e MongoDB estão a correr e disponíveis nas respetivas portas. 
+Antes de correr a aplicação, é necessário garantir que as bases de dados _MySQL_ e _MongoDB_ estão a correr e disponíveis nas respetivas portas. É também necessário que vefificar que o _Spring Boot_ está a utilizar os _urls_ corretos destes serviços em `application.properties`.
 
 > Para saber como estas podem ser inicializadas, recomenda-se a consulta do ficheiro `/projDB/readme.md`.
 
@@ -19,9 +19,9 @@ Se a compilação não foi interrompida por nenhum erro, esta deve ficar dispon�
 ## Preparar aplicação para o _Deploy_
 
 Antes de ser possível fazer o _deploy_ deve-se alterar os _urls_ dos serviços no ficheiro `application.properties` de modo a estarem associados ao seu nome no _Docker Compose_.
-Como título de exemplo, o serviço `Kafka` terá o url `Kafka` dentro da rede interna do _Docker Compose_.
+Como título de exemplo, o serviço `Kafka` terá o _url_ `Kafka` dentro da rede interna do _Docker Compose_.
 
-Uma vez feito isto, deve ser compilado o código e gerado o seu _jar_:
+Posteriormente é necessário compilar o código e gerar o seu _jar_:
 
 ```bash
 $ mvn -DskipTests clean package
