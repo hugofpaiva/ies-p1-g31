@@ -32,4 +32,10 @@ Está a ser utilizado o _Jira_ para planear e documentar o projeto. É possível
 - [**Serviço**](./projservice)
 - [**Geração de Dados**](./projDataGeneration)
 - [**Message Broker (Kafka)**](./projKafkaBroker) - Informação de pesquisa e exemplos
-- [**Base de Dados (MySQL e MongoDB)**](./projKafkaBroker) - Informação de pesquisa e exemplos
+- [**Base de Dados (MySQL e MongoDB)**](./projDB) - Informação de pesquisa e exemplos
+
+## _Deploy_ do sistema
+
+A disponibilização do sistema foi feita através da _Google Cloud Platform_ e de acordo com [este guião](https://cloud.google.com/community/tutorials/docker-compose-on-container-optimized-os), utilizando o _free tier_.
+
+A informação relativa ao _deploy_ de cada componente do sistema encontra-se na sua pasta sendo que foi utilizado um [ficheiro](./docker-compose.yml) _Docker Compose_ para definir e correr os múltiplos _Docker Containers_ dos componentes do sistema.
