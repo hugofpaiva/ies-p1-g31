@@ -26,76 +26,81 @@ const Dashboard = () => {
   const classes = useStyles();
   const [customers_in_store, set_customers_in_store] = useState(0);
   const [latest_products, set_latest_products] = useState([]);
-  const [maxValue, set_max_value] = useState(5);
+  const [maxValue, set_max_value] = useState(10);
   const [todays_attended_requests, set_todays_attended_requests] = useState(0);
+  const [waiting_for_help, set_waiting_for_help] = useState([])
+  // Fazer chamada à API para obter produtos
+	useEffect(async() => {
+    const loop = updateValues();
+    return () => clearInterval(loop);
+	}, []);
 
-  // See the max number of people that can be inside the store
-  useEffect(async() => {
+	async function updateValues() {
 		const requestOptions = {
 			method: 'GET',
 			headers: { 
 				'Content-Type': 'application/json',
 				'Authorization': 'Bearer ' + localStorage.getItem('token')
-			},
+			}
 		};
-		const response = await fetch('http://127.0.0.1:8080/api/work/max_persons', requestOptions);
-		const data = await response.json();
+    // Update costumers in store
+		let url = "http://127.0.0.1:8080/api/work/num_persons_in_store";
+		let response = await fetch(url, requestOptions);
+    let data = await response.json();
+    set_customers_in_store(data['persons_in_store']);
+
+    // Update max numb of people
+    response = await fetch('http://127.0.0.1:8080/api/work/max_persons', requestOptions);
+		data = await response.json();
 		console.log("GOT MAX");
     console.log(data);
     set_max_value(data)
-  }, []);
 
-  // See how many people are inside the store
-  useEffect(async() => {
-		const requestOptions = {
-			method: 'GET',
-			headers: { 
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + localStorage.getItem('token')
-			},
-		};
-		const response = await fetch('http://127.0.0.1:8080/api/work/num_persons_in_store', requestOptions);
-		const data = await response.json();
-		console.log("GOT DATA");
-    console.log(data);
-    set_customers_in_store(data['persons_in_store'])
-  }, []);
-  
-  // See how many help requests have been attended
-  useEffect(async() => {
-		const requestOptions = {
-			method: 'GET',
-			headers: { 
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + localStorage.getItem('token')
-			},
-		};
-		const response = await fetch('http://127.0.0.1:8080/api/work/todays_attended_requests', requestOptions);
-		const data = await response.json();
-		console.log("GOT TODAYS ATTENDED REQUESTS");
-    console.log(data);
-    set_todays_attended_requests(data)
-  }, []);
+    // Update number of attended people
+		url = "http://127.0.0.1:8080/api/work/todays_attended_requests";
+		response = await fetch(url, requestOptions);
+    data = await response.json();
+    set_todays_attended_requests(data);
 
-  // See the latest bought products
-  useEffect(async() => {
-		const requestOptions = {
-			method: 'GET',
-			headers: { 
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + localStorage.getItem('token')
-			},
-    };
-    
-		const response = await fetch('http://127.0.0.1:8080/api/work/last_bought_products', requestOptions);
-		const data = await response.json();
-		console.log("GOT LATEST PRODUCTS");
-    console.log(data);
-    set_latest_products(data)
-	}, []);
+    // Update last bought products
+    url = "http://127.0.0.1:8080/api/work/last_bought_products";
+		response = await fetch(url, requestOptions);
+    data = await response.json();
+    set_latest_products(data);
 
-	
+    // Update persons waiting for help
+    url = "http://127.0.0.1:8080/api/work/notifications_help_waiting";
+		response = await fetch(url, requestOptions);
+    data = await response.json();
+    set_waiting_for_help(data["notifications"]);
 
+
+    // Refresh the most dynamic every second
+    return setInterval(async function() {
+      // Update costumers in store
+      url = "http://127.0.0.1:8080/api/work/num_persons_in_store";
+      response = await fetch(url, requestOptions);
+      data = await response.json();
+      set_customers_in_store(data['persons_in_store']);
+      // Update last bought products
+      url = "http://127.0.0.1:8080/api/work/last_bought_products";
+      response = await fetch(url, requestOptions);
+      data = await response.json();
+      set_latest_products(data);
+      // Update number of attended people
+      url = "http://127.0.0.1:8080/api/work/todays_attended_requests";
+      response = await fetch(url, requestOptions);
+      data = await response.json();
+      set_todays_attended_requests(data);
+      // Update persons waiting for help
+      url = "http://127.0.0.1:8080/api/work/notifications_help_waiting";
+      response = await fetch(url, requestOptions);
+      data = await response.json();
+      set_waiting_for_help(data["notifications"]);
+    }, 1000);
+
+  }
+ 
   return (
     <Page
       className={classes.root}
@@ -152,7 +157,7 @@ const Dashboard = () => {
             xl={9}
             xs={12}
           >
-            <HelpRequests />
+            <HelpRequests waiting_for_help = {waiting_for_help.slice(0,6)}/>
           </Grid>
           <Grid
             item
@@ -161,7 +166,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <RequestsStats />
+            <RequestsStats/>
           </Grid>
           <Grid
             item
@@ -170,7 +175,7 @@ const Dashboard = () => {
             xl={12}
             xs={12}
           >
-            <LatestProducts latest_products = {latest_products}/>
+            <LatestProducts latest_products = {latest_products.slice(0,6)}/>
           </Grid>
         </Grid>
       </Container>

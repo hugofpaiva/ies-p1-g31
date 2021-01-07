@@ -209,6 +209,8 @@ public class NotificationController {
             help_stats.put(type, (int) Math.round(value * 100 /total));
         }
 
+        help_stats.put("teste", 123);
+
         return help_stats;
     }
 

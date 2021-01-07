@@ -23,8 +23,6 @@ import {
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
-import data from './data';
-
 const useStyles = makeStyles(() => ({
   root: {},
   actions: {
@@ -32,25 +30,9 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const HelpRequests = ({ className, ...rest }) => {
+const HelpRequests = ({ className, waiting_for_help, ...rest }) => {
   const classes = useStyles();
-  const [tasks, updateTasks] = useState([]);
 
-  useEffect(async() => {
-		const requestOptions = {
-			method: 'GET',
-			headers: { 
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + localStorage.getItem('token')
-			},
-    };
-    
-		const response = await fetch('http://127.0.0.1:8080/api/work/notifications_help', requestOptions);
-		const data = await response.json();
-		console.log("GOT DATA");
-    console.log(data);
-    updateTasks(data["notifications"])
-	}, []);
 
   return (
     <Card
@@ -83,23 +65,20 @@ const HelpRequests = ({ className, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tasks.map((task) => {
-                if (task.state == "Pending") {
-                  return (
-                    <TableRow
-                      hover
-                      key={task.id}
-                    >
-                      <TableCell>
-                        {moment(task.date_ts).format('DD/MM/YYYY, h:mm:ss')}
-                      </TableCell>
-                      <TableCell>
-                        {task.nif}
-                      </TableCell>
-                    </TableRow>
-                  )
-                }
-              })}
+              {waiting_for_help.map((person) => (
+                  <TableRow
+                    hover
+                    key={person.id}
+                  >
+                    <TableCell>
+                      {moment(person.date_ts).format('DD/MM/YYYY, h:mm:ss')}
+                    </TableCell>
+                    <TableCell>
+                      {person.nif}
+                    </TableCell>
+                  </TableRow>
+              )
+              )}
             </TableBody>
           </Table>
         </Box>

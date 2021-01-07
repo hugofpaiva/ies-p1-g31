@@ -23,9 +23,10 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const RequestsStats = ({ className, ...rest }) => {
+const RequestsStats = ({ className, stats,...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
+
 
   const [data, updateData] = useState({
     datasets: [
