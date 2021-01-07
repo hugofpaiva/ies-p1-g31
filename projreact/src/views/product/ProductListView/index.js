@@ -5,6 +5,7 @@ import Page from "src/components/Page";
 import Toolbar from "./Toolbar";
 import ProductCard from "./ProductCard";
 import data from "./data";
+import {Url} from "src/ApiConsts";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -22,6 +23,8 @@ const ProductList = (props) => {
 	const classes = useStyles();
 	// Inicializar o estado products
 	const [products, setProducts] = useState([]);
+	const [categories, setCategories] = useState([]);
+	const [search, setSearch] = useState("");
 	const itemsPerPage = 6;
 	const [page, setPage] = React.useState(1);
 	const [nPages, setNPages] = React.useState(
@@ -29,13 +32,13 @@ const ProductList = (props) => {
 	);
 
 	const handleChange = (event, value) => {
-		setPage(value);
-		updateProducts();
+		setPage(value, updateProducts());
 	};
 
 	// Fazer chamada à API para obter produtos
 	useEffect(async() => {
 		updateProducts();
+		updateCategories();
 	}, []);
 
 	async function updateProducts() {
@@ -47,7 +50,10 @@ const ProductList = (props) => {
 			}
 		};
 		let pageN = page - 1;
-		let url = "http://127.0.0.1:8080/api/work/products?page=" + pageN + "&size=" + itemsPerPage;
+		let url = Url + "/api/work/products?page=" + pageN + "&size=" + itemsPerPage;
+		if (search.trim() != "") {
+			url += "&name=" + search;
+		}
 		const response = await fetch(url, requestOptions);
 		const data = await response.json();
 
@@ -62,10 +68,36 @@ const ProductList = (props) => {
 		setPage(data['currentPage']+1);
 	}
 
+	async function updateCategories() {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			}
+		};
+		let url = Url + "/api/work/productscategories";
+		const response = await fetch(url, requestOptions);
+		const data = await response.json();
+		console.log("GOT CATEGORIES");
+		console.log(data);
+		// Update categories 
+		setCategories(data);
+	}
+
+	function searchFunc(keyword) {
+		setSearch(keyword, updateProducts());
+	}
+
 	return (
 		<Page className={classes.root} title="Products">
 			<Container maxWidth={false}>
-				<Toolbar persona={props.persona} />
+				<Toolbar 
+					persona={props.persona} 
+					search={searchFunc}
+					categories={categories}
+					update={updateProducts}
+				/>
 				<Box mt={3}>
 					<Grid container spacing={3}>
 						{products.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((product) => (
@@ -74,6 +106,8 @@ const ProductList = (props) => {
 									className={classes.productCard}
 									product={product}
 									persona={props.persona}
+									update={updateProducts}
+									categories={categories}
 								/>
 							</Grid>
 						))}

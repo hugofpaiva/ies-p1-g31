@@ -131,7 +131,7 @@ class dataGenerator:
         prods = list(client_cart.keys())
         for prod in prods:
             msg = {"type": "removing-product", "nif": client_nif,
-                   "idProduct": prod, "qty": self.clients[client_nif][1][prod]}
+                   "id": prod, "qty": self.clients[client_nif][1][prod]}
             self.sendMessage('costumer-events', msg)
             del client_cart[prod]
 

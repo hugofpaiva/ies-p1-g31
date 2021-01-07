@@ -23,75 +23,6 @@ import {
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
-const data = [
-  {
-    id: uuid(),
-    ref: 'CDD1049',
-    amount: 30.5,
-    customer: {
-      name: 'Ekaterina Tankova',
-      email: 'ekaterina.tankova@devias.io'
-    },
-    createdAt: 1555016400000,
-    status: 'in line'
-  },
-  {
-    id: uuid(),
-    ref: 'CDD1048',
-    amount: 25.1,
-    customer: {
-      name: 'Cao Yu',
-      email: 'cao.yu@devias.io	'
-    },
-    createdAt: 1555016400000,
-    status: 'in line'
-  },
-  {
-    id: uuid(),
-    ref: 'CDD1047',
-    amount: 10.99,
-    customer: {
-      name: 'Alexa Richardson',
-      email: 'alexa.richardson@devias.io'
-    },
-    createdAt: 1554930000000,
-    status: 'in line'
-  },
-  {
-    id: uuid(),
-    ref: 'CDD1046',
-    amount: 96.43,
-    customer: {
-      name: 'Anje Keizer',
-      email: 'anje.keizer@devias.io'
-    },
-    createdAt: 1554757200000,
-    status: 'inside store'
-  },
-  {
-    id: uuid(),
-    ref: 'CDD1045',
-    amount: 32.54,
-    customer: {
-      name: 'Clarke Gillebert',
-      email: 'clarke.gillebert@devias.io'
-    },
-    createdAt: 1554670800000,
-    status: 'inside store'
-  },
-  {
-    id: uuid(),
-    ref: 'CDD1044',
-    amount: 16.76,
-    customer: {
-      name: 'Adam Denisov',
-      email: 'adam.denisov@devias.io'
-    },
-    createdAt: 1554670800000,
-    status: 'in line'
-  }
-];
-
 const useStyles = makeStyles(() => ({
   root: {},
   actions: {
@@ -99,10 +30,9 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const LatestOrders = ({ className, ...rest }) => {
+const LatestOrders = ({ persons, className, ...rest }) => {
   const classes = useStyles();
-  const [orders] = useState(data);
-
+  
   return (
     <Card
       className={clsx(classes.root, className)}
@@ -148,21 +78,21 @@ const LatestOrders = ({ className, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((order) => (
+              {persons.map((person) => (
                 <TableRow
                   hover
-                  key={order.id}
+                  key={person.nif}
                 >
                   <TableCell>
-                    {order.customer.name}
+                    {person.name}
                   </TableCell>
                   <TableCell>
-                    {order.customer.email}
+                    {person.email}
                   </TableCell>
                   <TableCell>
                     <Chip
                       color="primary"
-                      label={order.status}
+                      label={'Inside Store'}
                       size="small"
                     />
                   </TableCell>

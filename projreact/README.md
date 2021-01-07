@@ -53,6 +53,16 @@ const data = await response.json();
 ```
 
 
+Este pedido tem de ser feito quando o componente é gerado. Para isto, é utilizado o método `useEffect`.
+
+```react
+import React, { useState, useEffect } from "react";
+
+useEffect(async() => {
+    apiCall();
+}, []);
+```
+
 > **Referências**
 >
 > [Use Docker With React](https://medium.com/better-programming/heres-how-you-can-use-docker-with-create-react-app-3ee3a972b04e)

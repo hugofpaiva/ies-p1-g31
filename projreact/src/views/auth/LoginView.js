@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik } from "formik";
+import {Url} from "src/ApiConsts";
 import {
 	Box,
 	Button,
@@ -24,6 +25,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LoginView = () => {
+	// When openned, delete local storage if not already
+	localStorage.removeItem("notifications");
+	localStorage.removeItem("token");
+	localStorage.removeItem("authority");
+
 	const classes = useStyles();
 	const navigate = useNavigate();
 
@@ -54,7 +60,7 @@ const LoginView = () => {
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ username: email, password: password })
 		};
-		const response = await fetch('http://127.0.0.1:8080/api/login', requestOptions);
+		const response = await fetch(Url + '/api/login', requestOptions);
 		const data = await response.json();
 		
 		// Process response
@@ -72,7 +78,7 @@ const LoginView = () => {
 		}
 	}
 
-	return redirectUser() && (
+	return (
 		<Page className={classes.root} title="Login">
 			<Box
 				display="flex"
