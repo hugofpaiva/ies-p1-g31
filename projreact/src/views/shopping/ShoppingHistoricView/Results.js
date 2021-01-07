@@ -19,6 +19,41 @@ import {
 import getInitials from 'src/utils/getInitials';
 import Bill from './Bill';
 
+/*
+{
+  "nproducts": 1,
+  "total": 710,
+  "transaction": {
+    "id": 4,
+    "client": {
+      "nif": 630114163,
+      "name": "José Matos",
+      "email": "jose.m@ua.pt",
+      "lastVisit": 1609894701000,
+      "type": "CLIENT"
+    },
+    "date": 1609894699000
+  },
+  "products": [
+    {
+      "product": {
+        "id": 1716,
+        "price": 10,
+        "name": "Produto4",
+        "description": "Descrição",
+        "stock_current": 282,
+        "stock_minimum": 5,
+        "category": {
+          "id": 1,
+          "name": "Categoria1"
+        }
+      },
+      "units": 71
+    }
+  ]
+}
+*/
+
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -27,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, shoppings, ...rest }) => {
+const Results = ({ className, transactions, ...rest }) => {
   const classes = useStyles();
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -68,19 +103,19 @@ const Results = ({ className, shoppings, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {shoppings.slice(0, limit).map((shopping) => (
+              {transactions.slice(page*limit, page*limit+limit).map((transaction) => (
                 <TableRow
                   hover
-                  key={shopping.id}
+                  key={transaction.transaction.id}
                 >
                   <TableCell>
-                    {shopping.bill.total}€
+                    {transaction.total}€
                   </TableCell>
                   <TableCell>
-                    {shopping.bill.products.length}
+                    {transaction.products.length}
                   </TableCell>
                   <TableCell>
-                    {moment(shopping.createdAt).format('DD/MM/YYYY, h:mm:ss')}
+                    {moment(transaction.transaction.date).format('DD/MM/YYYY, h:mm:ss')}
                   </TableCell>
                   <TableCell>
                     <Box
@@ -91,18 +126,18 @@ const Results = ({ className, shoppings, ...rest }) => {
                         className={classes.avatar}
                         
                       >
-                        {getInitials(shopping.customer)}
+                        {getInitials(transaction.transaction.client.name)}
                       </Avatar>
                       <Typography
                         color="textPrimary"
                         variant="body1"
                       >
-                        {shopping.customer}
+                        {transaction.transaction.client.name}
                       </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    <Bill shopping={shopping} />
+                    <Bill transaction={transaction} />
                   </TableCell>
                 </TableRow>
               ))}
@@ -112,7 +147,7 @@ const Results = ({ className, shoppings, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={shoppings.length}
+        count={transactions.length}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
@@ -125,7 +160,7 @@ const Results = ({ className, shoppings, ...rest }) => {
 
 Results.propTypes = {
   className: PropTypes.string,
-  shoppings: PropTypes.array.isRequired
+  transactions: PropTypes.array.isRequired
 };
 
 export default Results;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Grid,
@@ -24,6 +24,73 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard = () => {
   const classes = useStyles();
+  const [profit, setProfit] = useState(0);
+  const [maxCustomers, setMaxCustomers] = useState(0);
+  const [inStore, setInStore] = useState(0);
+  const [inLine, setInLine] = useState(0);
+  const [sales, setSales] = useState([]);
+  const [lastPersons, setLastPersons] = useState([]);
+  const [lastProducts, setLastProducts] = useState([]);
+
+  // Fazer chamada à API para obter produtos
+	useEffect(async() => {
+    const loop = updateValues();
+    return () => clearInterval(loop);
+	}, []);
+
+	async function updateValues() {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			}
+		};
+    // Update month profit
+		let url = "http://127.0.0.1:8080/api/admin/monthly_profit";
+		let response = await fetch(url, requestOptions);
+		let data = await response.json();
+    setProfit(data['last_month_total']); 
+    // Update costumers in store
+		url = "http://127.0.0.1:8080/api/work/num_persons_in_store";
+		response = await fetch(url, requestOptions);
+    data = await response.json();
+    setInStore(data['persons_in_store']);
+    // Update sales by type
+		url = "http://127.0.0.1:8080/api/admin/monthly_sale_by_category";
+		response = await fetch(url, requestOptions);
+    data = await response.json();
+    setSales(data);
+    // Update last persons in store
+    url = "http://127.0.0.1:8080/api/work/last_persons_in_store";
+		response = await fetch(url, requestOptions);
+    data = await response.json();
+    setLastPersons(data);
+    // Update last bought products
+    url = "http://127.0.0.1:8080/api/work/last_bought_products";
+		response = await fetch(url, requestOptions);
+    data = await response.json();
+    setLastProducts(data);
+    
+    // Refresh the most dynamic every second
+    return setInterval(async function() {
+      // Update costumers in store
+      url = "http://127.0.0.1:8080/api/work/num_persons_in_store";
+      response = await fetch(url, requestOptions);
+      data = await response.json();
+      setInStore(data['persons_in_store']);
+      // Update last persons in store
+      url = "http://127.0.0.1:8080/api/work/last_persons_in_store";
+      response = await fetch(url, requestOptions);
+      data = await response.json();
+      setLastPersons(data);
+      // Update last bought products
+      url = "http://127.0.0.1:8080/api/work/last_bought_products";
+      response = await fetch(url, requestOptions);
+      data = await response.json();
+      setLastProducts(data);
+    }, 1000);
+  }
 
   return (
     <Page
@@ -43,7 +110,7 @@ const Dashboard = () => {
             xs={12}
             style={{height: '80%'}}
           >
-            <CostumersInLine />
+            <CostumersInLine value={inLine} />
           </Grid>
           <Grid
             item
@@ -53,7 +120,7 @@ const Dashboard = () => {
             xs={12}
             style={{height: '80%'}}
           >
-            <CostumersInStore />
+            <CostumersInStore value={inStore} />
           </Grid>
           <Grid
             item
@@ -63,7 +130,7 @@ const Dashboard = () => {
             xs={12}
             style={{height: '80%'}}
           >
-            <TotalCustomers />
+            <TotalCustomers value={maxCustomers} />
           </Grid>
           <Grid
             item
@@ -72,7 +139,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <TotalProfit />
+            <TotalProfit value={profit} />
           </Grid>
           <Grid
             item
@@ -81,7 +148,7 @@ const Dashboard = () => {
             xl={9}
             xs={12}
           >
-            <CurrentCostumers />
+            <CurrentCostumers persons={lastPersons.slice(0,6)} />
           </Grid>
           <Grid
             item
@@ -90,7 +157,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <SalesByType />
+            <SalesByType sales={sales} />
           </Grid>
           <Grid
             item
@@ -99,7 +166,7 @@ const Dashboard = () => {
             xl={12}
             xs={12}
           >
-            <LatestProducts />
+            <LatestProducts productsList={lastProducts.slice(0,6)} />
           </Grid>
         </Grid>
       </Container>

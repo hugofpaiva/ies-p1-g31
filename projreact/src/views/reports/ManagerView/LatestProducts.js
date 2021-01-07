@@ -20,39 +20,6 @@ import {
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
-const data = [
-  {
-    id: uuid(),
-    name: 'Horizon Organic 1 % Low Fat Milk',
-    imageUrl: 'https://images-na.ssl-images-amazon.com/images/I/81hRExAE9OL._SX679_PIbundle-18,TopRight,0,0_SX679SY385SH20_.jpg',
-    updatedAt: moment().subtract(2, 'minutes')
-  },
-  {
-    id: uuid(),
-    name: 'Silk Unsweetened Organic Soymilk',
-    imageUrl: 'https://images-na.ssl-images-amazon.com/images/I/91GOVhS2uVL._SX679_.jpg',
-    updatedAt: moment().subtract(2, 'minutes')
-  },
-  {
-    id: uuid(),
-    name: 'Panasonic LUMIX FZ80 4K Digital Camera',
-    imageUrl: 'https://images-na.ssl-images-amazon.com/images/I/917LEZ%2Bit3L._AC_SX679_.jpg',
-    updatedAt: moment().subtract(3, 'minutes')
-  },
-  {
-    id: uuid(),
-    name: 'Monster Energy Zero Ultra, Sugar Free Energy Drink',
-    imageUrl: 'https://m.media-amazon.com/images/I/913KMH1cDKL._AC_UL320_.jpg',
-    updatedAt: moment().subtract(5, 'minutes')
-  },
-  {
-    id: uuid(),
-    name: 'Reign Total Body Fuel, Sour Apple, Fitness & Performance',
-    imageUrl: 'https://m.media-amazon.com/images/I/81xADoTxjFL._AC_UL320_.jpg',
-    updatedAt: moment().subtract(9, 'minutes')
-  }
-];
-
 const useStyles = makeStyles(({
   root: {
     height: '100%'
@@ -63,9 +30,21 @@ const useStyles = makeStyles(({
   }
 }));
 
-const LatestProducts = ({ className, ...rest }) => {
+const LatestProducts = ({ productsList, className, ...rest }) => {
   const classes = useStyles();
-  const [products] = useState(data);
+
+  let counter = 0;
+  const products = productsList.map(obj => {
+    counter += 1;
+    const name = Object.keys(obj)[0];
+    return {
+      'id': counter,
+      'name': name,
+      'updatedAt': moment(obj[name]).format('DD/MM/YYYY, h:mm:ss')
+    }
+  })
+  console.log(productsList);
+  console.log(products);
 
   return (
     <Card
@@ -83,16 +62,9 @@ const LatestProducts = ({ className, ...rest }) => {
             divider={i < products.length - 1}
             key={product.id}
           >
-            <ListItemAvatar>
-              <img
-                alt="Product"
-                className={classes.image}
-                src={product.imageUrl}
-              />
-            </ListItemAvatar>
             <ListItemText
               primary={product.name}
-              secondary={`Bought ${product.updatedAt.fromNow()}`}
+              secondary={`Bought ${product.updatedAt}`}
             />
             <IconButton
               edge="end"

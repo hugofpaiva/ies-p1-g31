@@ -53,6 +53,11 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/work/productscategories")
+    public List<ProductCategory> getCategories() {
+        return productCategoryRepository.findAll();
+    }
+
     //Use for edit and restock, it is possible to only send the information needed to update
     @PutMapping("/admin/product/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable(value = "id") long productId,
@@ -91,7 +96,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/admin/product/{id}")
-    public Map<String, Boolean> deletePerson(@PathVariable(value = "id") Long productId)
+    public Map<String, Boolean> deleteProduct(@PathVariable(value = "id") Long productId)
             throws ResourceNotFoundException {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found for this id: " + productId));

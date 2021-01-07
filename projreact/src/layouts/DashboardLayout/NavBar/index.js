@@ -56,7 +56,6 @@ const NavBar = ({ onMobileClose, openMobile, persona }) => {
 				p={2}
 			>
 				<Avatar className={classes.avatar}>
-					{getInitials(user.name)}
 				</Avatar>
 
 				<Typography
@@ -64,10 +63,10 @@ const NavBar = ({ onMobileClose, openMobile, persona }) => {
 					color="textPrimary"
 					variant="h5"
 				>
-					{user.name}
+					{persona == "admin" && "Manager"}
+					{persona == "employee" && "Employee"}
 				</Typography>
 				<Typography color="textSecondary" variant="body2">
-					{user.jobTitle}
 				</Typography>
 			</Box>
 			<Divider />
