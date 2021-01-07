@@ -33,7 +33,7 @@ public class InitScriptGenerator {
         });
         String message = "{\n" +
                 "\"type\":\"initialize-people-response\",\n" +
-                "\"data\":" + clients +
+                "\"data\": " + clients +
                 "\n}";
         System.out.println("Kafka MSG clients" + message);
         producer.sendMessage(message);

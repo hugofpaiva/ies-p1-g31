@@ -29,10 +29,18 @@ public class Consumer {
         System.out.println("\n" + result.toString());
         switch ((String) result.get("type")){
             case "entering-store":
+                try{
                 service.enterStore(Long.valueOf((Integer) result.get("nif")));
+                } catch (Exception e){
+                    System.err.println(e.getMessage());
+                }
                 break;
             case "leaving-store":
+                try{
                 service.leaveStore(Long.valueOf((Integer) result.get("nif")));
+                } catch (Exception e){
+                    System.err.println(e.getMessage());
+                }
                 break;
             case "adding-product":
                 System.out.println("adding-product - " + result);
@@ -45,17 +53,20 @@ public class Consumer {
             case "removing-product":
                 System.out.println("removing-product - " + result);
                 try {
-                    service.removeProductFromCart(Long.valueOf((Integer) result.get("nif")), Long.valueOf((Integer) result.get("id")), (Integer) result.get("qty"));
+                    service.removeProductFromCart(Long.valueOf((Integer) result.get("nif")), Long.valueOf((Integer) result.get("idProduct")), (Integer) result.get("qty"));
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
                 break;
             case "help-needed":
-                System.out.println("help-needed - " + result);
+                try{
                 service.notifyHelpNeeded(Long.valueOf((Integer) result.get("nif")), NotificationType.HELP);
+                } catch (Exception e){
+                    System.err.println(e.getMessage());
+                }
                 break;
             default:
-                System.out.println("Event not supported!");
+                System.err.println("Event not supported!");
                 break;
         }
     }
@@ -68,21 +79,13 @@ public class Consumer {
     public void consumeInit(String message) throws Exception {
         JSONObject obj = new JSONObject(message);
         System.out.println("INITIALIZING: " +obj.getString("type"));
-        //System.out.println("DAMMIT" +obj.getJSONObject("data"));
-        JSONObject data = obj.getJSONObject("data");
-        Map<String, Object> result = new ObjectMapper().readValue(data.toString(), HashMap.class);
-
-        /*
-        for(Map.Entry<String, Object> r : result.entrySet()){
-            System.out.println("JSON-DATA: "+r.getKey() + " - values: " +r.getValue());
-        }
-         */
         switch (obj.getString("type")){
             case "initialize-people-request":
                 System.out.println("initialize-people-req");
                 try {
                     init.initPeopleReq();
                 } catch (Exception e){
+                    System.out.println("FODEU dEU ERRO");
                     System.err.println(e.getMessage());
                 }
                 break;
@@ -106,9 +109,9 @@ public class Consumer {
                 }
                 break;
             case "initialize-categories":
-                System.out.println("initialize-categories - " + result);
-                String str = (String) result.get("data");
+                String str = (String) obj.get("data");
                 String[] categories = str.split(",");
+                System.out.println("initialize-categories - " + categories);
                 try {
                     init.initCategories(categories);
                 } catch (Exception e){
@@ -118,7 +121,6 @@ public class Consumer {
             case "initialize-products":
                 JSONObject data_prod = obj.getJSONObject("data");
                 Map<String, Object> products = new ObjectMapper().readValue(data_prod.toString(), HashMap.class);
-                System.out.println("FUCK THAT SHIT: "+products);
                 System.out.println("initialize-products - " + products);
                 try {
                     init.initProducts(products);
