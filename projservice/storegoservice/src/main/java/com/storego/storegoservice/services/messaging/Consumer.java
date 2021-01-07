@@ -28,56 +28,40 @@ public class Consumer {
 
     @KafkaListener(topics="costumer-events")
     public void consume(String message) throws IOException {
-        Map<String,Object> result = new ObjectMapper().readValue(message, HashMap.class);
-        System.out.println("\n" + result.toString());
-        switch ((String) result.get("type")){
+        JSONObject obj = new JSONObject(message);
+        System.out.println("INITIALIZING: " +obj.getString("type"));
+        switch ((String) obj.get("type")){
             case "entering-store":
                 try{
-                service.enterStore(Long.valueOf((Integer) result.get("nif")));
+                service.enterStore(Long.valueOf((Integer) obj.get("nif")));
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
                 break;
             case "leaving-store":
                 try{
-                service.leaveStore(Long.valueOf((Integer) result.get("nif")));
+                service.leaveStore(Long.valueOf((Integer) obj.get("nif")));
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
                 break;
             case "adding-product":
-                System.out.println("adding-product - " + result);
                 try {
-                    service.addProductToCart(Long.valueOf((Integer) result.get("nif")), Long.valueOf((Integer) result.get("idProduct")), (Integer) result.get("qty"));
+                    service.addProductToCart(Long.valueOf((Integer) obj.get("nif")), Long.valueOf((Integer) obj.get("idProduct")), (Integer) obj.get("qty"));
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
                 break;
             case "removing-product":
-                System.out.println("removing-product - " + result);
                 try {
-                    service.removeProductFromCart(Long.valueOf((Integer) result.get("nif")), Long.valueOf((Integer) result.get("idProduct")), (Integer) result.get("qty"));
+                    service.removeProductFromCart(Long.valueOf((Integer) obj.get("nif")), Long.valueOf((Integer) obj.get("idProduct")), (Integer) obj.get("qty"));
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
                 break;
             case "help-needed":
-                service.notifyHelpNeeded(Long.valueOf((Integer) result.get("nif")), NotificationType.HELP);
+                service.notifyHelpNeeded(Long.valueOf((Integer) obj.get("nif")), NotificationType.HELP);
                 break;
-            default:
-                System.err.println("Event not supported!");
-                break;
-        }
-    }
-
-
-
-
-    @KafkaListener(topics="costumer-events")
-    public void consumeInit(String message) throws Exception {
-        JSONObject obj = new JSONObject(message);
-        System.out.println("INITIALIZING: " +obj.getString("type"));
-        switch (obj.getString("type")){
             case "initialize-people-request":
                 System.out.println("initialize-people-req");
                 try {
