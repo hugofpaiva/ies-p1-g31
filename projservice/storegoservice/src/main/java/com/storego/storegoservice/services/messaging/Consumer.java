@@ -90,8 +90,11 @@ public class Consumer {
                 }
                 break;
             case "initialize-categories":
-                String str = (String) obj.get("data");
-                String[] categories = str.split(",");
+                JSONArray arr = obj.getJSONArray("data");
+                List<String> categories = new ArrayList<String>();
+                for (int i = 0; i < arr.length(); i++) {
+                    categories.add(arr.get(i));
+                }
                 System.out.println("initialize-categories - " + categories);
                 try {
                     initScriptGenerator.initCategories(categories);

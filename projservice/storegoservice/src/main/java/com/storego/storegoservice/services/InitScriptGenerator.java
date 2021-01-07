@@ -67,7 +67,7 @@ public class InitScriptGenerator {
         }
     }
 
-    public void initCategories(String[] result) {
+    public void initCategories(List<String> result) {
         for(String r : result) {
             ProductCategory pc = new ProductCategory(r);
             productCategoryRepository.save(pc);
