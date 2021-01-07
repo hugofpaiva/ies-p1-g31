@@ -13,7 +13,7 @@ import java.util.Set;
 public interface PersonRepository extends JpaRepository<Person, Long> {
     public Integer countByEmail(String email);
     public Person findByNif(Long nif);
-    public Person findByEmail(String email);
+    public Optional<Person> findByEmail(String email);
     public Set<Person> findDistinctTop10ByLastVisitIsNotNullOrderByLastVisitDesc();
     public List<Person> findAllByType(PersonType type);
 }

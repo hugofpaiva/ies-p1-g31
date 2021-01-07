@@ -13,9 +13,8 @@ import java.util.List;
 
 @Repository
 public interface NotificationRepository extends MongoRepository<Notification, String> {
-    List<Notification> findByTypeAndAndState(Integer type, HelpNeededState state);
-    List<Notification> findByNif(long nif);
     Page<Notification> findAllByTypeOrderByDateDesc(NotificationType type, Pageable pageable);
-
+    Page<Notification> findAllByTypeAndStateOrderByDateDesc(NotificationType type, HelpNeededState state, Pageable pageable);
+    Page<Notification> findAllByTypeAndTypeOrderByDateDesc(NotificationType type1,NotificationType type2, Pageable pageable);
 
 }

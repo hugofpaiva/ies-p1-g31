@@ -22,12 +22,27 @@ public class NotificationSocketsService {
         return ow.writeValueAsString(not);
     }
 
-
     public void sendHelp(Notification notification){
         try {
             template.convertAndSend("/topic/help", toJson(notification));
         } catch (Exception e){
             System.err.println("Error sending Help notification for WebSockets");
+        }
+    }
+
+    public void sendEnteredStore(Notification notification){
+        try {
+            template.convertAndSend("/topic/enter_store", toJson(notification));
+        } catch (Exception e){
+            System.err.println("Error sending Entered Store notification for WebSockets");
+        }
+    }
+
+    public void sendExitedStore(Notification notification){
+        try {
+            template.convertAndSend("/topic/exit_store", toJson(notification));
+        } catch (Exception e){
+            System.err.println("Error sending Exited Store notification for WebSockets");
         }
     }
 
