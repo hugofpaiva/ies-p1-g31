@@ -1,6 +1,6 @@
 # StoreGO
 
-**Group:** G31
+**Grupo:** G31
 
 O sistema tem a finalidade de simular a gestão de uma loja automatizada, ou seja, um estabelecimento que proporciona uma experiência de compras sem caixas de pagamento, ao reconhecer os produtos que um cliente retirou da prateleira e efetuar a cobrança no momento em que ele deixa a loja.
 
@@ -28,4 +28,8 @@ Está a ser utilizado o _Jira_ para planear e documentar o projeto. É possível
 
 ### Componentes
 
-- [**Web Application**](./projreact)
+- [**Aplicação Web**](./projreact)
+- [**Serviço**](./projservice)
+- [**Geração de Dados**](./projDataGeneration)
+- [**Message Broker (Kafka)**](./projKafkaBroker) - Informação de pesquisa e exemplos
+- [**Base de Dados (MySQL e MongoDB)**](./projKafkaBroker) - Informação de pesquisa e exemplos
