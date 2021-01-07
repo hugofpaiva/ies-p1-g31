@@ -34,16 +34,13 @@ const useStyles = makeStyles((theme) => ({
 
   }));
 
-export default function Bill(shoppingobj) {
+export default function Bill(props) {
 	const [open, setOpen] = React.useState(false);
 	const [maxWidth, setMaxWidth] = React.useState("sm");
     const [fullWidth, setFullWidth] = React.useState(true);
     const classes = useStyles();
 
-	const shopping = shoppingobj.shopping;
-
 	const handleClickOpen = () => {
-		console.log(shopping);
 		setOpen(true);
 	};
 
@@ -69,17 +66,14 @@ export default function Bill(shoppingobj) {
 				aria-describedby="alert-dialog-description"
 			>
 				<DialogTitle id="alert-dialog-title">
-					{moment(shopping.createdAt).format("DD/MM/YYYY H:M")}
-					{/*<br />
-                    Served by {shopping.bill.employee}
-                    */}
+					{moment(props.transaction.transaction.date).format("DD/MM/YYYY H:M")}
 				</DialogTitle>
 				<DialogContent>
 					<DialogContentText
 						id="alert-dialog-description"
 						color="primary"
 					>
-						Total: {shopping.bill.total}€
+						Total: {props.transaction.total}€
 					</DialogContentText>
 					<Table>
 						<TableHead>
@@ -93,25 +87,22 @@ export default function Bill(shoppingobj) {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{shopping.bill.products.map((product) => (
+							{props.transaction.products.map((p) => (
 								<TableRow>
-									<TableCell>{product.quantity}</TableCell>
-									<TableCell>{product.title}</TableCell>
-									{
-										//<TableCell>{product.vat}</TableCell>
-									}
+									<TableCell>{1}</TableCell>
+									<TableCell>{p.product.name}</TableCell>
 									<TableCell>
 										<Grid container="true" direction="row">
-											{product.price * product.quantity}
-											{product.price * product.quantity !=
-												product.price && (
+											{p.product.price}
+											{p.product.price * 1 !=
+												p.product.price && (
 												<Grid
 													style={{
 														marginLeft: "auto",
 													}}
 												>
 													<Tooltip
-														title={`${product.price} per unit`}
+														title={`${p.product.price} per unit`}
 													>
 														<Typography
 															color="textSecondary"

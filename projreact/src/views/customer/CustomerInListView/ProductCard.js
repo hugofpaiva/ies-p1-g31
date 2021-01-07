@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductCard = ({ className, product, ...rest }) => {
   const classes = useStyles();
-  const subtotal = useState((parseFloat(product.quantity) * parseFloat(product.price)).toFixed(2))
+  const subtotal = useState((parseFloat(1) * parseFloat(product.price)).toFixed(2))
   function sendData(){
     this.props.parentCallback(subtotal);
   }
@@ -38,15 +38,6 @@ const ProductCard = ({ className, product, ...rest }) => {
       {...rest}
     >
       <CardContent style={{display:'flex'}}>
-        <Box style={{height: "100%", width: "30%"}}> 
-          <Avatar
-            alt="Product"
-            src={product.media}
-            variant="rounded"
-            display="inline"
-            style={{height:"auto", width: "100%"}}
-          />
-        </Box>
         <Box style={{width: "80%", verticalAlign: "center"}}>
           <Typography
             color="textPrimary"
@@ -54,7 +45,7 @@ const ProductCard = ({ className, product, ...rest }) => {
             variant="h3"
             style={{marginLeft: '8%', letterSpacing: '0.8px', verticalAlign: "center"}}
           >
-            {product.title}
+            {product.name}
           </Typography>
           <Typography style={{display: "block", marginLeft: '8%'}}>
           {product.description}
@@ -90,7 +81,7 @@ const ProductCard = ({ className, product, ...rest }) => {
               Quantity:
             </Typography>
             <Typography color="textSecondary" variant="h4" style={{marginLeft: '5%'}}>
-                {product.quantity}
+                {'1'}
             </Typography>
           </Grid>
           <Grid

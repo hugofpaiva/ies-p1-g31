@@ -22,12 +22,28 @@ const CustomerListView = () => {
 
 	useEffect(() => {
 		setLoading(true);
-		const apiUrl = "http://localhost:8080/api/persons/";
-		axios.get(apiUrl).then((response) => {
-			setCustomers(response.data);
-			setLoading(false);
-		});
+		getCostumers();
 	}, []);
+
+	async function getCostumers() {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			}
+		};
+		let url = "http://127.0.0.1:8080/api/admin/persons";
+		const response = await fetch(url, requestOptions);
+		const data = await response.json();
+		console.log("GOT COSTUMERS");
+		console.log(data);
+		// Update categories
+		// Only show clients
+		setCustomers(data.filter(c => c.type=="CLIENT"));
+		// Remove loading
+		setLoading(false);
+	}
 
 	return (
 		<Page className={classes.root} title="Customers">
@@ -38,7 +54,6 @@ const CustomerListView = () => {
 					</Box>
 				) : (
 					<div>
-						<Toolbar />
 						<Box mt={3}>
 							<Results customers={customers} />
 						</Box>

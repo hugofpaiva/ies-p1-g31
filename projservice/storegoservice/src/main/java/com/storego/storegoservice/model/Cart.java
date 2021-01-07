@@ -3,25 +3,22 @@ package com.storego.storegoservice.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Objects;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.*;
 
 @Entity
 @Data
 @Table(name = "cart")
-public class Cart {
+public class Cart implements Serializable {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
-    @JoinColumn(name = "person_id", referencedColumnName = "nif")
+    @OneToOne(optional = false)
+    @JoinColumn(name = "person_id", referencedColumnName = "nif", nullable = false)
     private Person person;
 
-    @OneToMany(mappedBy="cart", cascade = CascadeType.ALL)
-    Set<CartProduct> products;
 
     public Cart() {}
 

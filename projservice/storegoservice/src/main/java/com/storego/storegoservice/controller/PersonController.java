@@ -1,72 +1,100 @@
 package com.storego.storegoservice.controller;
 
+import com.storego.storegoservice.configuration.JwtTokenUtil;
 import com.storego.storegoservice.exception.ResourceNotFoundException;
-import com.storego.storegoservice.model.Notification;
-import com.storego.storegoservice.model.Person;
+import com.storego.storegoservice.model.*;
 import com.storego.storegoservice.repository.NotificationRepository;
 import com.storego.storegoservice.repository.PersonRepository;
+import com.storego.storegoservice.services.DataGeneratorComService;
 import com.storego.storegoservice.services.StoreServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-@EnableMongoRepositories(basePackageClasses = NotificationRepository.class)
-@EnableJpaRepositories(basePackageClasses = {PersonRepository.class})
+
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
-@RequestMapping("/api")
 public class PersonController {
     @Autowired
     private PersonRepository personRepository;
 
     @Autowired
-    private NotificationRepository notificationRepository;
+    private PasswordEncoder bcryptEncoder;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
     private StoreServices service;
 
-    @GetMapping("/persons")
-    public List<Person> getAllPersons() {
-        return personRepository.findAll();
+    @Autowired
+    private DataGeneratorComService dataGeneratorComService;
+
+    @GetMapping("/admin/persons")
+    public List<Person> getAllClients() {
+        return personRepository.findAllByType(PersonType.CLIENT);
+    }
+
+    @GetMapping("/admin/new-limit")
+    public ResponseEntity<Map<String, Object>> setNewLimit(@RequestParam int limit){
+            if(limit>0){
+                service.setMaxClients(limit);
+                dataGeneratorComService.newLimit(limit);
+            }else{
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("confirm", "ok");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
+    @PutMapping("/work/person/")
+    public ResponseEntity<Person> updatePerson(HttpServletRequest request, @Valid @RequestBody Person p) throws ResourceNotFoundException {
+        String requestTokenHeader = request.getHeader("Authorization");
+        String jwtToken = requestTokenHeader.substring(7);
+        String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
+
+        Person person = personRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Person not found for this email: " + email));
+
+        if (p.getName() != null) {
+            person.setName(p.getName());
+        }
+        if (p.getEmail() != null) {
+            person.setEmail(p.getEmail());
+        }
+        if (p.getPassword() != null) {
+            person.setPassword(bcryptEncoder.encode(p.getPassword()));
+        }
+
+        Person updatedPer = personRepository.save(person);
+        return ResponseEntity.ok(updatedPer);
     }
 
 
-    @GetMapping("/persons_in_store")
-    public Set<Person> getPersonsInStore() {
-        return service.getClientsInStore();
+    @GetMapping("/work/last_persons_in_store")
+    public Set<Person> getLastPersonsInStore() {
+        return personRepository.findDistinctTop10ByLastVisitIsNotNullOrderByLastVisitDesc();
     }
 
-    @GetMapping("/persons/{id}")
-    public ResponseEntity<Person> getPersonById(@PathVariable(value = "id") Long personId)
+    @GetMapping("/admin/persons/{nif}")
+    public ResponseEntity<Person> getPersonById(@PathVariable(value = "nif") Long personNif)
             throws ResourceNotFoundException {
-        Person person = personRepository.findById(personId)
-                .orElseThrow(() -> new ResourceNotFoundException("Person not found for this id :: " + personId));
+        Person person = personRepository.findById(personNif)
+                .orElseThrow(() -> new ResourceNotFoundException("Person not found for this id :: " + personNif));
         return ResponseEntity.ok().body(person);
     }
 
-    @PostMapping("/persons")
-    public Person createPerson(@Valid @RequestBody Person person) {
-        return personRepository.save(person);
-    }
 
 
-    @DeleteMapping("/persons/{id}")
-    public Map<String, Boolean> deletePerson(@PathVariable(value = "id") Long personId)
-            throws ResourceNotFoundException {
-        Person person = personRepository.findById(personId)
-                .orElseThrow(() -> new ResourceNotFoundException("Person not found for this id :: " + personId));
-
-        personRepository.delete(person);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return response;
-    }
 }

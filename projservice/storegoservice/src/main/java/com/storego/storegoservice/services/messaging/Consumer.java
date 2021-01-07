@@ -23,6 +23,9 @@ public class Consumer {
     @Autowired
     private StoreServices service;
 
+    @Autowired
+    private InitScriptGenerator initScriptGenerator;
+
     @KafkaListener(topics="costumer-events")
     public void consume(String message) throws IOException {
         Map<String,Object> result = new ObjectMapper().readValue(message, HashMap.class);
@@ -59,11 +62,7 @@ public class Consumer {
                 }
                 break;
             case "help-needed":
-                try{
                 service.notifyHelpNeeded(Long.valueOf((Integer) result.get("nif")), NotificationType.HELP);
-                } catch (Exception e){
-                    System.err.println(e.getMessage());
-                }
                 break;
             default:
                 System.err.println("Event not supported!");
@@ -72,8 +71,7 @@ public class Consumer {
     }
 
 
-    @Autowired
-    private InitScriptGenerator init;
+
 
     @KafkaListener(topics="costumer-events")
     public void consumeInit(String message) throws Exception {
@@ -83,7 +81,7 @@ public class Consumer {
             case "initialize-people-request":
                 System.out.println("initialize-people-req");
                 try {
-                    init.initPeopleReq();
+                    initScriptGenerator.initPeopleReq();
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
@@ -91,7 +89,7 @@ public class Consumer {
             case "initialize-products-request":
                 System.out.println("initialize-products-req");
                 try {
-                    init.initProductsReq();
+                    initScriptGenerator.initProductsReq();
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
@@ -102,7 +100,7 @@ public class Consumer {
                 System.out.println("FUCK THAT SHIT: "+people);
                 System.out.println("initialize-people - " + people);
                 try {
-                    init.initPeople(people);
+                    initScriptGenerator.initPeople(people);
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
@@ -112,7 +110,7 @@ public class Consumer {
                 String[] categories = str.split(",");
                 System.out.println("initialize-categories - " + categories);
                 try {
-                    init.initCategories(categories);
+                    initScriptGenerator.initCategories(categories);
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
@@ -122,13 +120,13 @@ public class Consumer {
                 Map<String, Object> products = new ObjectMapper().readValue(data_prod.toString(), HashMap.class);
                 System.out.println("initialize-products - " + products);
                 try {
-                    init.initProducts(products);
+                    initScriptGenerator.initProducts(products);
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
                 break;
             default:
-                System.out.println("Event not supported!");
+                System.err.println("Event not supported!");
                 break;
         }
     }

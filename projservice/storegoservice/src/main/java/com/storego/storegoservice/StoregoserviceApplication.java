@@ -12,28 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
-public class StoregoserviceApplication implements CommandLineRunner {
+public class StoregoserviceApplication{
 
 	public static void main(String[] args) {
 		SpringApplication.run(StoregoserviceApplication.class, args);
-	}
-
-	@Autowired
-	private PersonRepository personRepository;
-
-	@Autowired
-	private ProductRepository productRepository;
-
-	@Autowired
-	private PasswordEncoder bcryptEncoder;
-
-	@Autowired
-	private ProductCategoryRepository productCategoryRepository;
-
-	public void run(String... args) throws Exception {
-		System.out.println("\n\n\n\nPOPULATING DATABASE.....\n\n\n\n");
-
-
 	}
 
 }
