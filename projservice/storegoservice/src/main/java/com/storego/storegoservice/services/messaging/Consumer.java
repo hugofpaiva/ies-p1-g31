@@ -75,7 +75,7 @@ public class Consumer {
     @Autowired
     private InitScriptGenerator init;
 
-    @KafkaListener(topics="initialization")
+    @KafkaListener(topics="costumer-events")
     public void consumeInit(String message) throws Exception {
         JSONObject obj = new JSONObject(message);
         System.out.println("INITIALIZING: " +obj.getString("type"));
@@ -85,7 +85,6 @@ public class Consumer {
                 try {
                     init.initPeopleReq();
                 } catch (Exception e){
-                    System.out.println("FODEU dEU ERRO");
                     System.err.println(e.getMessage());
                 }
                 break;

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class Producer {
 
-    private static final String TOPIC = "initialization";
+    private static final String TOPIC = "storego-events";
 
     /*
     Supressed Warning as advised in:
