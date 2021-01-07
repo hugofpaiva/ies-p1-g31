@@ -1,17 +1,24 @@
 package com.storego.storegoservice.controller;
 
+import com.storego.storegoservice.configuration.JwtTokenUtil;
 import com.storego.storegoservice.exception.ResourceNotFoundException;
-import com.storego.storegoservice.model.Person;
-import com.storego.storegoservice.model.PersonType;
+import com.storego.storegoservice.model.*;
 import com.storego.storegoservice.repository.NotificationRepository;
 import com.storego.storegoservice.repository.PersonRepository;
+import com.storego.storegoservice.services.DataGeneratorComService;
 import com.storego.storegoservice.services.StoreServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.*;
 
 
 @RestController
@@ -20,14 +27,58 @@ public class PersonController {
     private PersonRepository personRepository;
 
     @Autowired
-    private NotificationRepository notificationRepository;
+    private PasswordEncoder bcryptEncoder;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
     private StoreServices service;
 
+    @Autowired
+    private DataGeneratorComService dataGeneratorComService;
+
     @GetMapping("/admin/persons")
     public List<Person> getAllClients() {
         return personRepository.findAllByType(PersonType.CLIENT);
+    }
+
+    @GetMapping("/admin/new-limit")
+    public ResponseEntity<Map<String, Object>> setNewLimit(@RequestParam int limit){
+            if(limit>0){
+                service.setMaxClients(limit);
+                dataGeneratorComService.newLimit(limit);
+            }else{
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("confirm", "ok");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
+    @PutMapping("/work/person/")
+    public ResponseEntity<Person> updatePerson(HttpServletRequest request, @Valid @RequestBody Person p) throws ResourceNotFoundException {
+        String requestTokenHeader = request.getHeader("Authorization");
+        String jwtToken = requestTokenHeader.substring(7);
+        String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
+
+        Person person = personRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Person not found for this email: " + email));
+
+        if (p.getName() != null) {
+            person.setName(p.getName());
+        }
+        if (p.getEmail() != null) {
+            person.setEmail(p.getEmail());
+        }
+        if (p.getPassword() != null) {
+            person.setPassword(bcryptEncoder.encode(p.getPassword()));
+        }
+
+        Person updatedPer = personRepository.save(person);
+        return ResponseEntity.ok(updatedPer);
     }
 
 

@@ -30,7 +30,7 @@ public class Notification implements Serializable {
     private long idProduct;
     private int qty;
 
-    //Help needed Notification
+    //Help needed, Entered and Exited Store Notification
     private long nif;
 
     @Enumerated(EnumType.ORDINAL)
@@ -52,6 +52,12 @@ public class Notification implements Serializable {
         this.qty = qty;
         this.type = type;
 
+    }
+
+    // Constructor for Entered, Exited notification
+    public Notification(NotificationType type, long nif){
+        this.nif = nif;
+        this.type = type;
     }
 
     // Constructor for 'Store Full' notification

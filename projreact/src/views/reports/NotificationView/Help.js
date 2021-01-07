@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
 import { v4 as uuid } from 'uuid';
@@ -20,57 +20,6 @@ import {
   makeStyles
 } from '@material-ui/core';
 
-const data = [
-  {
-    id: uuid(),
-    customer: {
-      name: 'Ekaterina Tankova'
-    },
-    createdAt: 1555016406000,
-    status: 'pending'
-  },
-  {
-    id: uuid(),
-    customer: {
-      name: 'Cao Yu'
-    },
-    createdAt: 1555016405000,
-    status: 'pending'
-  },
-  {
-    id: uuid(),
-    customer: {
-      name: 'Alexa Richardson'
-    },
-    createdAt: 1554930200000,
-    status: 'pending'
-  },
-  {
-    id: uuid(),
-    customer: {
-      name: 'Anje Keizer'
-    },
-    createdAt: 1554757210700,
-    status: 'customer left'
-  },
-  {
-    id: uuid(),
-    customer: {
-      name: 'Clarke Gillebert'
-    },
-    createdAt: 1554670809000,
-    status: 'resolved'
-  },
-  {
-    id: uuid(),
-    customer: {
-      name: 'Adam Denisov'
-    },
-    createdAt: 1554670803000,
-    status: 'customer left'
-  }
-];
-
 const useStyles = makeStyles(() => ({
   root: {},
   actions: {
@@ -78,9 +27,14 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Help = ({ className, ...rest }) => {
+const Help = ({ notificationsArray, className, ...rest }) => {
   const classes = useStyles();
-  const [notifications] = useState(data);
+  const [notifications, setNotifications] = useState([]);
+
+  // Initialize and update every time props change
+  useEffect(() => {
+    setNotifications(notificationsArray.sort(not => not['timestamp']).slice(0, 10));
+  }, [notificationsArray]);
 
   return (
     <Card
@@ -89,56 +43,55 @@ const Help = ({ className, ...rest }) => {
     >
       <CardHeader title="Help Needed notifications" />
       <Divider />
-        <Box minWidth={800}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  Customer
+      <Box minWidth={800}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                Customer
                 </TableCell>
-                <TableCell sortDirection="desc">
-                  <Tooltip
-                    enterDelay={300}
-                    title="Sort"
+              <TableCell sortDirection="desc">
+                <Tooltip
+                  enterDelay={300}
+                  title="Sort"
+                >
+                  <TableSortLabel
+                    active
+                    direction="desc"
                   >
-                    <TableSortLabel
-                      active
-                      direction="desc"
-                    >
-                      Date
+                    Date
                     </TableSortLabel>
-                  </Tooltip>
+                </Tooltip>
+              </TableCell>
+              <TableCell>
+                Status
+                </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {notifications.map(notification => (
+              <TableRow
+                hover
+                key={notification.key}
+              >
+                <TableCell>
+                  {notification.nif}
                 </TableCell>
                 <TableCell>
-                  Status
+                  {moment(notification.timestamp).format('DD/MM/YYYY, HH:mm:ss')}
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    color="primary"
+                    label={notification.state}
+                    size="small"
+                  />
                 </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {notifications.map((notification) => (
-                <TableRow
-                  hover
-                  key={notification.id}
-                >
-
-                  <TableCell>
-                    {notification.customer.name}
-                  </TableCell>
-                  <TableCell>
-                    {moment(notification.createdAt).format('DD/MM/YYYY, h:mm:ss')}
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      color="primary"
-                      label={notification.status}
-                      size="small"
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>
     </Card>
   );
 };

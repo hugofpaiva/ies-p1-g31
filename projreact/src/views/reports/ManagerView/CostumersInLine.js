@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const CostumersInLine = ({ className, ...rest }) => {
+const CostumersInLine = ({ value, className, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -58,7 +58,7 @@ const CostumersInLine = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              10
+              {value}
             </Typography>
           </Grid>
           <Grid item>

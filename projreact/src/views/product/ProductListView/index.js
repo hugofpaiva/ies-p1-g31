@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Container, Grid, makeStyles } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import Page from "src/components/Page";
@@ -20,21 +20,83 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductList = (props) => {
 	const classes = useStyles();
-	const [products] = useState(data);
+	// Inicializar o estado products
+	const [products, setProducts] = useState([]);
+	const [categories, setCategories] = useState([]);
+	const [search, setSearch] = useState("");
 	const itemsPerPage = 6;
 	const [page, setPage] = React.useState(1);
-	const [noOfPages] = React.useState(
+	const [nPages, setNPages] = React.useState(
 		Math.ceil(products.length / itemsPerPage)
 	);
 
 	const handleChange = (event, value) => {
-		setPage(value);
+		setPage(value, updateProducts());
 	};
+
+	// Fazer chamada à API para obter produtos
+	useEffect(async() => {
+		updateProducts();
+		updateCategories();
+	}, []);
+
+	async function updateProducts() {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			}
+		};
+		let pageN = page - 1;
+		let url = "http://127.0.0.1:8080/api/work/products?page=" + pageN + "&size=" + itemsPerPage;
+		if (search.trim() != "") {
+			url += "&name=" + search;
+		}
+		const response = await fetch(url, requestOptions);
+		const data = await response.json();
+
+		console.log("GOT DATA");
+		console.log(data);
+
+		// Update products 
+		setProducts(data['products']);
+		// Update number of pages
+		setNPages(data['totalPages']);
+		// Update page
+		setPage(data['currentPage']+1);
+	}
+
+	async function updateCategories() {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			}
+		};
+		let url = "http://127.0.0.1:8080/api/work/productscategories";
+		const response = await fetch(url, requestOptions);
+		const data = await response.json();
+		console.log("GOT CATEGORIES");
+		console.log(data);
+		// Update categories 
+		setCategories(data);
+	}
+
+	function searchFunc(keyword) {
+		setSearch(keyword, updateProducts());
+	}
 
 	return (
 		<Page className={classes.root} title="Products">
 			<Container maxWidth={false}>
-				<Toolbar persona={props.persona} />
+				<Toolbar 
+					persona={props.persona} 
+					search={searchFunc}
+					categories={categories}
+					update={updateProducts}
+				/>
 				<Box mt={3}>
 					<Grid container spacing={3}>
 						{products.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((product) => (
@@ -43,6 +105,8 @@ const ProductList = (props) => {
 									className={classes.productCard}
 									product={product}
 									persona={props.persona}
+									update={updateProducts}
+									categories={categories}
 								/>
 							</Grid>
 						))}
@@ -51,7 +115,7 @@ const ProductList = (props) => {
 				<Box mt={3} display="flex" justifyContent="center">
 					<Pagination
 						color="primary"
-						count={noOfPages}
+						count={nPages}
 						page={page}
 						defaultPage={1}
 						showFirstButton

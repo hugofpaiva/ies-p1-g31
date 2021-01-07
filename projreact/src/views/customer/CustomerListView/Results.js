@@ -81,7 +81,7 @@ const Results = ({ className, customers, ...rest }) => {
 										<Button
                       variant="contained"
 											component={RouterLink}
-											to='/admin/orders'
+											to={'/admin/orders?nif='+customer.nif}
 										>
                       <DollarSign className={classes.icon} size="20" />
 						<span className={classes.title}>Purchases</span>
