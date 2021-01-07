@@ -29,6 +29,9 @@ $ mvn -DskipTests clean package
 > Foi utilizada a opção `-DskipTests` para ignorar os testes neste caso pois estes iriam falhar devido aos serviços não estarem disponíveis no _urL_ especificado pois a máquina não está no _Docker Compose_
 
 
+O ficheiro _Dockerfile_, de acordo com as referências, tem a informação necessária para o _deploy_ deste serviço através do ficheiro _Docker Compose_ na raiz do repositório.
+
+
 > **Referências**
 >
 > [Spring Boot Docker](https://spring.io/guides/topicals/spring-boot-docker/)
