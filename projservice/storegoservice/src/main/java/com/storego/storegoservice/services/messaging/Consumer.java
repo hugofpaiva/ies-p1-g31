@@ -1,13 +1,10 @@
 package com.storego.storegoservice.services.messaging;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationConfig;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.storego.storegoservice.model.NotificationType;
-import com.storego.storegoservice.services.InitScriptGenerator;
+import com.storego.storegoservice.services.InitScriptGeneratorService;
 import com.storego.storegoservice.services.StoreServices;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -24,7 +21,7 @@ public class Consumer {
     private StoreServices service;
 
     @Autowired
-    private InitScriptGenerator initScriptGenerator;
+    private InitScriptGeneratorService initScriptGeneratorService;
 
     @KafkaListener(topics="costumer-events")
     public void consume(String message) throws IOException {
@@ -60,12 +57,16 @@ public class Consumer {
                 }
                 break;
             case "help-needed":
-                service.notifyHelpNeeded(Long.valueOf((Integer) obj.get("nif")), NotificationType.HELP);
+                try {
+                    service.notifyHelpNeeded(Long.valueOf((Integer) obj.get("nif")), NotificationType.HELP);
+                } catch (Exception e){
+                    System.err.println(e.getMessage());
+                }
                 break;
             case "initialize-people-request":
                 System.out.println("initialize-people-req");
                 try {
-                    initScriptGenerator.initPeopleReq();
+                    initScriptGeneratorService.initPeopleReq();
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
@@ -73,41 +74,31 @@ public class Consumer {
             case "initialize-products-request":
                 System.out.println("initialize-products-req");
                 try {
-                    initScriptGenerator.initProductsReq();
+                    initScriptGeneratorService.initProductsReq();
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
                 break;
             case "initialize-people":
                 JSONObject data_ppl = obj.getJSONObject("data");
-                Map<String, Object> people = new ObjectMapper().readValue(data_ppl.toString(), HashMap.class);
-                System.out.println("FUCK THAT SHIT: "+people);
-                System.out.println("initialize-people - " + people);
                 try {
-                    initScriptGenerator.initPeople(people);
+                    initScriptGeneratorService.initPeople(data_ppl);
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
                 break;
             case "initialize-categories":
                 JSONArray arr = obj.getJSONArray("data");
-                List<String> categories = new ArrayList<String>();
-                for (int i = 0; i < arr.length(); i++) {
-                    categories.add(arr.get(i));
-                }
-                System.out.println("initialize-categories - " + categories);
                 try {
-                    initScriptGenerator.initCategories(categories);
+                    initScriptGeneratorService.initCategories(arr);
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
                 break;
             case "initialize-products":
                 JSONObject data_prod = obj.getJSONObject("data");
-                Map<String, Object> products = new ObjectMapper().readValue(data_prod.toString(), HashMap.class);
-                System.out.println("initialize-products - " + products);
                 try {
-                    initScriptGenerator.initProducts(products);
+                    initScriptGeneratorService.initProducts(data_prod);
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }

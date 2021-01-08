@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class DataGeneratorComService {
+public class UpdateScriptGeneratorService {
 
     @Autowired
     private Producer producer;

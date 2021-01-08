@@ -6,7 +6,7 @@ import com.storego.storegoservice.model.HelpNeededState;
 import com.storego.storegoservice.model.Notification;
 import com.storego.storegoservice.model.NotificationType;
 import com.storego.storegoservice.repository.NotificationRepository;
-import com.storego.storegoservice.services.DataGeneratorComService;
+import com.storego.storegoservice.services.UpdateScriptGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +28,7 @@ public class NotificationController {
     private NotificationRepository notificationRepository;
 
     @Autowired
-    private DataGeneratorComService dataGeneratorComService;
+    private UpdateScriptGeneratorService updateScriptGeneratorService;
 
     @GetMapping("/work/notifications_help")
     public ResponseEntity<Map<String, Object>> getHelpNotifications(
@@ -179,7 +179,7 @@ public class NotificationController {
 
             updatedNot = notificationRepository.save(notification);
             if(notificationDetails.getState() == HelpNeededState.RESOLVED){
-                dataGeneratorComService.helpGiven(notification.getNif());
+                updateScriptGeneratorService.helpGiven(notification.getNif());
             }
         }
 
