@@ -31,14 +31,18 @@
 ```json
 {
     "type": "initialize-categories",
-    "data": [categoria1, categoria2,...]
+    "data": [
+    { "id":1, "name": categoria1 }, 
+    { "id":2, "name": categoria2 },
+    ... 
+    ]
 }
 ```
 ```json
 {
     "type": "initialize-products",
     "data": {
-                id: [preço, nome, descrição, stock, min_stock, categoria],
+                id: [preço, nome, descrição, stock, min_stock, idcategoria],
             }
 }
 ```
