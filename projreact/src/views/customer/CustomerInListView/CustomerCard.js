@@ -109,7 +109,7 @@ const CustomerCard = ({ className, customer, ...rest }) => {
 						gutterBottom
 						variant="h6"
 					>
-						Entered at: {moment(customer.last_visit).format('DD/MM/YYYY, h:mm:ss')}
+						Entered at: {moment(customer.last_visit).format('DD/MM/YYYY, HH:mm:ss')}
 					</Typography>
 				</Box>
 				<Grid container justify="center">

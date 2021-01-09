@@ -75,7 +75,7 @@ const Results = ({ className, customers, ...rest }) => {
 									<TableCell>{customer.nif}</TableCell>
 									<TableCell>{customer.email}</TableCell>
 									<TableCell>
-										{moment(customer.last_visit).format('DD/MM/YYYY, h:mm:ss')}
+										{moment(customer.last_visit).format('DD/MM/YYYY, HH:mm:ss')}
 									</TableCell>
 									<TableCell>
 										<Button

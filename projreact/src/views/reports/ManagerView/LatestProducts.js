@@ -40,7 +40,7 @@ const LatestProducts = ({ productsList, className, ...rest }) => {
     return {
       'id': counter,
       'name': name,
-      'updatedAt': moment(obj[name]).format('DD/MM/YYYY, h:mm:ss')
+      'updatedAt': moment(obj[name]).format('DD/MM/YYYY, HH:mm:ss')
     }
   })
   console.log(productsList);

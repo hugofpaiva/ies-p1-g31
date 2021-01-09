@@ -126,7 +126,7 @@ const EntriesOut = ({ className, ...rest }) => {
                     {eout.customer.name}
                   </TableCell>
                   <TableCell>
-                    {moment(eout.createdAt).format('DD/MM/YYYY, h:mm:ss')}
+                    {moment(eout.createdAt).format('DD/MM/YYYY, HH:mm:ss')}
                   </TableCell>
                   <TableCell>
                     <Chip

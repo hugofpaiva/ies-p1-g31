@@ -115,7 +115,7 @@ const Results = ({ className, transactions, ...rest }) => {
                     {transaction.products.length}
                   </TableCell>
                   <TableCell>
-                    {moment(transaction.transaction.date).format('DD/MM/YYYY, h:mm:ss')}
+                    {moment(transaction.transaction.date).format('DD/MM/YYYY, HH:mm:ss')}
                   </TableCell>
                   <TableCell>
                     <Box
