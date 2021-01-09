@@ -53,6 +53,10 @@ public class StoreServices {
         this.maxClients = maxClients;
     }
 
+    public int getMaxClients() {
+        return maxClients;
+    }
+
     public void enterStore(Long nif) throws Exception{
         // Get person
         Person p = personRepository.findById(nif).orElseThrow(() -> new ResourceNotFoundException("Person not found for this id :: " + nif));

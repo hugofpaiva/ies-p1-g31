@@ -26,25 +26,25 @@ const Dashboard = () => {
   const [profit, setProfit] = useState(0);
   const [maxCustomers, setMaxCustomers] = useState(0);
   const [inStore, setInStore] = useState(0);
-  const [inLine, setInLine] = useState(0);
   const [sales, setSales] = useState([]);
   const [lastPersons, setLastPersons] = useState([]);
   const [lastProducts, setLastProducts] = useState([]);
 
   // Fazer chamada à API para obter produtos
 	useEffect(async() => {
-    const loop = updateValues();
-    return () => clearInterval(loop);
-	}, []);
-
-	async function updateValues() {
-		const requestOptions = {
+    const requestOptions = {
 			method: 'GET',
 			headers: { 
 				'Content-Type': 'application/json',
 				'Authorization': 'Bearer ' + localStorage.getItem('token')
 			}
 		};
+    updateValues(requestOptions);
+    const loop = scheduleUpdates(requestOptions);
+    return () => clearInterval(loop);
+	}, []);
+
+	async function updateValues(requestOptions) {
     // Update month profit
 		let url = "http://127.0.0.1:8080/api/admin/monthly_profit";
 		let response = await fetch(url, requestOptions);
@@ -55,6 +55,11 @@ const Dashboard = () => {
 		response = await fetch(url, requestOptions);
     data = await response.json();
     setInStore(data['persons_in_store']);
+    // Update max customers in store
+		url = "http://127.0.0.1:8080/api/work/num_limit";
+		response = await fetch(url, requestOptions);
+    data = await response.json();
+    setMaxCustomers(data['limit_persons_in_store']);
     // Update sales by type
 		url = "http://127.0.0.1:8080/api/admin/monthly_sale_by_category";
 		response = await fetch(url, requestOptions);
@@ -70,13 +75,15 @@ const Dashboard = () => {
 		response = await fetch(url, requestOptions);
     data = await response.json();
     setLastProducts(data);
-    
+  }
+
+  async function scheduleUpdates(requestOptions) {
     // Refresh the most dynamic every second
     return setInterval(async function() {
       // Update costumers in store
-      url = "http://127.0.0.1:8080/api/work/num_persons_in_store";
-      response = await fetch(url, requestOptions);
-      data = await response.json();
+      let url = "http://127.0.0.1:8080/api/work/num_persons_in_store";
+      let response = await fetch(url, requestOptions);
+      let data = await response.json();
       setInStore(data['persons_in_store']);
       // Update last persons in store
       url = "http://127.0.0.1:8080/api/work/last_persons_in_store";

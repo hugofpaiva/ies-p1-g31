@@ -58,6 +58,13 @@ public class PersonController {
 
     }
 
+    @GetMapping("/work/num_limit")
+    public Map<String, Integer> getNumLimitPersonsInStore() {
+        Map<String, Integer> response = new HashMap<>();
+        response.put("limit_persons_in_store", service.getMaxClients());
+        return response;
+    }
+
     @PutMapping("/work/person/")
     public ResponseEntity<Person> updatePerson(HttpServletRequest request, @Valid @RequestBody Person p) throws ResourceNotFoundException {
         String requestTokenHeader = request.getHeader("Authorization");
