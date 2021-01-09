@@ -30,21 +30,25 @@ const Dashboard = () => {
   const [lastPersons, setLastPersons] = useState([]);
   const [lastProducts, setLastProducts] = useState([]);
 
+  const requestOptions = {
+    method: 'GET',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }
+  };
+
   // Fazer chamada à API para obter produtos
-	useEffect(async() => {
-    const requestOptions = {
-			method: 'GET',
-			headers: { 
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + localStorage.getItem('token')
-			}
-		};
-    updateValues(requestOptions);
-    const loop = scheduleUpdates(requestOptions);
+	useEffect(() => {
+    updateValues();
+    // Refresh the most dynamic every second
+    const loop = setInterval(async function() {
+      scheduleUpdates();
+    }, 1000);
     return () => clearInterval(loop);
 	}, []);
 
-	async function updateValues(requestOptions) {
+	async function updateValues() {
     // Update month profit
 		let url = "http://127.0.0.1:8080/api/admin/monthly_profit";
 		let response = await fetch(url, requestOptions);
@@ -77,25 +81,22 @@ const Dashboard = () => {
     setLastProducts(data);
   }
 
-  async function scheduleUpdates(requestOptions) {
-    // Refresh the most dynamic every second
-    return setInterval(async function() {
-      // Update costumers in store
-      let url = "http://127.0.0.1:8080/api/work/num_persons_in_store";
-      let response = await fetch(url, requestOptions);
-      let data = await response.json();
-      setInStore(data['persons_in_store']);
-      // Update last persons in store
-      url = "http://127.0.0.1:8080/api/work/last_persons_in_store";
-      response = await fetch(url, requestOptions);
-      data = await response.json();
-      setLastPersons(data);
-      // Update last bought products
-      url = "http://127.0.0.1:8080/api/work/last_bought_products";
-      response = await fetch(url, requestOptions);
-      data = await response.json();
-      setLastProducts(data);
-    }, 1000);
+  async function scheduleUpdates() {
+    // Update costumers in store
+    let url = "http://127.0.0.1:8080/api/work/num_persons_in_store";
+    let response = await fetch(url, requestOptions);
+    let data = await response.json();
+    setInStore(data['persons_in_store']);
+    // Update last persons in store
+    url = "http://127.0.0.1:8080/api/work/last_persons_in_store";
+    response = await fetch(url, requestOptions);
+    data = await response.json();
+    setLastPersons(data);
+    // Update last bought products
+    url = "http://127.0.0.1:8080/api/work/last_bought_products";
+    response = await fetch(url, requestOptions);
+    data = await response.json();
+    setLastProducts(data);
   }
 
   return (

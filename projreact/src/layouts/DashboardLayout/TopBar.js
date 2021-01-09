@@ -87,7 +87,9 @@ const TopBar = ({
         }
         return not;
       });
-      localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+      localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
+        not => ({...not, "icon": ""})
+      ) }));
       return newArray;
     });
   };
@@ -136,7 +138,9 @@ const TopBar = ({
               "employee": true,
               "manager": false,
             }];
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
+              not => ({...not, "icon": ""})
+            ) }));
             return newArray;
           })
         });
@@ -159,7 +163,9 @@ const TopBar = ({
               "employee": false,
               "manager": true,
             }];
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
+              not => ({...not, "icon": ""})
+            ) }));
             return newArray;
           })
         });
@@ -177,7 +183,9 @@ const TopBar = ({
               "employee": false,
               "manager": true,
             }];
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
+              not => ({...not, "icon": ""})
+            ) }));
             return newArray;
           })
         });
@@ -195,8 +203,9 @@ const TopBar = ({
               "employee": true,
               "manager": false,
             }];
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
-            console.log(JSON.parse(localStorage.getItem("notifications")));
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
+              not => ({...not, "icon": ""})
+            ) }));
             return newArray;
           })
         });
@@ -220,9 +229,6 @@ const TopBar = ({
       {...rest}
     >
       <Toolbar>
-        {/*<RouterLink to="/">
-          <Logo />
-  </RouterLink>*/}
         <Box flexGrow={1} />
         <Hidden mdDown>
           <IconButton color="inherit" onClick={handleClick}>
@@ -233,8 +239,8 @@ const TopBar = ({
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit">
-            <InputIcon onClick={() => logOut()} />
+          <IconButton color="inherit" onClick={() => logOut()}>
+            <InputIcon />
           </IconButton>
           <Menu
             id="simple-menu"
@@ -242,7 +248,7 @@ const TopBar = ({
             keepMounted
             open={Boolean(anchorEl)}
             onClose={handleClose}
-            menuAlign={{ lg: 'right' }}
+            menualign={{ lg: 'right' }}
           >
             <MenuList>
               {
@@ -258,6 +264,7 @@ const TopBar = ({
                   )
                 ).map((n) => (
                   <MenuItem
+                    key={n.key}
                     onClick={() => { window.location.href = n.link; }}
                   >
                     <ListItemIcon fontSize="small">

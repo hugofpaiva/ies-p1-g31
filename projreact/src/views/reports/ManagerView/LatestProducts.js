@@ -43,8 +43,6 @@ const LatestProducts = ({ productsList, className, ...rest }) => {
       'updatedAt': moment(obj[name]).format('DD/MM/YYYY, HH:mm:ss')
     }
   })
-  console.log(productsList);
-  console.log(products);
 
   return (
     <Card
