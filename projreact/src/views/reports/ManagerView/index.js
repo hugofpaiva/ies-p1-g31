@@ -5,7 +5,6 @@ import {
   makeStyles
 } from '@material-ui/core';
 import Page from 'src/components/Page';
-import CostumersInLine from './CostumersInLine';
 import LatestProducts from './LatestProducts';
 import CurrentCostumers from './CurrentCostumers';
 import CostumersInStore from './CostumersInStore';
@@ -102,16 +101,6 @@ const Dashboard = () => {
           container
           spacing={3}
         >
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-            style={{height: '80%'}}
-          >
-            <CostumersInLine value={inLine} />
-          </Grid>
           <Grid
             item
             lg={3}
