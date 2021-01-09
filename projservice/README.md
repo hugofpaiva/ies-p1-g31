@@ -24,6 +24,6 @@ Utilizando a ferramenta _Swagger_, foi possível documentar automáticamente os 
 
 É de notar que, alguns _endpoints_, para permitir paginação e outras _features_, retornam um _Map<String, Object>_, permitindo inserir informação como o número total de produtos, a página atual e, como é de esperar, os objetos daquele _endpoint_, não fazendo distinção se os mesmos são Produtos, Categorias... 
 
-**Com isto, o _Swagger_ acaba por não documentar da maneira correta estes casos, faltando alguns modelos.**
+**Nestes casos, o _Swagger_ acaba por não documentar da maneira correta, faltando alguns modelos.**
 
 A interface do _Swagger_ encontar-se-à em [localhost:8080/api/swagger-ui/index.html](localhost:8080/api/swagger-ui/index.html) caso seja executada a aplicação em _localhost_.
