@@ -67,8 +67,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
-        System.out.println(request.getHeader("Origin"));
-        System.out.println(response.getHeader("Access-Control-Allow-Origin"));
         chain.doFilter(request, response);
     }
 
