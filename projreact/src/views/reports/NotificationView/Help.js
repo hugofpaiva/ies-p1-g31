@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 import {
   Box,
   Card,
@@ -42,9 +44,50 @@ const Help = ({ notificationsArray, className, ...rest }) => {
   // /Pagination stuff
 
   // Initialize and update every time props change
+
   useEffect(() => {
-    setNotifications(notificationsArray.sort(not => not['timestamp']));
-  }, [notificationsArray]);
+    // Load last notitications from API
+    getLastNotifications();
+    
+    // Subscribe to socket for updates
+    const socket = new SockJS('http://localhost:8080/api/ws');
+    const stompClient = Stomp.over(socket);
+    const headers = {};
+
+    stompClient.connect(headers, () => {
+      stompClient.subscribe('/topic/help', function (messageOutput) {
+        const not = JSON.parse(messageOutput.body);
+        setNotifications(oldArray => {
+          const newArray = [...oldArray, {
+            ...not,
+            "date": Date.now(),
+          }];
+          return newArray.sort(not => not['date']);
+        })
+      });
+  });
+  }, []);
+
+  async function getLastNotifications() {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    };
+    const response = await fetch('http://127.0.0.1:8080/api/work/notifications_help', requestOptions);
+    const data = await response.json();
+    // Update value with notifications from server
+    setNotifications(not => {
+      const newNotifications = [...not];
+      data['notifications'].forEach(notification => {
+        newNotifications.push(notification);
+      })
+      // Return sorted version
+      return newNotifications.sort(not => not['date']);
+    });
+  }
 
   return (
     <Card
@@ -79,16 +122,16 @@ const Help = ({ notificationsArray, className, ...rest }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {notifications.slice(page*limit, page*limit+limit).map(notification => (
+            {notifications.slice(page * limit, page * limit + limit).map(notification => (
               <TableRow
                 hover
-                key={notification.key}
+                key={notification.id}
               >
                 <TableCell>
                   {notification.nif}
                 </TableCell>
                 <TableCell>
-                  {moment(notification.timestamp).format('DD/MM/YYYY, HH:mm:ss')}
+                  {moment(notification.date).format('DD/MM/YYYY, HH:mm:ss')}
                 </TableCell>
                 <TableCell>
                   <Chip
@@ -99,7 +142,7 @@ const Help = ({ notificationsArray, className, ...rest }) => {
                 </TableCell>
               </TableRow>
             ))}
-            </TableBody>
+          </TableBody>
         </Table>
         <TablePagination
           component="div"
