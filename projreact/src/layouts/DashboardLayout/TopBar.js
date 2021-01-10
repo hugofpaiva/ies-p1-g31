@@ -227,7 +227,15 @@ const TopBar = ({
         <Hidden mdDown>
           <IconButton color="inherit" onClick={handleClick}>
             <Badge
-              badgeContent={notifications.filter(n => !n['seen']).length}
+              badgeContent={notifications.filter(
+                  n => !n['seen']
+                  &&
+                  (
+                    (localStorage.getItem('authority') === 'EMPLOYEE'  && n['employee'])
+                    || 
+                    (localStorage.getItem('authority') === 'MANAGER'  && n['manager'])
+                  )
+                ).length}
               color="error"
             >
               <NotificationsIcon />
