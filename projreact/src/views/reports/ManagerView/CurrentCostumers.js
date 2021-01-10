@@ -9,7 +9,6 @@ import {
   Button,
   Card,
   CardHeader,
-  Chip,
   Divider,
   Table,
   TableBody,
@@ -31,8 +30,6 @@ const useStyles = makeStyles(() => ({
 
 const LatestOrders = ({ persons, className, ...rest }) => {
   const classes = useStyles();
-
-  console.log(persons);
   
   return (
     <Card

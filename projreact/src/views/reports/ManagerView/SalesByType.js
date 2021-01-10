@@ -20,15 +20,21 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+let graphColors = [];
+
 const SalesByType = ({ sales, className, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const salesList = Object.keys(sales).map(tag => {
+  for(let i = graphColors.length; i < Object.keys(sales).length; i++) {
+      graphColors.push('#'+Math.floor(Math.random()*16777215).toString(16));
+  }
+
+  const salesList = Object.keys(sales).map((tag, index) => {
     return {
       'title': tag,
       'value': sales[tag],
-      'color': '#'+Math.floor(Math.random()*16777215).toString(16)
+      'color': graphColors[index]
     }
   });
 
