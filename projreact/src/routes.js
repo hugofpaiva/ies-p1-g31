@@ -2,7 +2,6 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import DashboardLayout from "src/layouts/DashboardLayout";
 import MainLayout from "src/layouts/MainLayout";
-import AccountView from "src/views/account/AccountView";
 import CustomerListView from "src/views/customer/CustomerListView";
 import CustomerInListView from "src/views/customer/CustomerInListView";
 import NotificationView from "src/views/reports/NotificationView";
@@ -21,7 +20,6 @@ const routes = [
 		path: "admin",
 		element: <DashboardLayout persona="admin" />,
 		children: [
-			{ path: "account", element: <AccountView /> },
 			{ path: "customers", element: <CustomerListView /> },
 			{ path: "customers/in_store", element: <CustomerInListView /> },
 			{ path: "orders", element: <ShoppingHistoricView /> },
