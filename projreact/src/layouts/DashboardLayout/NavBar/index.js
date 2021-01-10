@@ -59,7 +59,7 @@ const NavBar = ({ onMobileClose, openMobile, persona }) => {
 		};
 		const response = await fetch('http://127.0.0.1:8080/api/work/person/', requestOptions);
 		// If bad response, log user out
-		if (response.status != 200) {
+		if (response.status !== 200) {
 			localStorage.removeItem("token");
 			window.location.href = "/";
 		}

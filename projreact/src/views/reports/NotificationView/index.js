@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Container,
   Grid,
@@ -8,8 +8,6 @@ import Page from 'src/components/Page';
 import Help from './Help';
 import LowStock from './LowStock';
 import EntriesOut from './EntriesOut';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 
 
 const useStyles = makeStyles((theme) => ({

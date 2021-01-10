@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
-import { v4 as uuid } from 'uuid';
 import PropTypes from 'prop-types';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
@@ -147,7 +146,7 @@ const EntriesOut = ({ className, ...rest }) => {
                   <Chip
                     color="primary"
                     label={
-                      (notification.type == "ENTERED_STORE") ? "Entered Store" : "Exited Store"
+                      (notification.type === "ENTERED_STORE") ? "Entered Store" : "Exited Store"
                     }
                     size="small"
                   />

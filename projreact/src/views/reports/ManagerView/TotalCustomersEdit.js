@@ -50,7 +50,7 @@ export default function FormDialog(props) {
         };
         const url = 'http://127.0.0.1:8080/api/admin/new-limit?limit=' + maxCustomers;
         const response = await fetch(url, requestOptions);
-        if (response.status == 200) {
+        if (response.status === 200) {
             // Close form  
             setOpen(false);
             // Update dashbard values

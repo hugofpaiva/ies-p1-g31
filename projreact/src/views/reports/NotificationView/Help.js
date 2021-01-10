@@ -41,7 +41,7 @@ const Help = ({ className, ...rest }) => {
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
     // When not first page, update state
-    if (newPage != 0) {
+    if (newPage !== 0) {
       updatePageStatus(newPage);
     }
   };

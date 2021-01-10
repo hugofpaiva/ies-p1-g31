@@ -32,7 +32,7 @@ import {
 export default function FormDialog(props) {
     const [open, setOpen] = React.useState(false);
     const [error, setError] = React.useState(null);
-    const [product, setProduct] = React.useState(props.product);
+    const [product] = React.useState(props.product);
     const [units, setUnits] = React.useState(0);
 
     const handleClickOpen = () => {
