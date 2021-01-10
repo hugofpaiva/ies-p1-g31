@@ -13,6 +13,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TablePagination,
   TableSortLabel,
   Tooltip,
   makeStyles
@@ -29,9 +30,20 @@ const Help = ({ notificationsArray, className, ...rest }) => {
   const classes = useStyles();
   const [notifications, setNotifications] = useState([]);
 
+  // Pagination stuff
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(0);
+  const handleLimitChange = (event) => {
+    setLimit(event.target.value);
+  };
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+  // /Pagination stuff
+
   // Initialize and update every time props change
   useEffect(() => {
-    setNotifications(notificationsArray.sort(not => not['timestamp']).slice(0, 10));
+    setNotifications(notificationsArray.sort(not => not['timestamp']));
   }, [notificationsArray]);
 
   return (
@@ -67,7 +79,7 @@ const Help = ({ notificationsArray, className, ...rest }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {notifications.map(notification => (
+            {notifications.slice(page*limit, page*limit+limit).map(notification => (
               <TableRow
                 hover
                 key={notification.key}
@@ -87,8 +99,17 @@ const Help = ({ notificationsArray, className, ...rest }) => {
                 </TableCell>
               </TableRow>
             ))}
-          </TableBody>
+            </TableBody>
         </Table>
+        <TablePagination
+          component="div"
+          count={notifications.length}
+          onChangePage={handlePageChange}
+          onChangeRowsPerPage={handleLimitChange}
+          page={page}
+          rowsPerPage={limit}
+          rowsPerPageOptions={[5, 10]}
+        />
       </Box>
     </Card>
   );

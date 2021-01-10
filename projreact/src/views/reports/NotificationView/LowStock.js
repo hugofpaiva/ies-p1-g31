@@ -12,6 +12,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TablePagination,
   TableSortLabel,
   Tooltip,
   makeStyles
@@ -28,9 +29,20 @@ const LowStock = ({ notificationsArray, className, ...rest }) => {
   const classes = useStyles();
   const [notifications, setNotifications] = useState([]);
 
+  // Pagination stuff
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(0);
+  const handleLimitChange = (event) => {
+    setLimit(event.target.value);
+  };
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+  // /Pagination stuff
+
   // Initialize and update every time props change
   useEffect(() => {
-    setNotifications(notificationsArray.sort(not => not['timestamp']).slice(0, 10));
+    setNotifications(notificationsArray.sort(not => not['timestamp']));
   }, [notificationsArray]);
 
   return (
@@ -38,58 +50,67 @@ const LowStock = ({ notificationsArray, className, ...rest }) => {
       className={clsx(classes.root, className)}
       {...rest}
     >
-      <CardHeader title="Low Stock notifications"/>
+      <CardHeader title="Low Stock notifications" />
       <Divider />
 
-        <Box minWidth={800}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell style={{width: '50%'}}>
-                  Product
-                </TableCell>
-                
-                <TableCell sortDirection="desc" style={{width: '25%'}}>
-                  <Tooltip
-                    enterDelay={300}
-                    title="Sort"
-                  >
-                    <TableSortLabel
-                      active
-                      direction="desc"
-                    >
-                      Date
-                    </TableSortLabel>
-                  </Tooltip>
-                </TableCell>
-                <TableCell style={{width: '25%'}}>
-                  Stock now
+      <Box minWidth={800}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ width: '50%' }}>
+                Product
                 </TableCell>
 
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {notifications.map(stock => (
-                <TableRow
-                  hover
-                  key={stock.key}
+              <TableCell sortDirection="desc" style={{ width: '25%' }}>
+                <Tooltip
+                  enterDelay={300}
+                  title="Sort"
                 >
-                  <TableCell>
-                    {stock.idProduct}
-                  </TableCell>
-                  <TableCell>
-                    {moment(stock.timestam).format('DD/MM/YYYY, HH:mm:ss')}
-                  </TableCell>
-                  <TableCell>
-                    {stock.qty}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
+                  <TableSortLabel
+                    active
+                    direction="desc"
+                  >
+                    Date
+                    </TableSortLabel>
+                </Tooltip>
+              </TableCell>
+              <TableCell style={{ width: '25%' }}>
+                Stock now
+                </TableCell>
 
-  
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {notifications.slice(page * limit, page * limit + limit).map(stock => (
+              <TableRow
+                hover
+                key={stock.key}
+              >
+                <TableCell>
+                  {stock.idProduct}
+                </TableCell>
+                <TableCell>
+                  {moment(stock.timestam).format('DD/MM/YYYY, HH:mm:ss')}
+                </TableCell>
+                <TableCell>
+                  {stock.qty}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <TablePagination
+          component="div"
+          count={notifications.length}
+          onChangePage={handlePageChange}
+          onChangeRowsPerPage={handleLimitChange}
+          page={page}
+          rowsPerPage={limit}
+          rowsPerPageOptions={[5, 10]}
+        />
+      </Box>
+
+
     </Card>
   );
 };
