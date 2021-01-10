@@ -1,7 +1,7 @@
 package com.storego.storegoservice.model;
 
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -23,7 +23,7 @@ public class Notification implements Serializable {
     @Enumerated(EnumType.ORDINAL)
     private NotificationType type;
 
-    @CreationTimestamp
+    @CreatedDate
     private Date date;
 
     //Stock Notification
