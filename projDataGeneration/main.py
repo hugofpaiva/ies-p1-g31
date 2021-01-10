@@ -149,8 +149,7 @@ def main():
                         6475: [3.20, "Sour Cream And Onion Chips", "These thick chips are cooked slowly and the result is a flavorful chip that tastes fresh and has a very good texture.", 10000, 5, 1],
                         2281: [6.10, "Pack Of 5 Limes", "Our limes are sour, round, and bright green citrus fruits. They’re nutritional powerhouses — high in vitamin C, antioxidants, and other nutrients. Because limes are loaded with nutrients, they may help boost your immunity, reduce heart disease risk factors, prevent kidney stones, aid iron absorption, and promote healthy skin.", 10000, 5, 6],
                         6203: [25.92, "Hefeweizen Beer", "Arguably one of the most recognizable beer styles, the German-style hefeweizen offers a striking beer experience thanks to the use of distinctive wheat malt, unique yeast and uncharateristic appearance. This wheat beer breaks from the German beer mold, showcasing yeast-driven fruit and spice as well as bearing an eye-catching mystique. Don’t let the cloudy hefeweizen deter you, this beer is one of the world’s most enjoyable styles for beer geeks and neophytes, alike. The refreshing qualities of this highly-carbonated style have kept it alive for centuries. Try one for yourself and experience why that is, firsthand.", 10000, 5, 5],
-                        3626: [21.53, "Hahn Pinot Noir", "Pinot Noir is the world’s most popular light-bodied red wine. It’s loved for its red fruit, flower, and spice aromas that are accentuated by a long, smooth finish.", 10000, 5, 1],
-        }   
+                        3626: [21.53, "Hahn Pinot Noir", "Pinot Noir is the world’s most popular light-bodied red wine. It’s loved for its red fruit, flower, and spice aromas that are accentuated by a long, smooth finish.", 10000, 5, 1]}   
 
         # starting our product representation
         for pid in product_to_send:
