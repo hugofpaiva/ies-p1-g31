@@ -62,10 +62,11 @@ const NavBar = ({ onMobileClose, openMobile, persona }) => {
 					color="textPrimary"
 					variant="h5"
 				>
-					{persona === "admin" && "Manager"}
-					{persona === "employee" && "Employee"}
+					{ localStorage.getItem("name")!=null ? localStorage.getItem("name") : "" }
 				</Typography>
 				<Typography color="textSecondary" variant="body2">
+					{persona === "admin" && "Manager"}
+					{persona === "employee" && "Employee"}
 				</Typography>
 			</Box>
 			<Divider />
@@ -118,7 +119,7 @@ NavBar.propTypes = {
 };
 
 NavBar.defaultProps = {
-	onMobileClose: () => {},
+	onMobileClose: () => { },
 	openMobile: false,
 };
 

@@ -193,6 +193,7 @@ const TopBar = ({
     localStorage.removeItem("token");
     localStorage.removeItem("authority");
     localStorage.removeItem("notifications");
+    localStorage.removeItem("name");
     window.location.href = "/";
   }
 

@@ -26,6 +26,7 @@ const LoginView = () => {
 	localStorage.removeItem("notifications");
 	localStorage.removeItem("token");
 	localStorage.removeItem("authority");
+	localStorage.removeItem("name");
 
 	const classes = useStyles();
 
@@ -58,6 +59,7 @@ const LoginView = () => {
 		};
 		const response = await fetch('http://127.0.0.1:8080/api/login', requestOptions);
 		const data = await response.json();
+		console.log(data);
 		
 		// Process response
 		// If error, show error warning
@@ -69,6 +71,7 @@ const LoginView = () => {
 		if ('token' in data) {
 			localStorage.setItem('token', data['token']);
 			localStorage.setItem('authority', data['type']['authority']);
+			localStorage.setItem('name', data['name']);
 			// Redirect user to dashboard main page
 			redirectUser();
 		}
