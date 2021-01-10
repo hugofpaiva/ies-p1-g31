@@ -73,6 +73,8 @@ class dataGenerator:
             return
         elif self.products[product] == 1:
             qty = 1
+        elif self.products[product] < 5:
+            qty = random.randint(1, self.products[product])
         else:
             # choosing a random quantity until 5
             qty = random.randint(1, 5)
