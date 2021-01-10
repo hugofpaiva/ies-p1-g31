@@ -16,61 +16,11 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TablePagination,
   TableSortLabel,
   Tooltip,
   makeStyles
 } from '@material-ui/core';
-
-const data = [
-  {
-    id: uuid(),
-    customer: {
-      name: 'Ekaterina Tankova'
-    },
-    createdAt: 1555016400000,
-    status: 'left'
-  },
-  {
-    id: uuid(),
-    customer: {
-      name: 'Cao Yu'
-    },
-    createdAt: 1555016400000,
-    status: 'entered'
-  },
-  {
-    id: uuid(),
-    customer: {
-      name: 'Alexa Richardson'
-    },
-    createdAt: 1554930000000,
-    status: 'entered'
-  },
-  {
-    id: uuid(),
-    customer: {
-      name: 'Anje Keizer'
-    },
-    createdAt: 1554757200000,
-    status: 'left'
-  },
-  {
-    id: uuid(),
-    customer: {
-      name: 'Clarke Gillebert'
-    },
-    createdAt: 1554670800000,
-    status: 'left'
-  },
-  {
-    id: uuid(),
-    customer: {
-      name: 'Adam Denisov'
-    },
-    createdAt: 1554670800000,
-    status: 'entered'
-  }
-];
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -81,11 +31,20 @@ const useStyles = makeStyles(() => ({
 
 const EntriesOut = ({ className, ...rest }) => {
   const classes = useStyles();
-  const [entriesout] = useState(data);
   const [notifications, setNotifications] = useState([]);
 
-  // Initialize and update every time props change
+  // Pagination stuff
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(0);
+  const handleLimitChange = (event) => {
+    setLimit(event.target.value);
+  };
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+  // /Pagination stuff
 
+  // Initialize and update every time props change
   useEffect(() => {
     // Load last notitications from API
     getLastNotifications();
@@ -173,7 +132,7 @@ const EntriesOut = ({ className, ...rest }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {notifications.map(notification => (
+            {notifications.slice(page*limit, page*limit+limit).map(notification => (
               <TableRow
                 hover
                 key={notification.id}
@@ -197,6 +156,15 @@ const EntriesOut = ({ className, ...rest }) => {
             ))}
           </TableBody>
         </Table>
+        <TablePagination
+          component="div"
+          count={notifications.length}
+          onChangePage={handlePageChange}
+          onChangeRowsPerPage={handleLimitChange}
+          page={page}
+          rowsPerPage={limit}
+          rowsPerPageOptions={[5, 10]}
+        />
       </Box>
     </Card>
   );
