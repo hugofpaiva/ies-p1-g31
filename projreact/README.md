@@ -66,3 +66,11 @@ useEffect(async() => {
 }, []);
 ```
 
+To convert the timestamps to legible strings, the moment package.
+
+```react
+import moment from "moment";
+moment(customer.last_visit).format('DD/MM/YYYY, HH:mm:ss')
+// Example output: 01/12/2021, 19:35:21
+```
+
