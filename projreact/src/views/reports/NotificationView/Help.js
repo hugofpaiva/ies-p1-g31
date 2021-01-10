@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Help = ({ notificationsArray, className, ...rest }) => {
+const Help = ({ className, ...rest }) => {
   const classes = useStyles();
   const [notifications, setNotifications] = useState([]);
 

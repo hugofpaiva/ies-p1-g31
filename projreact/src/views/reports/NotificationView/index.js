@@ -23,32 +23,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard = () => {
   const classes = useStyles();
-  const [notificationsStock, setNotificationsStock] = useState([]);
-
-  useEffect(() => {
-    const loop = setInterval(updateNotifications, 1000);
-    return () => clearInterval(loop);
-  }, []);
-
-  function updateNotifications() {
-    const nots = localStorage.getItem("notifications") != null ? JSON.parse(localStorage.getItem("notifications"))['notifications'] : [];
-    setNotificationsStock(nots.filter(not => not['update'].indexOf("restock") > 0).map(not => ({...not, icon: <ShoppingBasketIcon />})));    
-    /*
-    setNotifications(nots.map(not => {
-      // Correct icon
-      if (not['update'].indexOf("help") > 0) {
-        not['icon'] = <AssignmentIcon />;
-      } else if (not['update'].indexOf("restock") > 0) {
-        not['icon'] = <ShoppingBasketIcon />;
-      } else if (not['update'].indexOf("full") > 0) {
-        not['icon'] = <GroupIcon />;
-      }
-      return not;
-    }
-    )
-    );
-    */
-  }
 
   return (
     <Page
@@ -77,7 +51,7 @@ const Dashboard = () => {
             xl={6}
             xs={12}
           >
-            <LowStock notificationsArray={notificationsStock} />
+            <LowStock />
           </Grid>
           <Grid
             item
