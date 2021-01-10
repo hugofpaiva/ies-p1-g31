@@ -10,7 +10,6 @@ import java.util.Set;
 @Data
 @Table(name = "product")
 public class Product implements Serializable {
-//TODO
 
     @Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,16 +38,7 @@ public class Product implements Serializable {
 
     public Product() { }
 
-    public Product(Double price, String name, String description, Integer stock_current, Integer stock_minimum, ProductCategory category) {
-        this.price = price;
-        this.name = name;
-        this.description = description;
-        this.stock_current = stock_current;
-        this.stock_minimum = stock_minimum;
-        this.category = category;
-    }
-
-    public Product(long id, Double price, String name, String description, Integer stock_current, Integer stock_minimum, ProductCategory category) {
+    public Product(Long id, Double price, String name, String description, Integer stock_current, Integer stock_minimum, ProductCategory category) {
         this.id = id;
         this.price = price;
         this.name = name;
@@ -58,4 +48,9 @@ public class Product implements Serializable {
         this.category = category;
     }
 
+    @Override
+    public String toString() {
+        return id + ": [" + price + ",\"" + name + "\", \"" + description + "\", " + stock_current + "," + stock_minimum +
+                ", \"" + category.getName() +"\"]";
+    }
 }
