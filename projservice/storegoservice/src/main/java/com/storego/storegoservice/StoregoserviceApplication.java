@@ -25,6 +25,9 @@ public class StoregoserviceApplication implements CommandLineRunner {
 	private ProductRepository productRepository;
 
 	@Autowired
+	private NotificationRepository notificationRepository;
+
+	@Autowired
 	private PasswordEncoder bcryptEncoder;
 
 	@Autowired
@@ -68,6 +71,10 @@ public class StoregoserviceApplication implements CommandLineRunner {
 		productRepository.save(new Product(5364, 10.00, "Produto8", "Descrição", 23, 5,pc4));
 		productRepository.save(new Product(1170, 10.00, "Produto9", "Descrição", 340, 5,pc4));
 		productRepository.save(new Product(5192, 10.00, "Produto10", "Descrição", 120, 5,pc5));
+
+		Notification n = new Notification(NotificationType.STORE_FULL);
+		notificationRepository.save(n);
+		System.out.println(n);
 
 
 	}
