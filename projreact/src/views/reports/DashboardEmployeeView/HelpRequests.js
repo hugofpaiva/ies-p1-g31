@@ -71,7 +71,7 @@ const HelpRequests = ({ className, waiting_for_help, ...rest }) => {
                     key={person.id}
                   >
                     <TableCell>
-                      {moment(person.timestamp).format('DD/MM/YYYY, h:mm:ss')}
+                      {moment(person.nif).format('DD/MM/YYYY, h:mm:ss')}
                     </TableCell>
                     <TableCell>
                       {person.nif}
