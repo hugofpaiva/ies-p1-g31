@@ -33,6 +33,7 @@ export default function FormDialog(props) {
     const [open, setOpen] = React.useState(false);
     const [error, setError] = React.useState(null);
     const [product, setProduct] = React.useState(props.product);
+    const [units, setUnits] = React.useState(0);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -47,20 +48,18 @@ export default function FormDialog(props) {
     }
 
     async function updateProduct() {
-        if (product.stock_current <= props.product.stock_current) {
-            setError("Stock must be greater than previuos!");
+        if (units <= 0) {
+            setError("The number of units must be greater than zero!");
             return;
         }
         // Make request 
-        console.log("RESTOCK");
-        console.log(product);
         const requestOptions = {
             method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
-            body: JSON.stringify(product)
+            body: JSON.stringify({...product, stock_current:units})
         };
         const url = 'http://127.0.0.1:8080/api/admin/product/' + product.id;
         const response = await fetch(url, requestOptions);
@@ -80,10 +79,10 @@ export default function FormDialog(props) {
                 <span>Restock</span>
             </Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Edit product</DialogTitle>
+                <DialogTitle id="form-dialog-title">Restock product</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Enter the quantity to restock the product.
+                        How many units are you going to restock?
                     </DialogContentText>
                     {
                         error && 
@@ -99,10 +98,10 @@ export default function FormDialog(props) {
                         autoFocus
                         margin="dense"
                         id="stock"
-                        label="Current stock"
+                        label="Additional units"
                         type="number"
-                        value={product.stock_current}
-                        onChange={val => setProduct({ ...product, stock_current: val.target.value })}
+                        value={units}
+                        onChange={val => setUnits(val.target.value)}
                         fullWidth
                     />
                 </DialogContent>
