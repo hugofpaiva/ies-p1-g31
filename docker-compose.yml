@@ -25,6 +25,8 @@ services:
     volumes:
       - ./projDB/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./docker/mongodb:/data/db
+    depends_on:
+      - mysql_db
 
   zookeeper:
     image: confluentinc/cp-zookeeper:6.0.1
