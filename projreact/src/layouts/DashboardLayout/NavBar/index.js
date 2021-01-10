@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import NavItem from "./NavItem";
 
-import personas from '../data';
+import menuAuthority from '../menu';
 
 const useStyles = makeStyles((theme) => ({
 	mobileDrawer: {
@@ -37,14 +37,36 @@ const NavBar = ({ onMobileClose, openMobile, persona }) => {
 	const location = useLocation();
 
 	// Define user based on persona passed as props
-	const user = personas[persona];
+	const [user, setUser] = useState(null);
+	const [menu, setMenu] = useState([]);
 
 	useEffect(() => {
 		if (openMobile && onMobileClose) {
 			onMobileClose();
 		}
 		// eslint-disable-next-line
+		// Get user data
+		loadUser();
 	}, [location.pathname]);
+
+	async function loadUser() {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			}
+		};
+		const response = await fetch('http://127.0.0.1:8080/api/work/person/', requestOptions);
+		// If bad response, log user out
+		if (response.status != 200) {
+			localStorage.removeItem("token");
+			window.location.href = "/";
+		}
+		const data = await response.json();
+		setUser(data);
+		setMenu(menuAuthority[data['type']]);
+	}
 
 	const content = (
 		<Box height="100%" display="flex" flexDirection="column">
@@ -62,17 +84,16 @@ const NavBar = ({ onMobileClose, openMobile, persona }) => {
 					color="textPrimary"
 					variant="h5"
 				>
-					{ localStorage.getItem("name")!=null ? localStorage.getItem("name") : "" }
+					{ user && user.name }
 				</Typography>
 				<Typography color="textSecondary" variant="body2">
-					{persona === "admin" && "Manager"}
-					{persona === "employee" && "Employee"}
+					{ user && (user.type[0].toUpperCase() + user.type.substring(1).toLowerCase()) }
 				</Typography>
 			</Box>
 			<Divider />
 			<Box p={2}>
 				<List>
-					{user.menu.map((item) => (
+					{menu.map((item) => (
 						<NavItem
 							href={item.href}
 							key={item.title}

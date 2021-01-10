@@ -22,11 +22,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LoginView = () => {
-	// When openned, delete local storage if not already
-	localStorage.removeItem("notifications");
-	localStorage.removeItem("token");
-	localStorage.removeItem("authority");
-	localStorage.removeItem("name");
+	// When openned, if token already exists, redirect
+	// Otherwise, clear local storage
+	if (localStorage.getItem("token") != null) {
+		redirectUser();
+	} else {
+		localStorage.removeItem("notifications");
+		localStorage.removeItem("token");
+		localStorage.removeItem("authority");
+		localStorage.removeItem("name");
+	}
 
 	const classes = useStyles();
 

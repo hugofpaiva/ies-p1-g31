@@ -61,6 +61,17 @@ public class PersonController {
         return response;
     }
 
+    @GetMapping("/work/person/")
+    public ResponseEntity<Person> getPersonDetails(HttpServletRequest request) throws ResourceNotFoundException {
+        String requestTokenHeader = request.getHeader("Authorization");
+        String jwtToken = requestTokenHeader.substring(7);
+        String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
+
+        Person person = personRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Person not found for this email: " + email));
+        return ResponseEntity.ok(person);
+    }
+
     @PutMapping("/work/person/")
     public ResponseEntity<Person> updatePerson(HttpServletRequest request, @Valid @RequestBody Person p) throws ResourceNotFoundException {
         String requestTokenHeader = request.getHeader("Authorization");
