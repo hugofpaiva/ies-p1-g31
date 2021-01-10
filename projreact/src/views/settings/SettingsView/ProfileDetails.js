@@ -32,26 +32,18 @@ const useStyles = makeStyles(() => ({
   root: {}
 }));
 
+const myVals = {
+  firstName: 'Pedro',
+  lastName: 'Paulo',
+  email: 'pedro.paulo@gostore.com',
+  admin: false,
+}
+
 const ProfileDetails = ({ persona, className, ...rest }) => {
   const classes = useStyles();
-  const [values, setValues] = useState({
-    'admin': {
-      firstName: 'Amélia',
-      lastName: 'Rodrigues',
-      email: 'amelia.rodrigues@gostore.com',
-      phone: '965235687',
-      admin: true,
-    },
-    'employee': {
-      firstName: 'Pedro',
-      lastName: 'Paulo',
-      email: 'pedro.paulo@gostore.com',
-      phone: '923658965',
-      admin: false,
-    }
-  });
-
-  const user = values[persona];
+  const [values, setValues] = useState(myVals);
+  const [isAdmin, setAdmin] = useState(false);
+  const [person, setPerson] = useState({});
 
   const handleChange = (event) => {
     setValues({
@@ -63,13 +55,43 @@ const ProfileDetails = ({ persona, className, ...rest }) => {
   async function updateInfo() {
 		const requestOptions = {
 			method: 'PUT',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ username: values.firstName + values.lastName, email: values.email })
+			headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token')},
+			body: JSON.stringify({...person, name: values.firstName + " " + values.lastName, email: values.email})
 		};
-		const response = await fetch('http://127.0.0.1:8080/api/wprk/person', requestOptions);
+		const response = await fetch('http://127.0.0.1:8080/api/work/person/', requestOptions);
 		const data = await response.json();
+    return false
+	}
 
-		}
+  useEffect(async() => {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    };
+    const response = await fetch('http://127.0.0.1:8080/api/work/person/', requestOptions);
+    const data = await response.json();
+    console.log(data);
+    if(data["type"] == "MANAGER"){
+      setAdmin(true)
+    }
+    else{
+      setAdmin(false)
+    }
+
+    setValues({
+      firstName: data["name"].split(" ")[0],
+      lastName: data["name"].split(" ")[1],
+      email: data["email"],
+      admin: isAdmin,
+
+    });
+
+    setPerson(data);
+
+  }, []);
 
   return (
     <form
@@ -104,7 +126,7 @@ const ProfileDetails = ({ persona, className, ...rest }) => {
                 name="firstName"
                 onChange={handleChange}
                 required
-                value={user.firstName}
+                value={values.firstName}
                 variant="outlined"
               />
             </Grid>
@@ -119,7 +141,7 @@ const ProfileDetails = ({ persona, className, ...rest }) => {
                 name="lastName"
                 onChange={handleChange}
                 required
-                value={user.lastName}
+                value={values.lastName}
                 variant="outlined"
               />
             </Grid>
@@ -134,7 +156,7 @@ const ProfileDetails = ({ persona, className, ...rest }) => {
                 name="email"
                 onChange={handleChange}
                 required
-                value={user.email}
+                value={values.email}
                 variant="outlined"
               />
             </Grid>
@@ -149,6 +171,7 @@ const ProfileDetails = ({ persona, className, ...rest }) => {
           <Button
             color="primary"
             variant="contained"
+            type="submit"
           >
             Save details
           </Button>

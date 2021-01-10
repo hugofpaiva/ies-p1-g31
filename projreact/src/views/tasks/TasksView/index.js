@@ -39,7 +39,7 @@ const CustomerListView = () => {
     console.log("GOT DATA");
     console.log(data);
     setTasks(data['notifications']);
-};
+  };
 
   return (
     <Page
