@@ -137,7 +137,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <TotalProfit value={profit} />
+            <TotalProfit value={profit.toFixed(2)} />
           </Grid>
           <Grid
             item
