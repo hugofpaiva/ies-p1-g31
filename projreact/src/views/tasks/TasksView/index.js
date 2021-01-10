@@ -22,6 +22,11 @@ const CustomerListView = () => {
   const [tasks, setTasks ] = useState(data);
 
   useEffect(async() => {
+    const loop = setInterval(updateNotifications, 1000);
+    return () => clearInterval(loop);
+  }, []);
+
+  async function updateNotifications() {
     const requestOptions = {
         method: 'get',
         headers: { 
@@ -34,7 +39,7 @@ const CustomerListView = () => {
     console.log("GOT DATA");
     console.log(data);
     setTasks(data['notifications']);
-}, []);
+};
 
   return (
     <Page

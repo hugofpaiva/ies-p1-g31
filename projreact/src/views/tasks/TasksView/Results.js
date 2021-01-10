@@ -56,9 +56,6 @@ const Results = ({ className, tasks, ...rest }) => {
                   Moment
                 </TableCell>
                 <TableCell>
-                  Section
-                </TableCell>
-                <TableCell>
                   Customer
                 </TableCell>
                 <TableCell>
@@ -76,18 +73,15 @@ const Results = ({ className, tasks, ...rest }) => {
                   key={task.id}
                 >
                   <TableCell>
-                    {moment(task.createdAt).format('DD/MM/YYYY, h:mm:ss')}
+                    {moment(task.timestamp).format('DD/MM/YYYY, h:mm:ss')}
                   </TableCell>
                   <TableCell>
-                    {task.place}
-                  </TableCell>
-                  <TableCell>
-                    {task.customer.name}
+                    {task.nif}
                   </TableCell>
                   <TableCell>
                     <Chip
-                      color={task.status == "Pending" ? "primary" : "secondary"}
-                      label={task.status}
+                      color={task.state == "Pending" ? "primary" : "secondary"}
+                      label={task.state}
                       size="small"
                     />
                   </TableCell>
