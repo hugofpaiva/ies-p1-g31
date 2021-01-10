@@ -145,17 +145,17 @@ const CustomerCard = ({ className, customer, ...rest }) => {
 							<Grid container spacing={3}>
 								{
 									cart.products.length>0 
-									? cart.products.map((p) => (
+									? cart.products.map(productsObj => (
 									<Grid
 										item
-										key={p.product.id}
+										key={productsObj.products.product.id}
 										lg={12}
 										md={12}
 										xs={12}
 									>
 										<ProductCard
 											className={classes.productCard}
-											product={p.product}
+											product={productsObj.products.product}
 										/>
 									</Grid>
 									)) 
