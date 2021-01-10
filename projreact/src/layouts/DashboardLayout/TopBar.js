@@ -140,7 +140,7 @@ const TopBar = ({
         });
       });
     }
-    // Manager subscribes to all
+    // Manager only subscribes to store_full and restock
     else if (localStorage.getItem('authority') === 'MANAGER') {
       stompClient.connect(headers, () => {
         stompClient.subscribe('/topic/restock', function (messageOutput) {
@@ -176,26 +176,6 @@ const TopBar = ({
               "seen": false,
               "employee": false,
               "manager": true,
-            }];
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
-              not => ({...not, "icon": ""})
-            ) }));
-            return newArray;
-          })
-        });
-        stompClient.subscribe('/topic/help', function (messageOutput) {
-          const not = JSON.parse(messageOutput.body);
-          setNotifications(oldArray => {
-            const newArray = [...oldArray, {
-              ...not,
-              "key": not["id"],
-              "update": `Client ${not['nif']} needs help!`,
-              "timestamp": Date.now(),
-              "icon": <AssignmentIcon />,
-              "link": "/employee/help",
-              "seen": false,
-              "employee": true,
-              "manager": false,
             }];
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
               not => ({...not, "icon": ""})
