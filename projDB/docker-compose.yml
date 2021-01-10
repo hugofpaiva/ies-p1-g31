@@ -28,3 +28,5 @@ services:
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ~/docker/mongodb:/data/db
+    depends_on:
+      - mysql

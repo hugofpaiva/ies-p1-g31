@@ -1,6 +1,5 @@
 package com.storego.storegoservice.services.messaging;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.storego.storegoservice.model.NotificationType;
 import com.storego.storegoservice.services.InitScriptGeneratorService;
 import com.storego.storegoservice.services.StoreServices;
@@ -11,8 +10,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+
 
 @Service
 public class Consumer {
