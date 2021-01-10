@@ -193,24 +193,22 @@ public class NotificationController {
         cal.add(Calendar.MONTH, -1);
         Date result = cal.getTime();
         List<Notification> notifications = notificationRepository.findByDateIsGreaterThanEqualAndType(result, NotificationType.HELP);
+        for(HelpNeededState state : HelpNeededState.values()) {
+            help_stats.put(state.name(), 0);
+        }
+        System.out.println(help_stats);
+        System.out.println(help_stats);
         for (Notification notif: notifications){
             total = total +1;
             String notif_state =notif.getState().name();
             Integer value = help_stats.get(notif_state);
-            if (value != null) {
-                help_stats.put(notif_state, value + 1);
-            } else {
-                help_stats.put(notif_state, 1);
-            }
+            help_stats.put(notif_state, value + 1);
         }
 
         for (String type: help_stats.keySet()){
             Integer value = help_stats.get(type);
             help_stats.put(type, (int) Math.round(value * 100 /total));
         }
-
-        help_stats.put("teste", 123);
-
         return help_stats;
     }
 

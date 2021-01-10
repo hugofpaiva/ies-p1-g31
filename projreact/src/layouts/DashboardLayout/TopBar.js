@@ -87,7 +87,7 @@ const TopBar = ({
         }
         return not;
       });
-      localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+      localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
       return newArray;
     });
   };
@@ -136,7 +136,7 @@ const TopBar = ({
               "employee": true,
               "manager": false,
             }];
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
             return newArray;
           })
         });
@@ -159,7 +159,7 @@ const TopBar = ({
               "employee": false,
               "manager": true,
             }];
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
             return newArray;
           })
         });
@@ -177,7 +177,7 @@ const TopBar = ({
               "employee": false,
               "manager": true,
             }];
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
             return newArray;
           })
         });
@@ -195,7 +195,7 @@ const TopBar = ({
               "employee": true,
               "manager": false,
             }];
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray }));
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
             console.log(JSON.parse(localStorage.getItem("notifications")));
             return newArray;
           })

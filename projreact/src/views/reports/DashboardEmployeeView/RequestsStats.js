@@ -42,7 +42,7 @@ const RequestsStats = ({ className, stats,...rest }) => {
         hoverBorderColor: colors.common.white
       }
     ],
-    labels: ['Resolved', 'Pending', 'Costumer Left']
+    labels: ['Resolved', 'Pending', 'Customer Left']
   });
 
   const options = {
@@ -70,17 +70,17 @@ const RequestsStats = ({ className, stats,...rest }) => {
   const [devices, updateDevices] = useState([
     {
       title: 'Resolved',
-      value: 91,
+      value: 0,
       color: colors.indigo[500]
     },
     {
       title: 'Pending',
-      value: 7,
+      value: 0,
       color: colors.orange[600]
     },
     {
-      title: 'Costumer Left',
-      value: 2,
+      title: 'Customer Left',
+      value: 0,
       color: colors.red[600]
     }
   ]);
@@ -100,7 +100,7 @@ const RequestsStats = ({ className, stats,...rest }) => {
     updateData({
       datasets: [
         {
-          data: [new_data['RESOLVED'], new_data['PENDING'], new_data['COSTUMER_LEFT']],
+          data: [new_data['RESOLVED'], new_data['PENDING'], new_data['CUSTOMER_LEFT']],
           backgroundColor: [
             colors.indigo[500],
             colors.orange[600],
@@ -111,7 +111,7 @@ const RequestsStats = ({ className, stats,...rest }) => {
           hoverBorderColor: colors.common.white
         }
       ],
-      labels: ['Resolved', 'Pending', 'Costumer Left']
+      labels: ['Resolved', 'Pending', 'Customer Left']
     });
     updateDevices([
       {
@@ -125,8 +125,8 @@ const RequestsStats = ({ className, stats,...rest }) => {
         color: colors.orange[600]
       },
       {
-        title: 'Costumer Left',
-        value: new_data['COSTUMER_LEFT'],
+        title: 'Client Left',
+        value: new_data['CUSTOMER_LEFT'],
         color: colors.red[600]
       }
     ]);
