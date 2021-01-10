@@ -60,12 +60,26 @@ const ProfileDetails = ({ persona, className, ...rest }) => {
     });
   };
 
+  async function updateInfo() {
+		const requestOptions = {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ username: values.firstName + values.lastName, email: values.email })
+		};
+		const response = await fetch('http://127.0.0.1:8080/api/wprk/person', requestOptions);
+		const data = await response.json();
+
+		}
+
   return (
     <form
       autoComplete="off"
       noValidate
       className={clsx(classes.root, className)}
       {...rest}
+      onSubmit={() => {
+        return updateInfo();
+      }}
     >
       <Card>
         <CardHeader

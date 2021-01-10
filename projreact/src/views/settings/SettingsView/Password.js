@@ -9,7 +9,8 @@ import {
   CardHeader,
   Divider,
   TextField,
-  makeStyles
+  makeStyles,
+  Typography
 } from '@material-ui/core';
 
 const useStyles = makeStyles(({
@@ -22,6 +23,8 @@ const Password = ({ className, ...rest }) => {
     password: '',
     confirm: ''
   });
+  const [loginError, setLoginError] = useState(false);
+
 
   const handleChange = (event) => {
     setValues({
@@ -30,10 +33,30 @@ const Password = ({ className, ...rest }) => {
     });
   };
 
+  async function updatePass() {
+    // Process response
+		// If error, show error warning
+		if (values.password != values.password) {
+			setLoginError(true);
+			return false;
+    }
+    
+    const requestOptions = {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: values.password })
+		};
+		const response = await fetch('http://127.0.0.1:8080/api/work/person', requestOptions);
+		const data = await response.json();
+	}
+
   return (
     <form
       className={clsx(classes.root, className)}
       {...rest}
+      onSubmit={() => {
+        return updatePass();
+      }}
     >
       <Card>
         <CardHeader
@@ -75,6 +98,16 @@ const Password = ({ className, ...rest }) => {
           >
             Update
           </Button>
+          <br />
+          { 
+            loginError && 
+            <Typography
+              color="error"
+              variant="caption"
+            >
+              Wrong credentials! Please, try again.
+            </Typography>
+          }
         </Box>
       </Card>
     </form>
