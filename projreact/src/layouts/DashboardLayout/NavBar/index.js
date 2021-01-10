@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
 	Avatar,
@@ -12,7 +12,6 @@ import {
 	makeStyles,
 } from "@material-ui/core";
 import NavItem from "./NavItem";
-import getInitials from "src/utils/getInitials";
 
 import personas from '../data';
 
@@ -63,8 +62,8 @@ const NavBar = ({ onMobileClose, openMobile, persona }) => {
 					color="textPrimary"
 					variant="h5"
 				>
-					{persona == "admin" && "Manager"}
-					{persona == "employee" && "Employee"}
+					{persona === "admin" && "Manager"}
+					{persona === "employee" && "Employee"}
 				</Typography>
 				<Typography color="textSecondary" variant="body2">
 				</Typography>

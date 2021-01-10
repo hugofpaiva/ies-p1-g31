@@ -5,10 +5,10 @@
 function auth(authority) {
     let auth = true;
 	// If does not have a token
-	if (localStorage.getItem("token") == null)
+	if (localStorage.getItem("token") === null)
 		auth = false;
 	// If is not admin
-	if (localStorage.getItem("authority") != authority)
+	if (localStorage.getItem("authority") !== authority)
         auth = false;
     // If not auth, remove token and redirect to login
     if (!auth) {

@@ -16,7 +16,6 @@ import {
   Typography,
   makeStyles,
   MenuList,
-  Link
 } from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import AssignmentIcon from '@material-ui/icons/Assignment';
@@ -66,7 +65,6 @@ const TopBar = ({
   const [admin] = useState(isAdmin);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [clientRef, setclientRef] = React.useState(null);
 
   const [notifications, setNotifications] = React.useState([]);
 
@@ -94,10 +92,6 @@ const TopBar = ({
     });
   };
 
-  const openTasks = (event) => {
-    handleClose();
-  };
-
   useEffect(() => {
     // Notifications on local storage
     let nots = localStorage.getItem("notifications") != null ? JSON.parse(localStorage.getItem("notifications"))['notifications'] : [];
@@ -122,7 +116,7 @@ const TopBar = ({
     const headers = {};
 
     // Employee only subscribes to help
-    if (localStorage.getItem('authority') == 'EMPLOYEE') {
+    if (localStorage.getItem('authority') === 'EMPLOYEE') {
       stompClient.connect(headers, () => {
         stompClient.subscribe('/topic/help', function (messageOutput) {
           const not = JSON.parse(messageOutput.body);
@@ -147,7 +141,7 @@ const TopBar = ({
       });
     }
     // Manager subscribes to all
-    else if (localStorage.getItem('authority') == 'MANAGER') {
+    else if (localStorage.getItem('authority') === 'MANAGER') {
       stompClient.connect(headers, () => {
         stompClient.subscribe('/topic/restock', function (messageOutput) {
           const not = JSON.parse(messageOutput.body);
@@ -258,9 +252,9 @@ const TopBar = ({
                   n => !n['seen']
                   &&
                   (
-                    (localStorage.getItem('authority') == 'EMPLOYEE'  && n['employee'])
+                    (localStorage.getItem('authority') === 'EMPLOYEE'  && n['employee'])
                     || 
-                    (localStorage.getItem('authority') == 'MANAGER'  && n['manager'])
+                    (localStorage.getItem('authority') === 'MANAGER'  && n['manager'])
                   )
                 ).map((n) => (
                   <MenuItem

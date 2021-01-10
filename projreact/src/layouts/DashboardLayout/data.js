@@ -6,7 +6,7 @@ import {
     Bell as NotificationsIcon,
     Users as UsersIcon,
     DollarSign as LatestOrders,
-    Users as Users,
+    Users,
 } from "react-feather";
 
 const personas = {

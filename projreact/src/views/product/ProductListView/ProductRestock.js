@@ -64,7 +64,7 @@ export default function FormDialog(props) {
         };
         const url = 'http://127.0.0.1:8080/api/admin/product/' + product.id;
         const response = await fetch(url, requestOptions);
-        if (response.status == 200) {
+        if (response.status === 200) {
             props.update();
             setError(null);
             setOpen(false);

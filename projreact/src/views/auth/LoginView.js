@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import {
 	Box,
 	Button,
 	Container,
-	Link,
 	TextField,
 	Typography,
 	makeStyles,
@@ -30,7 +28,6 @@ const LoginView = () => {
 	localStorage.removeItem("authority");
 
 	const classes = useStyles();
-	const navigate = useNavigate();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -38,12 +35,12 @@ const LoginView = () => {
 	
 	function redirectUser() {
 		// Validate that token was created 
-		if (localStorage.getItem('token') != null) {
+		if (localStorage.getItem('token') !== null) {
 			// If so, redirect
-			if (localStorage.getItem('authority') == 'MANAGER') {
+			if (localStorage.getItem('authority') === 'MANAGER') {
 				window.location.href = "/admin";
 				return false;
-			} else if (localStorage.getItem('authority') == 'EMPLOYEE') {
+			} else if (localStorage.getItem('authority') === 'EMPLOYEE') {
 				window.location.href = "/employee";
 				return false;
 			} 
@@ -64,7 +61,7 @@ const LoginView = () => {
 		
 		// Process response
 		// If error, show error warning
-		if ('status' in data && data['status'] != 200) {
+		if ('status' in data && data['status'] !== 200) {
 			setLoginError(true);
 			return false;
 		}

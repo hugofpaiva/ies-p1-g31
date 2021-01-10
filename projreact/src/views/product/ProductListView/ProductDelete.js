@@ -13,7 +13,7 @@ import {
 export default function AlertDialog(props) {
     const [open, setOpen] = React.useState(false);
     const [error, setError] = React.useState(false);
-    const [product, setProduct] = React.useState(props.product);
+    const [product] = React.useState(props.product);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -40,7 +40,7 @@ export default function AlertDialog(props) {
         };
         const url = 'http://127.0.0.1:8080/api/admin/product/' + product.id;
         const response = await fetch(url, requestOptions);
-        if (response.status == 200) {
+        if (response.status === 200) {
             props.update();
             setOpen(false);
         } else {

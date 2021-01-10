@@ -4,7 +4,6 @@ import { Pagination } from "@material-ui/lab";
 import Page from "src/components/Page";
 import Toolbar from "./Toolbar";
 import ProductCard from "./ProductCard";
-import data from "./data";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -35,10 +34,10 @@ const ProductList = (props) => {
 	};
 
 	// Fazer chamada à API para obter produtos
-	useEffect(async() => {
+	useEffect(() => {
 		updateProducts();
 		updateCategories();
-	}, []);
+	}, [updateProducts]);
 
 	async function updateProducts() {
 		const requestOptions = {
@@ -50,7 +49,7 @@ const ProductList = (props) => {
 		};
 		let pageN = page - 1;
 		let url = "http://127.0.0.1:8080/api/work/products?page=" + pageN + "&size=" + itemsPerPage;
-		if (search.trim() != "") {
+		if (search.trim() !== "") {
 			url += "&name=" + search;
 		}
 		const response = await fetch(url, requestOptions);

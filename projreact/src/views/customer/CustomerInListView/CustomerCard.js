@@ -61,8 +61,17 @@ const DialogActions = withStyles((theme) => ({
 const CustomerCard = ({ className, customer, ...rest }) => {
 	const classes = useStyles();
 	const [open, setOpen] = React.useState(false);
-	const [products, setProducts] = React.useState([]);
-	const [cart, setCart] = React.useState(null);
+	const [cart, setCart] = React.useState({
+		'id': 0,
+		'person': {
+			'nif': 0,
+			'name': 0,
+			'email': 0,
+			'lastVisit': 0,
+			'type': ''
+		},
+		'products': []
+	});
 
 	const openCart = (customer) => {
 		loadCart();
@@ -113,7 +122,7 @@ const CustomerCard = ({ className, customer, ...rest }) => {
 					</Typography>
 				</Box>
 				<Grid container justify="center">
-					<Button color={colors.common.white} variant="contained" onClick={openCart}>
+					<Button style={{backgroundColor: colors.common.white}} variant="contained" onClick={openCart}>
 						<ShoppingCart className={classes.icon} size="20" />
 						<span className={classes.title}>See Shopping Cart</span>
 					</Button>
@@ -135,8 +144,8 @@ const CustomerCard = ({ className, customer, ...rest }) => {
 						<Box mt={3}>
 							<Grid container spacing={3}>
 								{
-									products.length>0 
-									? products.map((p) => (
+									cart.products.length>0 
+									? cart.products.map((p) => (
 									<Grid
 										item
 										key={p.product.id}

@@ -7,7 +7,6 @@ import {
 import Page from 'src/components/Page';
 import Results from './Results';
 import Toolbar from './Toolbar';
-import data from './data';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,15 +20,9 @@ const useStyles = makeStyles((theme) => ({
 const CustomerListView = () => {
   const classes = useStyles();
   const [transactions, setTransactions] = useState([]);
-  const itemsPerPage = 20;
-  const totalItems = 1000;
-  const [page, setPage] = React.useState(1);
-  const [nPages, setNPages] = React.useState(
-    Math.ceil(transactions.length / itemsPerPage)
-  );
 
   // Fazer chamada à API para obter produtos
-  useEffect(async () => {
+  useEffect(() => {
     updateTransactions();
   }, []);
 
@@ -41,7 +34,6 @@ const CustomerListView = () => {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       }
     };
-    let pageN = page - 1;
     let url = "http://127.0.0.1:8080/api/admin/purchases/";
     const nif = new URLSearchParams(window.location.search).get("nif");
     if (nif != null) {
@@ -49,16 +41,9 @@ const CustomerListView = () => {
     }
     const response = await fetch(url, requestOptions);
     const data = await response.json();
-
-    console.log("GOT DATA");
-    console.log(data);
-
+    
     // Update transactions
     setTransactions(data['transactions']);
-    // Update number of pages
-    setNPages(data['totalPages']);
-    // Update page
-    setPage(data['currentPage'] + 1);
   }
 
   return (

@@ -10,8 +10,6 @@ import LowStock from './LowStock';
 import EntriesOut from './EntriesOut';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import InputIcon from '@material-ui/icons/Input';
-import GroupIcon from '@material-ui/icons/Group';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +26,7 @@ const Dashboard = () => {
   const [notificationsHelp, setNotificationsHelp] = useState([]);
   const [notificationsStock, setNotificationsStock] = useState([]);
 
-  useEffect(async () => {
+  useEffect(() => {
     const loop = setInterval(updateNotifications, 1000);
     return () => clearInterval(loop);
   }, []);
