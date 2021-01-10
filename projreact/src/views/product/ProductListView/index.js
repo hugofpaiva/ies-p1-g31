@@ -37,7 +37,7 @@ const ProductList = (props) => {
 	useEffect(() => {
 		updateProducts();
 		updateCategories();
-	}, [updateProducts]);
+	}, []);
 
 	async function updateProducts() {
 		const requestOptions = {
