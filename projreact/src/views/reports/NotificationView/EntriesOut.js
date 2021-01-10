@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import PropTypes from 'prop-types';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 import {
   Box,
   Card,
@@ -80,6 +82,63 @@ const useStyles = makeStyles(() => ({
 const EntriesOut = ({ className, ...rest }) => {
   const classes = useStyles();
   const [entriesout] = useState(data);
+  const [notifications, setNotifications] = useState([]);
+
+  // Initialize and update every time props change
+
+  useEffect(() => {
+    // Load last notitications from API
+    getLastNotifications();
+
+    // Subscribe to socket for updates
+    const socket = new SockJS('http://localhost:8080/api/ws');
+    const stompClient = Stomp.over(socket);
+    const headers = {};
+
+    stompClient.connect(headers, () => {
+      stompClient.subscribe('/topic/enter_store', function (messageOutput) {
+        const not = JSON.parse(messageOutput.body);
+        setNotifications(oldArray => {
+          const newArray = [...oldArray, {
+            ...not,
+            "date": Date.now(),
+          }];
+          return newArray.sort(not => not['date']);
+        })
+      });
+      stompClient.subscribe('/topic/exit_store', function (messageOutput) {
+        const not = JSON.parse(messageOutput.body);
+        setNotifications(oldArray => {
+          const newArray = [...oldArray, {
+            ...not,
+            "date": Date.now(),
+          }];
+          return newArray.sort(not => not['date']);
+        })
+      });
+    });
+  }, []);
+
+  async function getLastNotifications() {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    };
+    const response = await fetch('http://127.0.0.1:8080/api/admin/notifications_entered_left', requestOptions);
+    const data = await response.json();
+    // Update value with notifications from server
+    setNotifications(not => {
+      const newNotifications = [...not];
+      data['notifications'].forEach(notification => {
+        newNotifications.push(notification);
+      })
+      // Return sorted version
+      return newNotifications.sort(not => not['date']);
+    });
+  }
 
   return (
     <Card
@@ -88,55 +147,57 @@ const EntriesOut = ({ className, ...rest }) => {
     >
       <CardHeader title="People in/out Store notifications" />
       <Divider />
-        <Box minWidth={800}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  Customer
+      <Box minWidth={800}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                Customer
                 </TableCell>
-                <TableCell sortDirection="desc">
-                  <Tooltip
-                    enterDelay={300}
-                    title="Sort"
+              <TableCell sortDirection="desc">
+                <Tooltip
+                  enterDelay={300}
+                  title="Sort"
+                >
+                  <TableSortLabel
+                    active
+                    direction="desc"
                   >
-                    <TableSortLabel
-                      active
-                      direction="desc"
-                    >
-                      Date
+                    Date
                     </TableSortLabel>
-                  </Tooltip>
+                </Tooltip>
+              </TableCell>
+              <TableCell>
+                Status
+                </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {notifications.map(notification => (
+              <TableRow
+                hover
+                key={notification.id}
+              >
+                <TableCell>
+                  {notification.nif}
                 </TableCell>
                 <TableCell>
-                  Status
+                  {moment(notification.date).format('DD/MM/YYYY, HH:mm:ss')}
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    color="primary"
+                    label={
+                      (notification.type == "ENTERED_STORE") ? "Entered Store" : "Exited Store"
+                    }
+                    size="small"
+                  />
                 </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {entriesout.map((eout) => (
-                <TableRow
-                  hover
-                  key={eout.id}
-                >
-                  <TableCell>
-                    {eout.customer.name}
-                  </TableCell>
-                  <TableCell>
-                    {moment(eout.createdAt).format('DD/MM/YYYY, HH:mm:ss')}
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      color="primary"
-                      label={eout.status}
-                      size="small"
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>
     </Card>
   );
 };
