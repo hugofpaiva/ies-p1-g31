@@ -40,15 +40,18 @@ const Help = ({ className, ...rest }) => {
   };
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
+    // When not first page, update state
+    if (newPage != 0) {
+      updatePageStatus(newPage);
+    }
   };
   // /Pagination stuff
 
-  // Initialize and update every time props change
-
+  // Initialize component
   useEffect(() => {
     // Load last notitications from API
     getLastNotifications();
-    
+
     // Subscribe to socket for updates
     const socket = new SockJS('http://localhost:8080/api/ws');
     const stompClient = Stomp.over(socket);
@@ -65,8 +68,28 @@ const Help = ({ className, ...rest }) => {
           return newArray.sort(not => not['date']);
         })
       });
-  });
+    });
   }, []);
+
+  // Update page status
+  async function updatePageStatus(newPage) {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      },
+    };
+    // Foreach page notification
+    await Promise.all(notifications.slice(newPage * limit, newPage * limit + limit).map(async (notification) => {
+      // Update status
+      const url = 'http://127.0.0.1:8080/api/work/notifications_help/' + notification['id'];
+      const response = await fetch(url, requestOptions);
+      const data = await response.json();
+      notification['state'] = data['state'];
+    }));
+    setNotifications(notifications);
+  }
 
   async function getLastNotifications() {
     const requestOptions = {

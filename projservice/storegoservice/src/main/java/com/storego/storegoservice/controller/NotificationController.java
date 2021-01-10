@@ -186,5 +186,14 @@ public class NotificationController {
         return ResponseEntity.ok(updatedNot);
     }
 
+    @GetMapping("/work/notifications_help/{id}")
+    public ResponseEntity<Notification> updateHelpNotification(@PathVariable(value = "id") String notificationId) throws ResourceNotFoundException {
+
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Notification not found for this id: " + notificationId));
+
+        return ResponseEntity.ok(notification);
+    }
+
 
 }
