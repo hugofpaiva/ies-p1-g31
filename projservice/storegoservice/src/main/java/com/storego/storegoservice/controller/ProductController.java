@@ -5,8 +5,7 @@ import com.storego.storegoservice.exception.ResourceNotFoundException;
 import com.storego.storegoservice.model.*;
 import com.storego.storegoservice.repository.ProductCategoryRepository;
 import com.storego.storegoservice.repository.ProductRepository;
-import com.storego.storegoservice.services.DataGeneratorComService;
-import com.storego.storegoservice.services.notifications.NotificationSocketsService;
+import com.storego.storegoservice.services.UpdateScriptGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +27,7 @@ public class ProductController {
     private ProductCategoryRepository productCategoryRepository;
 
     @Autowired
-    private DataGeneratorComService dataGeneratorComService;
+    private UpdateScriptGeneratorService updateScriptGeneratorService;
 
     @GetMapping("/work/products")
     public ResponseEntity<Map<String, Object>> getPurchaseByPersonNif(@RequestParam(required = false) String name,
@@ -80,7 +79,7 @@ public class ProductController {
         //Used to send how many more products it is to add
         if (productDetails.getStock_current() != null) {
             product.setStock_current(product.getStock_current() + productDetails.getStock_current());
-            dataGeneratorComService.restockProduct(productDetails.getStock_current(), product);
+            updateScriptGeneratorService.restockProduct(productDetails.getStock_current(), product);
         }
         if (productDetails.getCategory() != null) {
             ProductCategory cat = productCategoryRepository.findById(productDetails.getCategory().getId())
@@ -101,7 +100,7 @@ public class ProductController {
     @PostMapping("/admin/products")
     public Product createProduct(@Valid @RequestBody Product product) {
         Product p = productRepository.save(product);
-        dataGeneratorComService.addProduct(product);
+        updateScriptGeneratorService.addProduct(product);
         return p;
     }
 
@@ -112,7 +111,7 @@ public class ProductController {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found for this id: " + productId));
 
         productRepository.delete(product);
-        dataGeneratorComService.deleteProduct(product);
+        updateScriptGeneratorService.deleteProduct(product);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return response;

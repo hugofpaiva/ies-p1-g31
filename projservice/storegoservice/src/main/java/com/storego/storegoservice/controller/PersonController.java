@@ -3,14 +3,10 @@ package com.storego.storegoservice.controller;
 import com.storego.storegoservice.configuration.JwtTokenUtil;
 import com.storego.storegoservice.exception.ResourceNotFoundException;
 import com.storego.storegoservice.model.*;
-import com.storego.storegoservice.repository.NotificationRepository;
 import com.storego.storegoservice.repository.PersonRepository;
-import com.storego.storegoservice.services.DataGeneratorComService;
+import com.storego.storegoservice.services.UpdateScriptGeneratorService;
 import com.storego.storegoservice.services.StoreServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,7 +32,7 @@ public class PersonController {
     private StoreServices service;
 
     @Autowired
-    private DataGeneratorComService dataGeneratorComService;
+    private UpdateScriptGeneratorService updateScriptGeneratorService;
 
     @GetMapping("/admin/persons")
     public List<Person> getAllClients() {
@@ -47,7 +43,7 @@ public class PersonController {
     public ResponseEntity<Map<String, Object>> setNewLimit(@RequestParam int limit){
             if(limit>0){
                 service.setMaxClients(limit);
-                dataGeneratorComService.newLimit(limit);
+                updateScriptGeneratorService.newLimit(limit);
             }else{
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
