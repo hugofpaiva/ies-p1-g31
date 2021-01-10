@@ -11,6 +11,7 @@ import CostumersInStore from './CostumersInStore';
 import TotalCustomers from './TotalCustomers';
 import TotalProfit from './TotalProfit';
 import SalesByType from './SalesByType';
+import TotalCustomersEdit from './TotalCustomersEdit';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -137,6 +138,18 @@ const Dashboard = () => {
             xs={12}
           >
             <TotalProfit value={profit} />
+          </Grid>
+          <Grid
+            item
+            lg={3}
+            sm={6}
+            xl={3}
+            xs={12}
+          >
+            <TotalCustomersEdit 
+              maxCustomers={maxCustomers} 
+              update={updateValues} 
+            />
           </Grid>
           <Grid
             item
