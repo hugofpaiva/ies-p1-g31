@@ -73,9 +73,11 @@ class dataGenerator:
             return
         elif self.products[product] == 1:
             qty = 1
-        else:
-            # choosing a random quantity that has to be less than the existing stock
+        elif self.products[product] < 5:
             qty = random.randint(1, self.products[product])
+        else:
+            # choosing a random quantity until 5
+            qty = random.randint(1, 5)
 
         client_cart = self.clients[client_nif][1]
         if product not in client_cart:                  # adding product + quantity to client cart
