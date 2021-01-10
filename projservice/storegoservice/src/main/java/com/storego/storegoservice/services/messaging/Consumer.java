@@ -21,42 +21,42 @@ public class Consumer {
     @Autowired
     private InitScriptGeneratorService initScriptGeneratorService;
 
-    @KafkaListener(topics="costumer-events")
+    @KafkaListener(topics="storego-new")
     public void consume(String message) throws IOException {
         JSONObject obj = new JSONObject(message);
-        System.out.println("INITIALIZING: " +obj.getString("type"));
+        System.out.println(obj.getString("type"));
         switch ((String) obj.get("type")){
             case "entering-store":
                 try{
-                service.enterStore(Long.valueOf((Integer) obj.get("nif")));
+                service.enterStore(obj.getLong("nif"));
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
                 break;
             case "leaving-store":
                 try{
-                service.leaveStore(Long.valueOf((Integer) obj.get("nif")));
+                service.leaveStore(obj.getLong("nif"));
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
                 break;
             case "adding-product":
                 try {
-                    service.addProductToCart(Long.valueOf((Integer) obj.get("nif")), Long.valueOf((Integer) obj.get("idProduct")), (Integer) obj.get("qty"));
+                    service.addProductToCart(obj.getLong("nif"), obj.getLong("idProduct"), obj.getInt("qty"));
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
                 break;
             case "removing-product":
                 try {
-                    service.removeProductFromCart(Long.valueOf((Integer) obj.get("nif")), Long.valueOf((Integer) obj.get("idProduct")), (Integer) obj.get("qty"));
+                    service.removeProductFromCart(obj.getLong("nif"), obj.getLong("idProduct"), obj.getInt("qty"));
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
                 break;
             case "help-needed":
                 try {
-                    service.notifyHelpNeeded(Long.valueOf((Integer) obj.get("nif")), NotificationType.HELP);
+                    service.notifyHelpNeeded(obj.getLong("nif"), NotificationType.HELP);
                 } catch (Exception e){
                     System.err.println(e.getMessage());
                 }
@@ -64,6 +64,7 @@ public class Consumer {
             case "initialize-people-request":
                 System.out.println("initialize-people-req");
                 try {
+                    initScriptGeneratorService.everybodyOut();
                     initScriptGeneratorService.initPeopleReq();
                 } catch (Exception e){
                     System.err.println(e.getMessage());
