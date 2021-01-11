@@ -49,7 +49,7 @@ const LatestProducts = ({ productsList, className, ...rest }) => {
     >
       <CardHeader
         subtitle={`${products.length} in total`}
-        title="Latest Products"
+        title="Last Bought Products"
       />
       <Divider />
       <List>
@@ -62,12 +62,7 @@ const LatestProducts = ({ productsList, className, ...rest }) => {
               primary={product.name}
               secondary={`Bought ${product.updatedAt}`}
             />
-            <IconButton
-              edge="end"
-              size="small"
-            >
-              <MoreVertIcon />
-            </IconButton>
+
           </ListItem>
         ))}
       </List>

@@ -137,19 +137,6 @@ export default function FormDialog(props) {
                             There was an error! :/ Please, try again.
                         </Typography>
                     }
-                    {
-                        !props.edit &&
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="id"
-                            label="ID"
-                            type="number"
-                            value={product.id}
-                            onChange={val => setProduct({ ...product, id: val.target.value })}
-                            fullWidth
-                        />
-                    }
                     <TextField
                         autoFocus
                         margin="dense"

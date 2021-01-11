@@ -52,7 +52,6 @@ const CustomerListView = () => {
       title="Latest Purchases"
     >
       <Container maxWidth={false}>
-        <Toolbar />
         <Box mt={3}>
           <Results transactions={transactions} />
         </Box>

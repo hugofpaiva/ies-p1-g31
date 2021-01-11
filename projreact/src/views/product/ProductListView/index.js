@@ -39,11 +39,6 @@ const ProductList = (props) => {
 		updateProducts(page);
 		updateCategories();
 
-		const loop = setInterval(() => {
-			updateProducts(page);
-		}, 1000);
-
-		return () => clearInterval(loop);
 	}, []);
 
 	async function updateProducts(nextPage) {
@@ -90,7 +85,7 @@ const ProductList = (props) => {
 	}
 
 	function searchFunc(keyword) {
-		setSearch(keyword, updateProducts());
+		setSearch(keyword, updateProducts(1));
 	}
 
 	return (

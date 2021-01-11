@@ -109,7 +109,7 @@ const Results = ({ className, transactions, ...rest }) => {
                   key={transaction.transaction.id}
                 >
                   <TableCell>
-                    {transaction.total}€
+                    {transaction.total.toFixed(2)}€
                   </TableCell>
                   <TableCell>
                     {transaction.products.length}

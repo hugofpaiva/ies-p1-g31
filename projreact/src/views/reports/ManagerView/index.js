@@ -98,7 +98,6 @@ const Dashboard = () => {
             sm={6}
             xl={3}
             xs={12}
-            style={{height: '80%'}}
           >
             <CostumersInStore value={inStore} />
           </Grid>
@@ -108,7 +107,6 @@ const Dashboard = () => {
             sm={6}
             xl={3}
             xs={12}
-            style={{height: '80%'}}
           >
             <TotalCustomers value={maxCustomers} />
           </Grid>
@@ -140,7 +138,7 @@ const Dashboard = () => {
             xl={9}
             xs={12}
           >
-            <CurrentCostumers persons={lastPersons.slice(0,6)} />
+            <CurrentCostumers persons={lastPersons.slice(0,8)} />
           </Grid>
           <Grid
             item
