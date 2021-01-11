@@ -50,7 +50,14 @@ export default function AlertDialog(props) {
 
     return (
         <div>
-            <Button variant="contained" onClick={handleClickOpen}>
+            <Button 
+                variant="contained" 
+                onClick={handleClickOpen}
+                style={{
+                    marginLeft: "10px",
+                    marginRight: "10px",
+                }}
+            >
                 <XCircle size="20" />
                 <span >Delete</span>
             </Button>
