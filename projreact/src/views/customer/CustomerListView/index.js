@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Container, makeStyles, LinearProgress } from "@material-ui/core";
-import axios from "axios";
 import Page from "src/components/Page";
 import Results from "./Results";
-import Toolbar from "./Toolbar";
-import data from "./data";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -18,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 const CustomerListView = () => {
 	const classes = useStyles();
 	const [loading, setLoading] = useState(true);
-	const [customers, setCustomers] = useState(data);
+	const [customers, setCustomers] = useState([]);
 
 	useEffect(() => {
 		setLoading(true);
@@ -40,7 +37,7 @@ const CustomerListView = () => {
 		console.log(data);
 		// Update categories
 		// Only show clients
-		setCustomers(data.filter(c => c.type=="CLIENT"));
+		setCustomers(data.filter(c => c.type==="CLIENT"));
 		// Remove loading
 		setLoading(false);
 	}

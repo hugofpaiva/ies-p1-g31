@@ -26,4 +26,12 @@ public class JwtResponse implements Serializable {
     public GrantedAuthority getType() {
         return type;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public Long getNif() {
+        return nif;
+    }
 }

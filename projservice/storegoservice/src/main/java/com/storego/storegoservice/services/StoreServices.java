@@ -46,7 +46,7 @@ public class StoreServices {
     private int maxClients;
 
     public StoreServices() {
-        this.maxClients = 5;
+        this.maxClients = 10;
     }
 
     public Integer getMaxClients(){return this.maxClients;}

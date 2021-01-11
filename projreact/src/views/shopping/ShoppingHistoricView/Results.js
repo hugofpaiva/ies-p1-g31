@@ -109,13 +109,13 @@ const Results = ({ className, transactions, ...rest }) => {
                   key={transaction.transaction.id}
                 >
                   <TableCell>
-                    {transaction.total}€
+                    {transaction.total.toFixed(2)}€
                   </TableCell>
                   <TableCell>
                     {transaction.products.length}
                   </TableCell>
                   <TableCell>
-                    {moment(transaction.transaction.date).format('DD/MM/YYYY, h:mm:ss')}
+                    {moment(transaction.transaction.date).format('DD/MM/YYYY, HH:mm:ss')}
                   </TableCell>
                   <TableCell>
                     <Box

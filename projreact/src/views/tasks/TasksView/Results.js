@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-  Avatar,
   Box,
   Card,
   Table,
@@ -13,7 +12,6 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
   makeStyles,
   Chip,
   Grid

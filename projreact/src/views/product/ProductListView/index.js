@@ -4,7 +4,6 @@ import { Pagination } from "@material-ui/lab";
 import Page from "src/components/Page";
 import Toolbar from "./Toolbar";
 import ProductCard from "./ProductCard";
-import data from "./data";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -31,16 +30,18 @@ const ProductList = (props) => {
 	);
 
 	const handleChange = (event, value) => {
-		setPage(value, updateProducts());
+		updateProducts(value);
+		setPage(value);
 	};
 
 	// Fazer chamada à API para obter produtos
-	useEffect(async() => {
-		updateProducts();
+	useEffect(() => {
+		updateProducts(page);
 		updateCategories();
+
 	}, []);
 
-	async function updateProducts() {
+	async function updateProducts(nextPage) {
 		const requestOptions = {
 			method: 'GET',
 			headers: { 
@@ -48,16 +49,13 @@ const ProductList = (props) => {
 				'Authorization': 'Bearer ' + localStorage.getItem('token')
 			}
 		};
-		let pageN = page - 1;
+		let pageN = nextPage - 1;
 		let url = "http://127.0.0.1:8080/api/work/products?page=" + pageN + "&size=" + itemsPerPage;
-		if (search.trim() != "") {
+		if (search.trim() !== "") {
 			url += "&name=" + search;
 		}
 		const response = await fetch(url, requestOptions);
 		const data = await response.json();
-
-		console.log("GOT DATA");
-		console.log(data);
 
 		// Update products 
 		setProducts(data['products']);
@@ -78,14 +76,16 @@ const ProductList = (props) => {
 		let url = "http://127.0.0.1:8080/api/work/productscategories";
 		const response = await fetch(url, requestOptions);
 		const data = await response.json();
-		console.log("GOT CATEGORIES");
-		console.log(data);
 		// Update categories 
 		setCategories(data);
 	}
 
+	function productHasChanged() {
+		updateProducts(page);
+	}
+
 	function searchFunc(keyword) {
-		setSearch(keyword, updateProducts());
+		setSearch(keyword, updateProducts(1));
 	}
 
 	return (
@@ -95,17 +95,17 @@ const ProductList = (props) => {
 					persona={props.persona} 
 					search={searchFunc}
 					categories={categories}
-					update={updateProducts}
+					update={productHasChanged}
 				/>
 				<Box mt={3}>
 					<Grid container spacing={3}>
-						{products.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((product) => (
+						{products.map((product) => (
 							<Grid item key={product.id} lg={4} md={6} xs={12}>
 								<ProductCard
 									className={classes.productCard}
 									product={product}
 									persona={props.persona}
-									update={updateProducts}
+									update={productHasChanged}
 									categories={categories}
 								/>
 							</Grid>

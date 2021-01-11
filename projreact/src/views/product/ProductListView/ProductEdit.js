@@ -11,7 +11,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
@@ -87,7 +86,7 @@ export default function FormDialog(props) {
         };
         const url = props.edit ? 'http://127.0.0.1:8080/api/admin/product/' + product.id : 'http://127.0.0.1:8080/api/admin/products';
         const response = await fetch(url, requestOptions);
-        if (response.status == 200) {
+        if (response.status === 200) {
             props.update();
             setOpen(false);
         } else {
@@ -138,19 +137,6 @@ export default function FormDialog(props) {
                             There was an error! :/ Please, try again.
                         </Typography>
                     }
-                    {
-                        !props.edit &&
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="id"
-                            label="ID"
-                            type="number"
-                            value={product.id}
-                            onChange={val => setProduct({ ...product, id: val.target.value })}
-                            fullWidth
-                        />
-                    }
                     <TextField
                         autoFocus
                         margin="dense"
@@ -197,8 +183,8 @@ export default function FormDialog(props) {
                             id="demo-simple-select"
                             value={product.category.id}
                             onChange={val => {
-                                props.categories.map(cat => {
-                                    if (cat.id == val.target.value)
+                                props.categories.forEach(cat => {
+                                    if (cat.id === val.target.value)
                                         setProduct({ ...product, category: cat });
                                 });
                             }}

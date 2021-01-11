@@ -36,8 +36,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Bill(props) {
 	const [open, setOpen] = React.useState(false);
-	const [maxWidth, setMaxWidth] = React.useState("sm");
-    const [fullWidth, setFullWidth] = React.useState(true);
+	const [maxWidth] = React.useState("sm");
+    const [fullWidth] = React.useState(true);
     const classes = useStyles();
 
 	const handleClickOpen = () => {
@@ -66,7 +66,7 @@ export default function Bill(props) {
 				aria-describedby="alert-dialog-description"
 			>
 				<DialogTitle id="alert-dialog-title">
-					{moment(props.transaction.transaction.date).format("DD/MM/YYYY H:M")}
+					{moment(props.transaction.transaction.date).format("DD/MM/YYYY HH:mm")}
 				</DialogTitle>
 				<DialogContent>
 					<DialogContentText
@@ -88,13 +88,13 @@ export default function Bill(props) {
 						</TableHead>
 						<TableBody>
 							{props.transaction.products.map((p) => (
-								<TableRow>
+								<TableRow key={p.id}>
 									<TableCell>{1}</TableCell>
 									<TableCell>{p.product.name}</TableCell>
 									<TableCell>
 										<Grid container="true" direction="row">
 											{p.product.price}
-											{p.product.price * 1 !=
+											{p.product.price * 1 !==
 												p.product.price && (
 												<Grid
 													style={{

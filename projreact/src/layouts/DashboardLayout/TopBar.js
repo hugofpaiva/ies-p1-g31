@@ -16,7 +16,6 @@ import {
   Typography,
   makeStyles,
   MenuList,
-  Link
 } from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import AssignmentIcon from '@material-ui/icons/Assignment';
@@ -66,7 +65,6 @@ const TopBar = ({
   const [admin] = useState(isAdmin);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [clientRef, setclientRef] = React.useState(null);
 
   const [notifications, setNotifications] = React.useState([]);
 
@@ -87,13 +85,11 @@ const TopBar = ({
         }
         return not;
       });
-      localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
+      localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
+        not => ({...not, "icon": ""})
+      ) }));
       return newArray;
     });
-  };
-
-  const openTasks = (event) => {
-    handleClose();
   };
 
   useEffect(() => {
@@ -120,7 +116,7 @@ const TopBar = ({
     const headers = {};
 
     // Employee only subscribes to help
-    if (localStorage.getItem('authority') == 'EMPLOYEE') {
+    if (localStorage.getItem('authority') === 'EMPLOYEE') {
       stompClient.connect(headers, () => {
         stompClient.subscribe('/topic/help', function (messageOutput) {
           const not = JSON.parse(messageOutput.body);
@@ -136,14 +132,20 @@ const TopBar = ({
               "employee": true,
               "manager": false,
             }];
+<<<<<<< HEAD
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
+=======
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
+              not => ({...not, "icon": ""})
+            ) }));
+>>>>>>> projreact/feature/stabilization
             return newArray;
           })
         });
       });
     }
-    // Manager subscribes to all
-    else if (localStorage.getItem('authority') == 'MANAGER') {
+    // Manager only subscribes to store_full and restock
+    else if (localStorage.getItem('authority') === 'MANAGER') {
       stompClient.connect(headers, () => {
         stompClient.subscribe('/topic/restock', function (messageOutput) {
           const not = JSON.parse(messageOutput.body);
@@ -159,7 +161,13 @@ const TopBar = ({
               "employee": false,
               "manager": true,
             }];
+<<<<<<< HEAD
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
+=======
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
+              not => ({...not, "icon": ""})
+            ) }));
+>>>>>>> projreact/feature/stabilization
             return newArray;
           })
         });
@@ -177,6 +185,7 @@ const TopBar = ({
               "employee": false,
               "manager": true,
             }];
+<<<<<<< HEAD
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
             return newArray;
           })
@@ -197,6 +206,11 @@ const TopBar = ({
             }];
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
             console.log(JSON.parse(localStorage.getItem("notifications")));
+=======
+            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
+              not => ({...not, "icon": ""})
+            ) }));
+>>>>>>> projreact/feature/stabilization
             return newArray;
           })
         });
@@ -210,6 +224,7 @@ const TopBar = ({
     localStorage.removeItem("token");
     localStorage.removeItem("authority");
     localStorage.removeItem("notifications");
+    localStorage.removeItem("name");
     window.location.href = "/";
   }
 
@@ -220,21 +235,26 @@ const TopBar = ({
       {...rest}
     >
       <Toolbar>
-        {/*<RouterLink to="/">
-          <Logo />
-  </RouterLink>*/}
         <Box flexGrow={1} />
         <Hidden mdDown>
           <IconButton color="inherit" onClick={handleClick}>
             <Badge
-              badgeContent={notifications.filter(n => !n['seen']).length}
+              badgeContent={notifications.filter(
+                  n => !n['seen']
+                  &&
+                  (
+                    (localStorage.getItem('authority') === 'EMPLOYEE'  && n['employee'])
+                    || 
+                    (localStorage.getItem('authority') === 'MANAGER'  && n['manager'])
+                  )
+                ).length}
               color="error"
             >
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit">
-            <InputIcon onClick={() => logOut()} />
+          <IconButton color="inherit" onClick={() => logOut()}>
+            <InputIcon />
           </IconButton>
           <Menu
             id="simple-menu"
@@ -242,7 +262,7 @@ const TopBar = ({
             keepMounted
             open={Boolean(anchorEl)}
             onClose={handleClose}
-            menuAlign={{ lg: 'right' }}
+            menualign={{ lg: 'right' }}
           >
             <MenuList>
               {
@@ -252,12 +272,13 @@ const TopBar = ({
                   n => !n['seen']
                   &&
                   (
-                    (localStorage.getItem('authority') == 'EMPLOYEE'  && n['employee'])
+                    (localStorage.getItem('authority') === 'EMPLOYEE'  && n['employee'])
                     || 
-                    (localStorage.getItem('authority') == 'MANAGER'  && n['manager'])
+                    (localStorage.getItem('authority') === 'MANAGER'  && n['manager'])
                   )
                 ).map((n) => (
                   <MenuItem
+                    key={n.key}
                     onClick={() => { window.location.href = n.link; }}
                   >
                     <ListItemIcon fontSize="small">

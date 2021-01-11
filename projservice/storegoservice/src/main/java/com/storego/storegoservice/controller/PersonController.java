@@ -4,9 +4,8 @@ import com.storego.storegoservice.configuration.JwtTokenUtil;
 import com.storego.storegoservice.exception.EtAuthException;
 import com.storego.storegoservice.exception.ResourceNotFoundException;
 import com.storego.storegoservice.model.*;
-import com.storego.storegoservice.repository.NotificationRepository;
 import com.storego.storegoservice.repository.PersonRepository;
-import com.storego.storegoservice.services.DataGeneratorComService;
+import com.storego.storegoservice.services.UpdateScriptGeneratorService;
 import com.storego.storegoservice.services.StoreServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,18 +36,43 @@ public class PersonController {
     private StoreServices service;
 
     @Autowired
-    private DataGeneratorComService dataGeneratorComService;
+    private UpdateScriptGeneratorService updateScriptGeneratorService;
 
     @GetMapping("/admin/persons")
-    public List<Person> getAllClients() {
-        return personRepository.findAllByType(PersonType.CLIENT);
+    public ResponseEntity<Map<String, Object>> getAllClients(
+            @RequestParam(required = false) String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
+        try {
+            List<Person> clients = new ArrayList<>();
+            Pageable paging = PageRequest.of(page, size);
+
+            Page<Person> pageClient;
+            if (name == null)
+                pageClient = personRepository.findAllByType(PersonType.CLIENT ,paging);
+            else
+                pageClient = personRepository.findAllByTypeAndNameContaining(PersonType.CLIENT, name, paging);
+
+            clients = pageClient.getContent();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("clients", clients);
+            response.put("currentPage", pageClient.getNumber());
+            response.put("totalItems", pageClient.getTotalElements());
+            response.put("totalPages", pageClient.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 
     @GetMapping("/admin/new-limit")
     public ResponseEntity<Map<String, Object>> setNewLimit(@RequestParam int limit){
             if(limit>0){
                 service.setMaxClients(limit);
-                dataGeneratorComService.newLimit(limit);
+                updateScriptGeneratorService.newLimit(limit);
             }else{
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -59,8 +83,17 @@ public class PersonController {
 
     }
 
+    @GetMapping("/work/num_limit")
+    public Map<String, Integer> getNumLimitPersonsInStore() {
+        Map<String, Integer> response = new HashMap<>();
+        response.put("limit_persons_in_store", service.getMaxClients());
+        return response;
+    }
+
+
+
     @PutMapping("/work/person/")
-    public ResponseEntity<Person> updatePerson(HttpServletRequest request, @Valid @RequestBody Person p) throws ResourceNotFoundException {
+    public ResponseEntity<?> updatePerson(HttpServletRequest request, @Valid @RequestBody Person p) throws ResourceNotFoundException {
         String requestTokenHeader = request.getHeader("Authorization");
         String jwtToken = requestTokenHeader.substring(7);
         String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
@@ -83,8 +116,6 @@ public class PersonController {
         String requestTokenHeader = request.getHeader("Authorization");
         String jwtToken = requestTokenHeader.substring(7);
         String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
-        System.out.println(pw.getEmail());
-        System.out.println(email);
         if (!pw.getEmail().equals(email)){
             throw new EtAuthException("Emails don't match!");
         }

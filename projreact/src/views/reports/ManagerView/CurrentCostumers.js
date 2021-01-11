@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
-import moment from 'moment';
-import { v4 as uuid } from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
+import moment from "moment";
 import {
   Box,
   Button,
   Card,
   CardHeader,
-  Chip,
   Divider,
   Table,
   TableBody,
@@ -73,7 +71,7 @@ const LatestOrders = ({ persons, className, ...rest }) => {
                   </Tooltip>
                 </TableCell>
                 <TableCell>
-                  Status
+                  Last visit
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -90,11 +88,7 @@ const LatestOrders = ({ persons, className, ...rest }) => {
                     {person.email}
                   </TableCell>
                   <TableCell>
-                    <Chip
-                      color="primary"
-                      label={'Inside Store'}
-                      size="small"
-                    />
+                    {moment(person.lastVisit).format('DD/MM/YYYY, HH:mm:ss')}
                   </TableCell>
                 </TableRow>
               ))}

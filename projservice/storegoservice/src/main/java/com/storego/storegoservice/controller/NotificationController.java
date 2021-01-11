@@ -8,7 +8,7 @@ import com.storego.storegoservice.model.NotificationType;
 import com.storego.storegoservice.model.Transaction;
 import com.storego.storegoservice.model.TransactionProduct;
 import com.storego.storegoservice.repository.NotificationRepository;
-import com.storego.storegoservice.services.DataGeneratorComService;
+import com.storego.storegoservice.services.UpdateScriptGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +27,7 @@ public class NotificationController {
     private NotificationRepository notificationRepository;
 
     @Autowired
-    private DataGeneratorComService dataGeneratorComService;
+    private UpdateScriptGeneratorService updateScriptGeneratorService;
 
     @GetMapping("/work/notifications_help")
     public ResponseEntity<Map<String, Object>> getHelpNotifications(
@@ -178,12 +178,13 @@ public class NotificationController {
 
             updatedNot = notificationRepository.save(notification);
             if(notificationDetails.getState() == HelpNeededState.RESOLVED){
-                dataGeneratorComService.helpGiven(notification.getNif());
+                updateScriptGeneratorService.helpGiven(notification.getNif());
             }
         }
 
         return ResponseEntity.ok(updatedNot);
     }
+
 
     @GetMapping("/work/monthly_help_requests_stats")
     public Map<String, Integer> getMonthlyHelpRequests() {
@@ -226,4 +227,13 @@ public class NotificationController {
         }
         return total;
     }
-}
+
+    @GetMapping("/work/notifications_help/{id}")
+    public ResponseEntity<Notification> updateHelpNotification(@PathVariable(value = "id") String notificationId) throws ResourceNotFoundException {
+
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Notification not found for this id: " + notificationId));
+
+        return ResponseEntity.ok(notification);
+
+    }
