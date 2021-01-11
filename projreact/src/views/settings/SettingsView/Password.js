@@ -37,16 +37,15 @@ const Password = ({ className, ...rest }) => {
     // Process response
 		// If error, show error warning
 		if (values.password != values.confirm) {
-			setLoginError(true);
+      setLoginError(true);
 			return false;
     }
-    
     const requestOptions = {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token') },
-    body: JSON.stringify({...person, password: values.password })
+    body: JSON.stringify({email: person.email, password: values.password })
 		};
-		const response = await fetch('http://127.0.0.1:8080/api/work/person/', requestOptions);
+		const response = await fetch('http://127.0.0.1:8080/api/work/change_pw/', requestOptions);
     const data = await response.json();
     return false
   }

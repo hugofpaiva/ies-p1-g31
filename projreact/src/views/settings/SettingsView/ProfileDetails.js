@@ -59,7 +59,8 @@ const ProfileDetails = ({ persona, className, ...rest }) => {
 			body: JSON.stringify({...person, name: values.firstName + " " + values.lastName, email: values.email})
 		};
 		const response = await fetch('http://127.0.0.1:8080/api/work/person/', requestOptions);
-		const data = await response.json();
+    const data = await response.json();
+    alert(data.name)
     return false
 	}
 

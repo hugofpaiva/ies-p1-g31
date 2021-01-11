@@ -1,6 +1,7 @@
 package com.storego.storegoservice.controller;
 
 import com.storego.storegoservice.configuration.JwtTokenUtil;
+import com.storego.storegoservice.exception.EtAuthException;
 import com.storego.storegoservice.exception.ResourceNotFoundException;
 import com.storego.storegoservice.model.*;
 import com.storego.storegoservice.repository.NotificationRepository;
@@ -63,8 +64,6 @@ public class PersonController {
         String requestTokenHeader = request.getHeader("Authorization");
         String jwtToken = requestTokenHeader.substring(7);
         String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
-        System.out.println("THIS IS A PERSON:");
-        System.out.println(p);
         Person person = personRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Person not found for this email: " + email));
 
@@ -74,11 +73,28 @@ public class PersonController {
         if (p.getEmail() != null) {
             person.setEmail(p.getEmail());
         }
-        if (p.getPassword() != null) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            System.out.println(p.getPassword());
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            person.setPassword(bcryptEncoder.encode(p.getPassword()));
+
+        Person updatedPer = personRepository.save(person);
+        return ResponseEntity.ok(updatedPer);
+    }
+
+    @PutMapping("/work/change_pw/")
+    public ResponseEntity<Person> updatePassword(HttpServletRequest request, @Valid @RequestBody PwChangeRequest pw) throws ResourceNotFoundException, EtAuthException {
+        String requestTokenHeader = request.getHeader("Authorization");
+        String jwtToken = requestTokenHeader.substring(7);
+        String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        System.out.println(pw.getEmail());
+        System.out.println(email);
+        if (!pw.getEmail().equals(email)){
+            throw new EtAuthException("Emails don't match!");
+        }
+
+        Person person = personRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Person not found for this email: " + email));
+
+        if (pw.getPassword() != null) {
+            System.out.println(pw.getPassword());
+            person.setPassword(bcryptEncoder.encode(pw.getPassword()));
         }
 
         Person updatedPer = personRepository.save(person);
