@@ -78,7 +78,7 @@ const Results = ({ className, tasks, ...rest }) => {
                   </TableCell>
                   <TableCell>
                     <Chip
-                      color={task.state == "Pending" ? "primary" : "secondary"}
+                      color={task.state === "Pending" ? "primary" : "secondary"}
                       label={task.state}
                       size="small"
                     />

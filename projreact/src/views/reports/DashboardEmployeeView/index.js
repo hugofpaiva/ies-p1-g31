@@ -30,7 +30,7 @@ const Dashboard = () => {
   const [todays_attended_requests, set_todays_attended_requests] = useState(0);
   const [waiting_for_help, set_waiting_for_help] = useState([])
   // Fazer chamada à API para obter produtos
-	useEffect(async() => {
+	useEffect(() => {
     const loop = updateValues();
     return () => clearInterval(loop);
 	}, []);

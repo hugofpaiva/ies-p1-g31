@@ -82,51 +82,55 @@ const RequestsStats = ({ className, stats,...rest }) => {
     }
   ]);
 
-  useEffect(async() => {
-		const requestOptions = {
-			method: 'GET',
-			headers: { 
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + localStorage.getItem('token')
-			},
-		};
-		const response = await fetch('http://127.0.0.1:8080/api/work/monthly_help_requests_stats', requestOptions);
-		const new_data = await response.json();
-		console.log("GOT STATS DATA");
-    console.log(new_data);
-    updateData({
-      datasets: [
+  useEffect(() => {
+    async function fetchData() {
+
+      const requestOptions = {
+        method: 'GET',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+      };
+      const response = await fetch('http://127.0.0.1:8080/api/work/monthly_help_requests_stats', requestOptions);
+      const new_data = await response.json();
+      console.log("GOT STATS DATA");
+      console.log(new_data);
+      updateData({
+        datasets: [
+          {
+            data: [new_data['RESOLVED'], new_data['PENDING'], new_data['CUSTOMER_LEFT']],
+            backgroundColor: [
+              colors.indigo[500],
+              colors.orange[600],
+              colors.red[600]          
+            ],
+            borderWidth: 8,
+            borderColor: colors.common.white,
+            hoverBorderColor: colors.common.white
+          }
+        ],
+        labels: ['Resolved', 'Pending', 'Customer Left']
+      });
+      updateDevices([
         {
-          data: [new_data['RESOLVED'], new_data['PENDING'], new_data['CUSTOMER_LEFT']],
-          backgroundColor: [
-            colors.indigo[500],
-            colors.orange[600],
-            colors.red[600]          
-          ],
-          borderWidth: 8,
-          borderColor: colors.common.white,
-          hoverBorderColor: colors.common.white
+          title: 'Resolved',
+          value: new_data['RESOLVED'],
+          color: colors.indigo[500]
+        },
+        {
+          title: 'Pending',
+          value: new_data['PENDING'],
+          color: colors.orange[600]
+        },
+        {
+          title: 'Client Left',
+          value: new_data['CUSTOMER_LEFT'],
+          color: colors.red[600]
         }
-      ],
-      labels: ['Resolved', 'Pending', 'Customer Left']
-    });
-    updateDevices([
-      {
-        title: 'Resolved',
-        value: new_data['RESOLVED'],
-        color: colors.indigo[500]
-      },
-      {
-        title: 'Pending',
-        value: new_data['PENDING'],
-        color: colors.orange[600]
-      },
-      {
-        title: 'Client Left',
-        value: new_data['CUSTOMER_LEFT'],
-        color: colors.red[600]
-      }
-    ]);
+      ]);
+    }
+    fetchData();
   }, []);
   
   return (

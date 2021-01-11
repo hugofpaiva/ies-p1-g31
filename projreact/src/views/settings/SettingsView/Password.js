@@ -36,7 +36,7 @@ const Password = ({ className, ...rest }) => {
   async function updatePass() {
     // Process response
 		// If error, show error warning
-		if (values.password != values.confirm) {
+		if (values.password !== values.confirm) {
       setLoginError(true);
 			return false;
     }
@@ -45,24 +45,25 @@ const Password = ({ className, ...rest }) => {
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     body: JSON.stringify({email: person.email, password: values.password })
 		};
-		const response = await fetch('http://127.0.0.1:8080/api/work/change_pw/', requestOptions);
-    const data = await response.json();
+		await fetch('http://127.0.0.1:8080/api/work/change_pw/', requestOptions);
     return false
   }
   
-  useEffect(async() => {
-    const requestOptions = {
-      method: 'GET',
-      headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('token')
-      }
-    };
-    const response = await fetch('http://127.0.0.1:8080/api/work/person/', requestOptions);
-    const data = await response.json();
-    console.log(data);
-    setPerson(data);
-
+  useEffect(() => {
+    async function fetchData() {
+      const requestOptions = {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+      };
+      const response = await fetch('http://127.0.0.1:8080/api/work/person/', requestOptions);
+      const data = await response.json();
+      console.log(data);
+      setPerson(data);
+    }
+    fetchData();
   }, []);
 
 
