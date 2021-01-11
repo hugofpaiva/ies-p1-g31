@@ -85,6 +85,10 @@ const ProductList = (props) => {
 		setCategories(data);
 	}
 
+	function productHasChanged() {
+		updateProducts(page);
+	}
+
 	function searchFunc(keyword) {
 		setSearch(keyword, updateProducts());
 	}
@@ -96,7 +100,7 @@ const ProductList = (props) => {
 					persona={props.persona} 
 					search={searchFunc}
 					categories={categories}
-					update={updateProducts}
+					update={productHasChanged}
 				/>
 				<Box mt={3}>
 					<Grid container spacing={3}>
@@ -106,7 +110,7 @@ const ProductList = (props) => {
 									className={classes.productCard}
 									product={product}
 									persona={props.persona}
-									update={updateProducts}
+									update={productHasChanged}
 									categories={categories}
 								/>
 							</Grid>
