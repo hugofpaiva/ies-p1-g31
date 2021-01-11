@@ -30,16 +30,17 @@ const ProductList = (props) => {
 	);
 
 	const handleChange = (event, value) => {
-		setPage(value, updateProducts());
+		updateProducts(value);
+		setPage(value);
 	};
 
 	// Fazer chamada à API para obter produtos
 	useEffect(() => {
-		updateProducts();
+		updateProducts(page);
 		updateCategories();
 	}, []);
 
-	async function updateProducts() {
+	async function updateProducts(nextPage) {
 		const requestOptions = {
 			method: 'GET',
 			headers: { 
@@ -47,16 +48,13 @@ const ProductList = (props) => {
 				'Authorization': 'Bearer ' + localStorage.getItem('token')
 			}
 		};
-		let pageN = page - 1;
+		let pageN = nextPage - 1;
 		let url = "http://127.0.0.1:8080/api/work/products?page=" + pageN + "&size=" + itemsPerPage;
 		if (search.trim() !== "") {
 			url += "&name=" + search;
 		}
 		const response = await fetch(url, requestOptions);
 		const data = await response.json();
-
-		console.log("GOT DATA");
-		console.log(data);
 
 		// Update products 
 		setProducts(data['products']);
@@ -96,7 +94,7 @@ const ProductList = (props) => {
 				/>
 				<Box mt={3}>
 					<Grid container spacing={3}>
-						{products.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((product) => (
+						{products.map((product) => (
 							<Grid item key={product.id} lg={4} md={6} xs={12}>
 								<ProductCard
 									className={classes.productCard}
