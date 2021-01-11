@@ -105,6 +105,23 @@ public class ProductController {
         return ResponseEntity.ok(updatedProd);
     }
 
+    //Use for restock by Employee
+    @PutMapping("/work/restock_product/{id}")
+    public ResponseEntity<Product> restockProduct(@PathVariable(value = "id") long productId,
+                                                  @Valid @RequestBody Product productDetails) throws ResourceNotFoundException {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found for this id: " + productId));
+
+        //Used to send how many more products it is to add
+        if (productDetails.getStock_current() != null) {
+            product.setStock_current(product.getStock_current() + productDetails.getStock_current());
+            updateScriptGeneratorService.restockProduct(productDetails.getStock_current(), product);
+        }
+
+        Product updatedProd = productRepository.save(product);
+        return ResponseEntity.ok(updatedProd);
+    }
+
     @PostMapping("/admin/products")
     public Product createProduct(@Valid @RequestBody Product product) {
         Product last = productRepository.findTopByOrderByIdDesc();

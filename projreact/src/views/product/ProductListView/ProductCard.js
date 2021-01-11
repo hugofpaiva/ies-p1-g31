@@ -96,10 +96,10 @@ const ProductCard = ({categories, update, persona, className, product, ...rest }
           }
           {
             persona === "employee" &&
-            <Button color={colors.common.yellow} variant="contained">
-              <RefreshCcw className={classes.icon} size="20" />
-              <span className={classes.title}>Restock</span>
-            </Button>
+            <ProductRestock 
+              product={product} 
+              update={update} 
+            />
           }
         </Box>
       </CardContent>
