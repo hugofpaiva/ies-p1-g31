@@ -37,7 +37,7 @@ const CustomerListView = () => {
 		console.log(data);
 		// Update categories
 		// Only show clients
-		setCustomers(data.filter(c => c.type==="CLIENT"));
+		setCustomers(data['clients'].filter(c => c.type==="CLIENT"));
 		// Remove loading
 		setLoading(false);
 	}
