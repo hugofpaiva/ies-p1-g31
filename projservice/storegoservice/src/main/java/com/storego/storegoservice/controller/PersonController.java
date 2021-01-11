@@ -63,7 +63,8 @@ public class PersonController {
         String requestTokenHeader = request.getHeader("Authorization");
         String jwtToken = requestTokenHeader.substring(7);
         String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
-
+        System.out.println("THIS IS A PERSON:");
+        System.out.println(p);
         Person person = personRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Person not found for this email: " + email));
 
@@ -74,6 +75,9 @@ public class PersonController {
             person.setEmail(p.getEmail());
         }
         if (p.getPassword() != null) {
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            System.out.println(p.getPassword());
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             person.setPassword(bcryptEncoder.encode(p.getPassword()));
         }
 

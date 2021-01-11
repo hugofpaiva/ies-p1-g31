@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -24,7 +24,7 @@ const Password = ({ className, ...rest }) => {
     confirm: ''
   });
   const [loginError, setLoginError] = useState(false);
-
+  const [person, setPerson] = useState(null);
 
   const handleChange = (event) => {
     setValues({
@@ -36,19 +36,36 @@ const Password = ({ className, ...rest }) => {
   async function updatePass() {
     // Process response
 		// If error, show error warning
-		if (values.password != values.password) {
+		if (values.password != values.confirm) {
 			setLoginError(true);
 			return false;
     }
     
     const requestOptions = {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password: values.password })
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+    body: JSON.stringify({...person, password: values.password })
 		};
-		const response = await fetch('http://127.0.0.1:8080/api/work/person', requestOptions);
-		const data = await response.json();
-	}
+		const response = await fetch('http://127.0.0.1:8080/api/work/person/', requestOptions);
+    const data = await response.json();
+    return false
+  }
+  
+  useEffect(async() => {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    };
+    const response = await fetch('http://127.0.0.1:8080/api/work/person/', requestOptions);
+    const data = await response.json();
+    console.log(data);
+    setPerson(data);
+
+  }, []);
+
 
   return (
     <form
@@ -95,6 +112,7 @@ const Password = ({ className, ...rest }) => {
           <Button
             color="primary"
             variant="contained"
+            type="submit"
           >
             Update
           </Button>
