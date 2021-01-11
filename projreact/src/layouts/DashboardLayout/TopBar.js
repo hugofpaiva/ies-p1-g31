@@ -132,13 +132,9 @@ const TopBar = ({
               "employee": true,
               "manager": false,
             }];
-<<<<<<< HEAD
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
-=======
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
               not => ({...not, "icon": ""})
             ) }));
->>>>>>> projreact/feature/stabilization
             return newArray;
           })
         });
@@ -161,13 +157,9 @@ const TopBar = ({
               "employee": false,
               "manager": true,
             }];
-<<<<<<< HEAD
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
-=======
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
               not => ({...not, "icon": ""})
             ) }));
->>>>>>> projreact/feature/stabilization
             return newArray;
           })
         });
@@ -185,7 +177,6 @@ const TopBar = ({
               "employee": false,
               "manager": true,
             }];
-<<<<<<< HEAD
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
             return newArray;
           })
@@ -206,11 +197,6 @@ const TopBar = ({
             }];
             localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
             console.log(JSON.parse(localStorage.getItem("notifications")));
-=======
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
-              not => ({...not, "icon": ""})
-            ) }));
->>>>>>> projreact/feature/stabilization
             return newArray;
           })
         });
