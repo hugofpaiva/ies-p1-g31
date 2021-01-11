@@ -38,6 +38,12 @@ const ProductList = (props) => {
 	useEffect(() => {
 		updateProducts(page);
 		updateCategories();
+
+		const loop = setInterval(() => {
+			updateProducts(page);
+		}, 1000);
+
+		return () => clearInterval(loop);
 	}, []);
 
 	async function updateProducts(nextPage) {
