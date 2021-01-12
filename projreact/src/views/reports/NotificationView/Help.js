@@ -144,7 +144,7 @@ const Help = ({ className, ...rest }) => {
                 <TableCell>
                   <Chip
                     color="primary"
-                    label={notification.state}
+                    label={notification.state[0] + notification.state.substring(1, notification.state.length).toLowerCase().replace("_", " ")}
                     size="small"
                   />
                 </TableCell>
