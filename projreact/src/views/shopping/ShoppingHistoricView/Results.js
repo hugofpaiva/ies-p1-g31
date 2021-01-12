@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -62,23 +62,53 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, transactions, ...rest }) => {
+const Results = ({ className, ...props }) => {
   const classes = useStyles();
-  const [limit, setLimit] = useState(10);
+
+  const [transactions, setTransactions] = useState([]);
+
+  // Pagination stuff
   const [page, setPage] = useState(0);
-
+  const [size, setSize] = useState(10);
+  const [count, setCount] = useState(0);
   const handleLimitChange = (event) => {
-    setLimit(event.target.value);
+    setSize(event.target.value);
   };
-
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
+  // -- Pagination stuff
+
+  // Fazer chamada à API para obter produtos
+  // Ao início e sempre que page e size sejam alterados
+  useEffect(() => {
+    updateTransactions();
+  }, [page, size]);
+
+  async function updateTransactions() {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    };
+    let url = "http://127.0.0.1:8080/api/admin/purchases/?page=" + page + "&size=" + size;
+    const nif = new URLSearchParams(window.location.search).get("nif");
+    if (nif != null) {
+      url += nif;
+    }
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+
+    // Update transactions
+    setTransactions(data['transactions']);
+    setCount(data['totalItems']);
+  }
 
   return (
     <Card
       className={clsx(classes.root, className)}
-      {...rest}
     >
       <PerfectScrollbar>
         <Box minWidth={1050}>
@@ -103,7 +133,7 @@ const Results = ({ className, transactions, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {transactions.slice(page*limit, page*limit+limit).map((transaction) => (
+              {transactions.map((transaction) => (
                 <TableRow
                   hover
                   key={transaction.transaction.id}
@@ -124,7 +154,7 @@ const Results = ({ className, transactions, ...rest }) => {
                     >
                       <Avatar
                         className={classes.avatar}
-                        
+
                       >
                         {getInitials(transaction.transaction.client.name)}
                       </Avatar>
@@ -147,11 +177,11 @@ const Results = ({ className, transactions, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={transactions.length}
+        count={count}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
-        rowsPerPage={limit}
+        rowsPerPage={size}
         rowsPerPageOptions={[5, 10, 25]}
       />
     </Card>
