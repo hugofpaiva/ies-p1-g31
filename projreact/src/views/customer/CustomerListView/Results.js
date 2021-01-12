@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { Link as RouterLink } from "react-router-dom";
@@ -6,8 +6,8 @@ import moment from "moment";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import {
 	Box,
-  Card,
-  Button,
+	Card,
+	Button,
 	Table,
 	TableBody,
 	TableCell,
@@ -18,34 +18,63 @@ import {
 	makeStyles,
 } from "@material-ui/core";
 import {
-  DollarSign 
+	DollarSign
 } from "react-feather";
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
 	avatar: {
 		marginRight: theme.spacing(2),
-  },
-  icon: {
-    marginRight: theme.spacing(1)
-  },
-  title: {
-    marginRight: 'auto'
-  },
+	},
+	icon: {
+		marginRight: theme.spacing(1)
+	},
+	title: {
+		marginRight: 'auto'
+	},
 }));
 
-const Results = ({ className, customers, ...rest }) => {
+const Results = ({ className, ...rest }) => {
 	const classes = useStyles();
-	const [limit, setLimit] = useState(10);
+
+	const [customers, setCustomers] = useState([]);
+
+	// Pagination stuff
 	const [page, setPage] = useState(0);
-
+	const [size, setSize] = useState(10);
+	const [count, setCount] = useState(0);
 	const handleLimitChange = (event) => {
-		setLimit(event.target.value);
+		setSize(event.target.value);
 	};
-
 	const handlePageChange = (event, newPage) => {
 		setPage(newPage);
 	};
+	// -- Pagination stuff
+
+	// Fazer chamada à API para obter produtos
+	// Ao início e sempre que page e size sejam alterados
+	useEffect(() => {
+		getCustomers();
+	}, [page, size]);
+
+	async function getCustomers() {
+		const requestOptions = {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			}
+		};
+		let url = "http://127.0.0.1:8080/api/admin/persons?page=" + page + "&size=" + size;
+		const response = await fetch(url, requestOptions);
+		const data = await response.json();
+		// Update categories
+		// Only show clients
+		setCustomers(data['clients'].filter(c => c.type === "CLIENT"));
+		setCount(data["totalItems"]);
+		// Remove loading
+		// setLoading(false);
+	}
 
 	return (
 		<Card className={clsx(classes.root, className)} {...rest}>
@@ -62,7 +91,7 @@ const Results = ({ className, customers, ...rest }) => {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{customers.slice(0, limit).map((customer) => (
+							{customers.map((customer) => (
 								<TableRow hover key={customer.nif}>
 									<TableCell>
 										<Typography
@@ -79,13 +108,13 @@ const Results = ({ className, customers, ...rest }) => {
 									</TableCell>
 									<TableCell>
 										<Button
-                      variant="contained"
+											variant="contained"
 											component={RouterLink}
-											to={'/admin/orders?nif='+customer.nif}
+											to={'/admin/orders?nif=' + customer.nif}
 										>
-                      <DollarSign className={classes.icon} size="20" />
-						<span className={classes.title}>Purchases</span>
-                    </Button>
+											<DollarSign className={classes.icon} size="20" />
+											<span className={classes.title}>Purchases</span>
+										</Button>
 									</TableCell>
 								</TableRow>
 							))}
@@ -95,11 +124,11 @@ const Results = ({ className, customers, ...rest }) => {
 			</PerfectScrollbar>
 			<TablePagination
 				component="div"
-				count={customers.length}
+				count={count}
 				onChangePage={handlePageChange}
 				onChangeRowsPerPage={handleLimitChange}
 				page={page}
-				rowsPerPage={limit}
+				rowsPerPage={size}
 				rowsPerPageOptions={[5, 10, 25]}
 			/>
 		</Card>
