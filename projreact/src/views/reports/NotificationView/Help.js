@@ -16,8 +16,6 @@ import {
   TableHead,
   TableRow,
   TablePagination,
-  TableSortLabel,
-  Tooltip,
   makeStyles
 } from '@material-ui/core';
 
@@ -61,11 +59,8 @@ const Help = ({ className, ...rest }) => {
       stompClient.subscribe('/topic/help', function (messageOutput) {
         const not = JSON.parse(messageOutput.body);
         setNotifications(oldArray => {
-          const newArray = [...oldArray, {
-            ...not,
-            "date": Date.now(),
-          }];
-          return newArray.sort(not => not['date']);
+          const newArray = [...oldArray, not];
+          return newArray;
         })
       });
     });
@@ -108,7 +103,7 @@ const Help = ({ className, ...rest }) => {
         newNotifications.push(notification);
       })
       // Return sorted version
-      return newNotifications.sort(not => not['date']);
+      return newNotifications;
     });
   }
 
@@ -126,18 +121,8 @@ const Help = ({ className, ...rest }) => {
               <TableCell>
                 Customer
                 </TableCell>
-              <TableCell sortDirection="desc">
-                <Tooltip
-                  enterDelay={300}
-                  title="Sort"
-                >
-                  <TableSortLabel
-                    active
-                    direction="desc"
-                  >
-                    Date
-                    </TableSortLabel>
-                </Tooltip>
+              <TableCell>
+                Date
               </TableCell>
               <TableCell>
                 Status
@@ -145,7 +130,7 @@ const Help = ({ className, ...rest }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {notifications.slice(page * limit, page * limit + limit).map(notification => (
+            {notifications.sort(not => -1*not['date']).slice(page * limit, page * limit + limit).map(notification => (
               <TableRow
                 hover
                 key={notification.id}

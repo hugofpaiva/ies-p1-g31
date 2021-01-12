@@ -46,7 +46,7 @@ const CustomerList = () => {
 				setCustomers(response.data.sort((a,b) => new Date(a['last_visit']) - new Date(b['last_visit'])));
 				setLoading(false);
 			});
-		setInterval(function() {
+		const loop = setInterval(function() {
 			axios
 				.get("http://localhost:8080/api/work/persons_in_store/", {
 					headers: {
@@ -58,6 +58,7 @@ const CustomerList = () => {
 					setCustomers(response.data.sort((a,b) => new Date(a['last_visit']) - new Date(b['last_visit'])));
 				});
 		}, 1000);
+		return () => clearInterval(loop);
 	}, []);
 
 	return (

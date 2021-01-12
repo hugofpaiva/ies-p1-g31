@@ -16,8 +16,6 @@ import {
   TableHead,
   TableRow,
   TablePagination,
-  TableSortLabel,
-  Tooltip,
   makeStyles
 } from '@material-ui/core';
 
@@ -57,21 +55,15 @@ const EntriesOut = ({ className, ...rest }) => {
       stompClient.subscribe('/topic/enter_store', function (messageOutput) {
         const not = JSON.parse(messageOutput.body);
         setNotifications(oldArray => {
-          const newArray = [...oldArray, {
-            ...not,
-            "date": Date.now(),
-          }];
-          return newArray.sort(not => not['date']);
+          const newArray = [...oldArray, not];
+          return newArray;
         })
       });
       stompClient.subscribe('/topic/exit_store', function (messageOutput) {
         const not = JSON.parse(messageOutput.body);
         setNotifications(oldArray => {
-          const newArray = [...oldArray, {
-            ...not,
-            "date": Date.now(),
-          }];
-          return newArray.sort(not => not['date']);
+          const newArray = [...oldArray, not];
+          return newArray;
         })
       });
     });
@@ -94,7 +86,7 @@ const EntriesOut = ({ className, ...rest }) => {
         newNotifications.push(notification);
       })
       // Return sorted version
-      return newNotifications.sort(not => not['date']);
+      return newNotifications;
     });
   }
 
@@ -112,18 +104,8 @@ const EntriesOut = ({ className, ...rest }) => {
               <TableCell>
                 Customer
                 </TableCell>
-              <TableCell sortDirection="desc">
-                <Tooltip
-                  enterDelay={300}
-                  title="Sort"
-                >
-                  <TableSortLabel
-                    active
-                    direction="desc"
-                  >
-                    Date
-                    </TableSortLabel>
-                </Tooltip>
+              <TableCell>
+                Date
               </TableCell>
               <TableCell>
                 Status
@@ -131,7 +113,7 @@ const EntriesOut = ({ className, ...rest }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {notifications.slice(page*limit, page*limit+limit).map(notification => (
+            {notifications.sort(not => -1 * not['date']).slice(page*limit, page*limit+limit).map(notification => (
               <TableRow
                 hover
                 key={notification.id}

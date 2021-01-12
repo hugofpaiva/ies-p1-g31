@@ -60,7 +60,7 @@ const LowStock = ({ className, ...rest }) => {
             ...not,
             "date": Date.now(),
           }];
-          return newArray.sort(not => not['date']);
+          return newArray;
         })
       });
     });
@@ -83,7 +83,7 @@ const LowStock = ({ className, ...rest }) => {
         newNotifications.push(notification);
       })
       // Return sorted version
-      return newNotifications.sort(not => not['date']);
+      return newNotifications;
     });
   }
 
@@ -123,7 +123,7 @@ const LowStock = ({ className, ...rest }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {notifications.slice(page * limit, page * limit + limit).map(stock => (
+            {notifications.sort(not => -1*not['date']).slice(page * limit, page * limit + limit).map(stock => (
               <TableRow
                 hover
                 key={stock.id}

@@ -69,11 +69,6 @@ export default function FormDialog(props) {
 
     async function updateProduct() {
         // Make request
-        if (props.edit)
-            console.log("UPDATE");
-        else
-            console.log("NEW PRODUCT");
-        console.log(product);
         if (!product)
             return;
         const requestOptions = {
