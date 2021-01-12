@@ -87,16 +87,12 @@ const ProductList = (props) => {
 		updateProducts();
 	}
 
-	function searchFunc(keyword) {
-		setSearch(keyword);
-	}
-
 	return (
 		<Page className={classes.root} title="Products">
 			<Container maxWidth={false}>
 				<Toolbar 
 					persona={props.persona} 
-					search={searchFunc}
+					search={setSearch}
 					categories={categories}
 					update={productHasChanged}
 				/>
