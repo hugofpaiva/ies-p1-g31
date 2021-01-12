@@ -64,7 +64,6 @@ const LoginView = () => {
 		};
 		const response = await fetch('http://127.0.0.1:8080/api/login', requestOptions);
 		const data = await response.json();
-		console.log(data);
 		
 		// Process response
 		// If error, show error warning
@@ -77,6 +76,11 @@ const LoginView = () => {
 			localStorage.setItem('token', data['token']);
 			localStorage.setItem('authority', data['type']['authority']);
 			localStorage.setItem('name', data['name']);
+			localStorage.setItem('notificationsPreferences', JSON.stringify({
+				'help': true,
+				'stock': true,
+				'full': true,
+			}));
 			// Redirect user to dashboard main page
 			redirectUser();
 		}

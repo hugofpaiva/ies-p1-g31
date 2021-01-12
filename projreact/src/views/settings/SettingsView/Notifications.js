@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import {
@@ -26,6 +26,28 @@ const useStyles = makeStyles({
 const Notifications = ({ persona, className, ...rest }) => {
 	const classes = useStyles();
 
+	const [notifications, setNotifications] = useState({
+		'help': true,
+		'stock': true,
+		'full': true,
+	})
+
+	useEffect(() => {
+		// Update notifications with user preferences on local storage
+		setNotifications(JSON.parse(localStorage.getItem('notificationsPreferences')));
+	}, []);
+
+	const handleChange = (attr) => {
+		setNotifications({...notifications, [attr]:!notifications[attr]});
+	};
+
+	const save = () => {
+		// Update localstorage
+		localStorage.setItem("notificationsPreferences", JSON.stringify(notifications));
+		// Reload to apply changes
+		window.location.reload();
+	}
+
 	return (
 		<form className={clsx(classes.root, className)} {...rest}>
 			<Card>
@@ -51,23 +73,23 @@ const Notifications = ({ persona, className, ...rest }) => {
 								Notifications
 							</Typography>
 
-							{ persona==="employee" &&
+							{persona === "employee" &&
 								<FormControlLabel
-									control={<Checkbox defaultChecked />}
+									control={<Checkbox checked={notifications.help} onChange={() => handleChange("help")} defaultChecked />}
 									label="Help needed"
 								/>
 							}
-							{ persona==="admin" &&
+							{persona === "admin" &&
 								<Grid
 									container="true"
 									direction="column"
 								>
 									<FormControlLabel
-										control={<Checkbox defaultChecked />}
+										control={<Checkbox checked={notifications.full} onChange={() => handleChange("full")} defaultChecked />}
 										label="Store is full"
 									/>
 									<FormControlLabel
-										control={<Checkbox defaultChecked />}
+										control={<Checkbox checked={notifications.stock} onChange={() => handleChange("stock")} defaultChecked />}
 										label="Low stock"
 									/>
 								</Grid>
@@ -77,7 +99,7 @@ const Notifications = ({ persona, className, ...rest }) => {
 				</CardContent>
 				<Divider />
 				<Box display="flex" justifyContent="flex-end" p={2}>
-					<Button color="primary" variant="contained">
+					<Button color="primary" variant="contained" onClick={() => save()}>
 						Save
 					</Button>
 				</Box>
