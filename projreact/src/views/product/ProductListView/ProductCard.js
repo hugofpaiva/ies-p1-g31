@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { colors } from '@material-ui/core';
 import {
   Box,
   Card,
@@ -10,11 +9,7 @@ import {
   Grid,
   Typography,
   makeStyles,
-  Button
 } from '@material-ui/core';
-import {
-  RefreshCcw
-} from "react-feather";
 import ProductEdit from './ProductEdit';
 import ProductDelete from './ProductDelete';
 import ProductRestock from './ProductRestock';

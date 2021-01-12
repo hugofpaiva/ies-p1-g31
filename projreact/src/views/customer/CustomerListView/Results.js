@@ -76,7 +76,7 @@ const Results = ({ className, loading, ...rest }) => {
 			}
 		};
 		let url = "http://127.0.0.1:8080/api/admin/persons?page=" + page + "&size=" + size;
-		if (search != "") {
+		if (search !== "") {
 			url += "&name=" + search;
 		}
 		const response = await fetch(url, requestOptions);

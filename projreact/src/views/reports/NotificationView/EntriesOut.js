@@ -16,8 +16,6 @@ import {
   TableHead,
   TableRow,
   TablePagination,
-  TableSortLabel,
-  Tooltip,
   makeStyles
 } from '@material-ui/core';
 
