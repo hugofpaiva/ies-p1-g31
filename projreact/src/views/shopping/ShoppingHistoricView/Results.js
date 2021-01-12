@@ -101,7 +101,7 @@ const Results = ({ className, ...props }) => {
     let url = "http://127.0.0.1:8080/api/admin/purchases/?page=" + page + "&size=" + size;
     const nif = new URLSearchParams(window.location.search).get("nif");
     if (nif != null) {
-      url += nif;
+      url = "http://127.0.0.1:8080/api/admin/purchases/" + nif + "?page=" + page + "&size=" + size;
     }
     const response = await fetch(url, requestOptions);
     const data = await response.json();
