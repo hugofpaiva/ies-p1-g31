@@ -26,7 +26,9 @@ const CustomerListView = () => {
 				) : (
 					<div>
 						<Box mt={3}>
-							<Results />
+							<Results
+								loading={setLoading}
+							/>
 						</Box>
 					</div>
 				)}

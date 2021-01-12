@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const Results = ({ className, ...rest }) => {
+const Results = ({ className, loading, ...rest }) => {
 	const classes = useStyles();
 
 	const [customers, setCustomers] = useState([]);
@@ -86,7 +86,7 @@ const Results = ({ className, ...rest }) => {
 		setCustomers(data['clients'].filter(c => c.type === "CLIENT"));
 		setCount(data["totalItems"]);
 		// Remove loading
-		// setLoading(false);
+		loading(false);
 	}
 
 	return (
