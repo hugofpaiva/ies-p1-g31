@@ -54,8 +54,16 @@ const Results = ({ className, ...rest }) => {
 	const handlePageChange = (event, newPage) => {
 		setPage(newPage);
 	};
-	// -- Pagination stuff
 
+	// Update list every second because of last visit
+	useEffect(() => {
+		const loop = setInterval(() => {
+			getCustomers();
+		}, 1000);
+		return () => clearInterval(loop);
+	}, [page, size, search]);
+	
+	// -- Pagination stuff
 	// Fazer chamada à API para obter produtos
 	// Ao início e sempre que page e size sejam alterados
 	useEffect(() => {
@@ -117,7 +125,7 @@ const Results = ({ className, ...rest }) => {
 										<TableCell>{customer.nif}</TableCell>
 										<TableCell>{customer.email}</TableCell>
 										<TableCell>
-											{moment(customer.last_visit).format('DD/MM/YYYY, HH:mm:ss')}
+											{moment(customer.lastVisit).format('DD/MM/YYYY, HH:mm:ss')}
 										</TableCell>
 										<TableCell>
 											<Button
