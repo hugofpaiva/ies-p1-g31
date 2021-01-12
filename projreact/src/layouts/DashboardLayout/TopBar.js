@@ -85,14 +85,19 @@ const TopBar = ({
         }
         return not;
       });
-      localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
-        not => ({...not, "icon": ""})
-      ) }));
+      localStorage.setItem("notifications", JSON.stringify({
+        notifications: newArray.map(
+          not => ({ ...not, "icon": "" })
+        )
+      }));
       return newArray;
     });
   };
 
   useEffect(() => {
+    // Get notifications preferences
+    const notPreferences = JSON.parse(localStorage.getItem('notificationsPreferences'));
+
     // Notifications on local storage
     let nots = localStorage.getItem("notifications") != null ? JSON.parse(localStorage.getItem("notifications"))['notifications'] : [];
     // Put them on view
@@ -117,89 +122,80 @@ const TopBar = ({
 
     // Employee only subscribes to help
     if (localStorage.getItem('authority') === 'EMPLOYEE') {
-      stompClient.connect(headers, () => {
-        stompClient.subscribe('/topic/help', function (messageOutput) {
-          const not = JSON.parse(messageOutput.body);
-          setNotifications(oldArray => {
-            const newArray = [...oldArray, {
-              ...not,
-              "key": not["id"],
-              "update": `Client ${not['nif']} needs help!`,
-              "timestamp": Date.now(),
-              "icon": <AssignmentIcon />,
-              "link": "/employee/help",
-              "seen": false,
-              "employee": true,
-              "manager": false,
-            }];
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
-              not => ({...not, "icon": ""})
-            ) }));
-            return newArray;
-          })
+      if (notPreferences['help']) {
+        stompClient.connect(headers, () => {
+          stompClient.subscribe('/topic/help', function (messageOutput) {
+            const not = JSON.parse(messageOutput.body);
+            setNotifications(oldArray => {
+              const newArray = [...oldArray, {
+                ...not,
+                "key": not["id"],
+                "update": `Client ${not['nif']} needs help!`,
+                "timestamp": Date.now(),
+                "icon": <AssignmentIcon />,
+                "link": "/employee/help",
+                "seen": false,
+                "employee": true,
+                "manager": false,
+              }];
+              localStorage.setItem("notifications", JSON.stringify({
+                notifications: newArray.map(
+                  not => ({ ...not, "icon": "" })
+                )
+              }));
+              return newArray;
+            })
+          });
         });
-      });
+      }
     }
     // Manager only subscribes to store_full and restock
     else if (localStorage.getItem('authority') === 'MANAGER') {
       stompClient.connect(headers, () => {
-        stompClient.subscribe('/topic/restock', function (messageOutput) {
-          const not = JSON.parse(messageOutput.body);
-          setNotifications(oldArray => {
-            const newArray = [...oldArray, {
-              ...not,
-              "key": not["id"],
-              "update": `Product ${not['idProduct']} needs restock!`,
-              "timestamp": Date.now(),
-              "icon": <ShoppingBasketIcon />,
-              "link": "/admin/products",
-              "seen": false,
-              "employee": false,
-              "manager": true,
-            }];
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(
-              not => ({...not, "icon": ""})
-            ) }));
-            return newArray;
-          })
-        });
-        stompClient.subscribe('/topic/store_full', function (messageOutput) {
-          const not = JSON.parse(messageOutput.body);
-          setNotifications(oldArray => {
-            const newArray = [...oldArray, {
-              ...not,
-              "key": not["id"],
-              "update": `Store is full!`,
-              "timestamp": Date.now(),
-              "icon": <GroupIcon />,
-              "link": "/admin/customers/in_store",
-              "seen": false,
-              "employee": false,
-              "manager": true,
-            }];
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
-            return newArray;
-          })
-        });
-        stompClient.subscribe('/topic/help', function (messageOutput) {
-          const not = JSON.parse(messageOutput.body);
-          setNotifications(oldArray => {
-            const newArray = [...oldArray, {
-              ...not,
-              "key": not["id"],
-              "update": `Client ${not['nif']} needs help!`,
-              "timestamp": Date.now(),
-              "icon": <AssignmentIcon />,
-              "link": "/employee/help",
-              "seen": false,
-              "employee": true,
-              "manager": false,
-            }];
-            localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({...not, "icon": ""})) }));
-            console.log(JSON.parse(localStorage.getItem("notifications")));
-            return newArray;
-          })
-        });
+        if (notPreferences['stock']) {
+          stompClient.subscribe('/topic/restock', function (messageOutput) {
+            const not = JSON.parse(messageOutput.body);
+            setNotifications(oldArray => {
+              const newArray = [...oldArray, {
+                ...not,
+                "key": not["id"],
+                "update": `Product ${not['idProduct']} needs restock!`,
+                "timestamp": Date.now(),
+                "icon": <ShoppingBasketIcon />,
+                "link": "/admin/products",
+                "seen": false,
+                "employee": false,
+                "manager": true,
+              }];
+              localStorage.setItem("notifications", JSON.stringify({
+                notifications: newArray.map(
+                  not => ({ ...not, "icon": "" })
+                )
+              }));
+              return newArray;
+            })
+          });
+        }
+        if (notPreferences['stock']) {
+          stompClient.subscribe('/topic/store_full', function (messageOutput) {
+            const not = JSON.parse(messageOutput.body);
+            setNotifications(oldArray => {
+              const newArray = [...oldArray, {
+                ...not,
+                "key": not["id"],
+                "update": `Store is full!`,
+                "timestamp": Date.now(),
+                "icon": <GroupIcon />,
+                "link": "/admin/customers/in_store",
+                "seen": false,
+                "employee": false,
+                "manager": true,
+              }];
+              localStorage.setItem("notifications", JSON.stringify({ notifications: newArray.map(not => ({ ...not, "icon": "" })) }));
+              return newArray;
+            })
+          });
+        }
       });
     }
 
@@ -226,14 +222,14 @@ const TopBar = ({
           <IconButton color="inherit" onClick={handleClick}>
             <Badge
               badgeContent={notifications.filter(
-                  n => !n['seen']
+                n => !n['seen']
                   &&
                   (
-                    (localStorage.getItem('authority') === 'EMPLOYEE'  && n['employee'])
-                    || 
-                    (localStorage.getItem('authority') === 'MANAGER'  && n['manager'])
+                    (localStorage.getItem('authority') === 'EMPLOYEE' && n['employee'])
+                    ||
+                    (localStorage.getItem('authority') === 'MANAGER' && n['manager'])
                   )
-                ).length}
+              ).length}
               color="error"
             >
               <NotificationsIcon />
@@ -256,12 +252,12 @@ const TopBar = ({
                 // Only show those that meet the authority
                 notifications.filter(
                   n => !n['seen']
-                  &&
-                  (
-                    (localStorage.getItem('authority') === 'EMPLOYEE'  && n['employee'])
-                    || 
-                    (localStorage.getItem('authority') === 'MANAGER'  && n['manager'])
-                  )
+                    &&
+                    (
+                      (localStorage.getItem('authority') === 'EMPLOYEE' && n['employee'])
+                      ||
+                      (localStorage.getItem('authority') === 'MANAGER' && n['manager'])
+                    )
                 ).map((n) => (
                   <MenuItem
                     key={n.key}
