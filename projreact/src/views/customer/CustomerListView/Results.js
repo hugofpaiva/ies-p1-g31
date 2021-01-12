@@ -55,19 +55,16 @@ const Results = ({ className, ...rest }) => {
 		setPage(newPage);
 	};
 
+	// -- Pagination stuff
+	// Fazer chamada à API para obter produtos
+	// Ao início e sempre que page e size sejam alterados
 	// Update list every second because of last visit
 	useEffect(() => {
+		getCustomers();
 		const loop = setInterval(() => {
 			getCustomers();
 		}, 1000);
 		return () => clearInterval(loop);
-	}, [page, size, search]);
-	
-	// -- Pagination stuff
-	// Fazer chamada à API para obter produtos
-	// Ao início e sempre que page e size sejam alterados
-	useEffect(() => {
-		getCustomers();
 	}, [page, size, search]);
 
 	async function getCustomers() {
