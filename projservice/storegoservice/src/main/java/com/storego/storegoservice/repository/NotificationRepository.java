@@ -17,6 +17,7 @@ import java.util.List;
 public interface NotificationRepository extends MongoRepository<Notification, String> {
     Page<Notification> findAllByTypeOrderByDateDesc(NotificationType type, Pageable pageable);
     List<Notification> findByDateIsGreaterThanEqualAndType(Date date, NotificationType type);
+    List<Notification> findByDateIsGreaterThanEqualAndTypeOrderByDateDesc(Date date, NotificationType type);
     List<Notification> findByDateAndType(Date date, NotificationType type);
     Page<Notification> findAllByTypeAndStateOrderByDateDesc(NotificationType type, HelpNeededState state, Pageable pageable);
     Page<Notification> findAllByTypeOrTypeOrderByDateDesc(NotificationType type1,NotificationType type2, Pageable pageable);

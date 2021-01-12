@@ -127,6 +127,17 @@ public class StoreServices {
         notificationRepository.save(n);
         notificationSocketsService.sendExitedStore(n);
 
+        List<Notification> help_notifications_last_visit = notificationRepository.findByDateIsGreaterThanEqualAndTypeOrderByDateDesc(p.getLastVisit(), NotificationType.HELP);
+
+        if (!help_notifications_last_visit.isEmpty()){
+            Notification n_help = help_notifications_last_visit.get(0);
+            if (n_help.getState() == HelpNeededState.PENDING){
+                n_help.setState(HelpNeededState.CUSTOMER_LEFT);
+                notificationRepository.save(n_help);
+            }
+
+        }
+
         // Output feedback
         System.out.println(String.format("%d (%s) " + format, nif, p.getName()));
     }
