@@ -1,4 +1,4 @@
-import React, { useDebugValue } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
@@ -24,8 +24,7 @@ function SimpleDialog(props) {
 			headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token')},
 			body: JSON.stringify({id:task.id, nif:task.nif, type:task.type, state: value})
 		};
-		const response = await fetch('http://127.0.0.1:8080/api/work/notifications_help/' + task.id, requestOptions);
-        const data = await response.json();
+		await fetch('http://127.0.0.1:8080/api/work/notifications_help/' + task.id, requestOptions);
         return false
 	}
 

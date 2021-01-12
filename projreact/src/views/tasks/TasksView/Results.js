@@ -17,7 +17,6 @@ import {
   Grid
 } from '@material-ui/core';
 
-import Location from './Location';
 import ResolveRequest from './ResolveRequest';
 
 const useStyles = makeStyles((theme) => ({
@@ -83,7 +82,7 @@ const Results = ({ className, tasks, ...rest }) => {
                       size="small"
                     />
                   </TableCell>
-                  {task.state == "PENDING" ? ( <TableCell>
+                  {task.state === "PENDING" ? ( <TableCell>
                     <Grid
                         container="true"
                         direction="row"             
