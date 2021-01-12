@@ -26,12 +26,6 @@ public class ProductController {
     private ProductRepository productRepository;
 
     @Autowired
-    private TransactionProductRepository transactionProductRepository;
-
-    @Autowired
-    private CartProductRepository cartProductRepository;
-
-    @Autowired
     private ProductCategoryRepository productCategoryRepository;
 
     @Autowired
@@ -47,9 +41,9 @@ public class ProductController {
 
             Page<Product> pageProd;
             if (name == null)
-                pageProd = productRepository.findAll(paging);
+                pageProd = productRepository.findByDeletedFalse(paging);
             else
-                pageProd = productRepository.findByNameContaining(name, paging);
+                pageProd = productRepository.findByNameContainingAndDeletedFalse(name, paging);
 
             products = pageProd.getContent();
 
@@ -125,18 +119,9 @@ public class ProductController {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found for this id: " + productId));
 
-        List<CartProduct> cps = cartProductRepository.findByProduct(product);
-        List<TransactionProduct> tps = transactionProductRepository.findByProduct(product);
+        product.setDeleted(true);
 
-        for(CartProduct cp: cps){
-            cartProductRepository.delete(cp);
-        }
-
-        for(TransactionProduct tp: tps){
-            transactionProductRepository.delete(tp);
-        }
-
-        productRepository.delete(product);
+        productRepository.save(product);
         updateScriptGeneratorService.deleteProduct(product);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
