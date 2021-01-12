@@ -71,7 +71,7 @@ const Results = ({ className, tasks, ...rest }) => {
                   key={task.id}
                 >
                   <TableCell>
-                    {moment(task.date).format('DD/MM/YYYY, h:mm:ss')}
+                    {moment(task.date).format('DD/MM/YYYY, hh:mm:ss')}
                   </TableCell>
                   <TableCell>
                     {task.nif}

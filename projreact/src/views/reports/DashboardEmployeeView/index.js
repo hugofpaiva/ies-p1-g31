@@ -113,17 +113,7 @@ const Dashboard = () => {
         >
           <Grid
             item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-            style={{height: '80%'}}
-          >
-            <CostumersInLine />
-          </Grid>
-          <Grid
-            item
-            lg={3}
+            lg={4}
             sm={6}
             xl={3}
             xs={12}
@@ -133,7 +123,7 @@ const Dashboard = () => {
           </Grid>
           <Grid
             item
-            lg={3}
+            lg={4}
             sm={6}
             xl={3}
             xs={12}
@@ -143,7 +133,7 @@ const Dashboard = () => {
           </Grid>
           <Grid
             item
-            lg={3}
+            lg={4}
             sm={6}
             xl={3}
             xs={12}
