@@ -78,19 +78,19 @@ const Results = ({ className, tasks, ...rest }) => {
                   </TableCell>
                   <TableCell>
                     <Chip
-                      color={task.state === "Pending" ? "primary" : "secondary"}
+                      color={task.state === "PENDING" ? "primary" : "secondary"}
                       label={task.state}
                       size="small"
                     />
                   </TableCell>
-                  <TableCell>
+                  {task.state == "PENDING" ? ( <TableCell>
                     <Grid
                         container="true"
                         direction="row"             
                     >
                       <ResolveRequest task={task} />
                     </Grid>
-                  </TableCell>
+                  </TableCell>): (<Grid></Grid>)}
                 </TableRow>
               ))}
             </TableBody>
