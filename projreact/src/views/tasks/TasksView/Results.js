@@ -71,7 +71,7 @@ const Results = ({ className, tasks, ...rest }) => {
                   key={task.id}
                 >
                   <TableCell>
-                    {moment(task.nif).format('DD/MM/YYYY, h:mm:ss')}
+                    {moment(task.timestamp).format('DD/MM/YYYY, h:mm:ss')}
                   </TableCell>
                   <TableCell>
                     {task.nif}
@@ -88,7 +88,6 @@ const Results = ({ className, tasks, ...rest }) => {
                         container="true"
                         direction="row"             
                     >
-                      <Location task={task} />
                       <ResolveRequest task={task} />
                     </Grid>
                   </TableCell>

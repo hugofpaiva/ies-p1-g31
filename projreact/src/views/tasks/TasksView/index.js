@@ -21,7 +21,7 @@ const CustomerListView = () => {
   const classes = useStyles();
   const [tasks, setTasks ] = useState(data);
 
-  useEffect(() => {
+  useEffect(async() => {
     const loop = setInterval(updateNotifications, 1000);
     return () => clearInterval(loop);
   }, []);
