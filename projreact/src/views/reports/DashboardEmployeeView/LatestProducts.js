@@ -33,12 +33,13 @@ const LatestProducts = ({ className, latest_products, ...rest }) => {
 
   let counter = 0;
   const products = latest_products.map(obj => {
+    console.log(obj)
     counter += 1;
     const name = Object.keys(obj)[0];
     return {
       'id': counter,
       'name': name,
-      'updatedAt': moment(obj[name]).format('DD/MM/YYYY, h:mm:ss')
+      'updatedAt': moment(obj[name]).format('DD/MM/YYYY, hh:mm:ss')
     }
   })
 
