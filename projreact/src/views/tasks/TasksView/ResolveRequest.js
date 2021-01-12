@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useDebugValue } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
@@ -9,7 +9,7 @@ import Dialog from '@material-ui/core/Dialog';
 
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
-const states = ['Resolved'];
+const states = ['RESOLVED'];
 
 function SimpleDialog(props) {
     const { onClose, selectedValue, open } = props;
@@ -18,7 +18,19 @@ function SimpleDialog(props) {
         onClose(selectedValue);
     };
 
+    async function updateState(task, value) {
+		const requestOptions = {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token')},
+			body: JSON.stringify({id:task.id, nif:task.nif, type:task.type, state: value})
+		};
+		const response = await fetch('http://127.0.0.1:8080/api/work/notifications_help/' + task.id, requestOptions);
+        const data = await response.json();
+        return false
+	}
+
     const handleListItemClick = (value) => {
+        updateState(props.task,value)
         onClose(value);
     };
 
