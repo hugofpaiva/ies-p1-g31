@@ -39,8 +39,13 @@ const ProductList = (props) => {
 	}, []);
 	// Fazer chamada à API para obter produtos
 	// Ao início e sempre que page e size sejam alterados
+	// Repetir todos os segundos para manter stock atualizado
 	useEffect(() => {
 		updateProducts();
+		const loop = setInterval(() => {
+			updateProducts()
+		}, 1000);
+		return () => clearInterval(loop);
 	}, [page, search]);
 
 	async function updateProducts() {
@@ -83,10 +88,6 @@ const ProductList = (props) => {
 		setCategories(data);
 	}
 
-	function productHasChanged() {
-		updateProducts();
-	}
-
 	return (
 		<Page className={classes.root} title="Products">
 			<Container maxWidth={false}>
@@ -94,7 +95,7 @@ const ProductList = (props) => {
 					persona={props.persona} 
 					search={setSearch}
 					categories={categories}
-					update={productHasChanged}
+					update={updateProducts}
 				/>
 				<Box mt={3}>
 					<Grid container spacing={3}>
@@ -104,7 +105,7 @@ const ProductList = (props) => {
 									className={classes.productCard}
 									product={product}
 									persona={props.persona}
-									update={productHasChanged}
+									update={updateProducts}
 									categories={categories}
 								/>
 							</Grid>
