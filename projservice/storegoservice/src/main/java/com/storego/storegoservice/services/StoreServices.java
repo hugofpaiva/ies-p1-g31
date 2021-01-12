@@ -59,14 +59,6 @@ public class StoreServices {
         Person p = personRepository.findById(nif).orElseThrow(() -> new ResourceNotFoundException("Person not found for this id :: " + nif));
         String format = "Entered the store!";
 
-        // Check if max number of clients has been reached
-        if (cartRepository.count() >= this.maxClients) {
-            System.out.println("MAX NUMBER OF CLIENTS HAS BEEN REACHED!");
-            Notification n = new Notification(NotificationType.STORE_FULL);
-            notificationRepository.save(n);
-            notificationSocketsService.sendStoreFull(n);
-        }
-
         // Create cart on database
         if (cartRepository.findByPersonNif(nif) == null) {
             Cart c = new Cart(p);
@@ -80,6 +72,14 @@ public class StoreServices {
         Notification n = new Notification(NotificationType.ENTERED_STORE, nif);
         notificationRepository.save(n);
         notificationSocketsService.sendEnteredStore(n);
+
+        // Check if max number of clients has been reached
+        if (cartRepository.countDistinctPerson() >= this.maxClients) {
+            System.out.println("MAX NUMBER OF CLIENTS HAS BEEN REACHED!");
+            Notification n_store_full = new Notification(NotificationType.STORE_FULL);
+            notificationRepository.save(n_store_full);
+            notificationSocketsService.sendStoreFull(n_store_full);
+        }
 
         // Output fedback
         System.out.println(String.format("%d (%s) " + format, nif, p.getName()));
