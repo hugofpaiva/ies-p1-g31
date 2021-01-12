@@ -171,7 +171,7 @@ public class NotificationController {
                 .orElseThrow(() -> new ResourceNotFoundException("Notification not found for this id: " + notificationId));
 
         Notification updatedNot = notification;
-        if (notificationDetails.getState() != null && notification.getType() == NotificationType.HELP) {
+        if (notification.getType() == NotificationType.HELP && notificationDetails.getState() == HelpNeededState.PENDING) {
             notification.setState(notificationDetails.getState());
 
             updatedNot = notificationRepository.save(notification);
@@ -195,8 +195,7 @@ public class NotificationController {
         for (HelpNeededState state : HelpNeededState.values()) {
             help_stats.put(state.name(), 0);
         }
-        System.out.println(help_stats);
-        System.out.println(help_stats);
+
         for (Notification notif : notifications) {
             total = total + 1;
             String notif_state = notif.getState().name();
@@ -213,7 +212,6 @@ public class NotificationController {
 
     @GetMapping("/work/todays_attended_requests")
     public Integer getTodaysAttendedRequests() {
-        Integer todays_reqs;
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);
         Date result = cal.getTime();
