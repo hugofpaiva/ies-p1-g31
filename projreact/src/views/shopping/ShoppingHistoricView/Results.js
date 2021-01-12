@@ -81,8 +81,13 @@ const Results = ({ className, ...props }) => {
 
   // Fazer chamada à API para obter produtos
   // Ao início e sempre que page e size sejam alterados
+  // Update list every second to always have last transactions
   useEffect(() => {
     updateTransactions();
+    const loop = setInterval(() => {
+      updateTransactions();
+    }, 1000);
+    return () => clearInterval(loop);
   }, [page, size]);
 
   async function updateTransactions() {
