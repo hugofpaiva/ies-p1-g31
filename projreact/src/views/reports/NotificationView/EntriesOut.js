@@ -127,7 +127,7 @@ const EntriesOut = ({ className, ...rest }) => {
 									</TableCell>
 									<TableCell>
 										<Chip
-											color="primary"
+											color={notification.type === "ENTERED_STORE" ? "primary": "secondary"}
 											label={
 												notification.type ===
 												"ENTERED_STORE"
