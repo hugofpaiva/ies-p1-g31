@@ -84,8 +84,9 @@ public class InitScriptGeneratorService {
 
 
     public void initPeople(JSONObject result) {
-        JSONArray keys = result.names ();
+        JSONArray keys = result.names();
 
+        System.out.println(keys.length() + " Clients will be added!");
         for (int i = 0; i < keys.length(); i++) {
             String nif = keys.getString(i);
             JSONArray value = result.getJSONArray(nif);
@@ -102,6 +103,7 @@ public class InitScriptGeneratorService {
     }
 
     public void initCategories(JSONArray result) {
+        System.out.println(result.length() + " Categories will be added!");
         for (int i = 0; i < result.length(); i++) {
             JSONObject cat = result.getJSONObject(i);
             ProductCategory pc = new ProductCategory(cat.getLong("id"), cat.getString("name"));
@@ -116,6 +118,8 @@ public class InitScriptGeneratorService {
 
     public void initProducts(JSONObject result) throws ResourceNotFoundException {
         JSONArray keys = result.names ();
+
+        System.out.println(keys.length() + " Products will be added!");
         for (int i = 0; i < keys.length(); i++) {
             String id = keys.getString(i);
             JSONArray value = result.getJSONArray(id);

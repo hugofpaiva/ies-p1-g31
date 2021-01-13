@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import moment from 'moment';
-import { v4 as uuid } from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
 import {
@@ -10,7 +9,6 @@ import {
   Button,
   Card,
   CardHeader,
-  Chip,
   Divider,
   Table,
   TableBody,
@@ -81,8 +79,8 @@ const HelpRequests = ({ className, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tasks.map((task) => {
-                if (task.status == "Pending") {
+              {tasks.forEach((task) => {
+                if (task.status === "Pending") {
                   return (
                     <TableRow
                       hover

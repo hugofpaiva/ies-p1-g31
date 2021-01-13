@@ -3,8 +3,10 @@ package com.storego.storegoservice.controller;
 
 import com.storego.storegoservice.exception.ResourceNotFoundException;
 import com.storego.storegoservice.model.*;
+import com.storego.storegoservice.repository.CartProductRepository;
 import com.storego.storegoservice.repository.ProductCategoryRepository;
 import com.storego.storegoservice.repository.ProductRepository;
+import com.storego.storegoservice.repository.TransactionProductRepository;
 import com.storego.storegoservice.services.UpdateScriptGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,12 @@ public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private TransactionProductRepository transactionProductRepository;
+
+    @Autowired
+    private CartProductRepository cartProductRepository;
 
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
@@ -97,8 +105,32 @@ public class ProductController {
         return ResponseEntity.ok(updatedProd);
     }
 
+    //Use for restock by Employee
+    @PutMapping("/work/restock_product/{id}")
+    public ResponseEntity<Product> restockProduct(@PathVariable(value = "id") long productId,
+                                                  @Valid @RequestBody Product productDetails) throws ResourceNotFoundException {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found for this id: " + productId));
+
+        //Used to send how many more products it is to add
+        if (productDetails.getStock_current() != null) {
+            product.setStock_current(product.getStock_current() + productDetails.getStock_current());
+            updateScriptGeneratorService.restockProduct(productDetails.getStock_current(), product);
+        }
+
+        Product updatedProd = productRepository.save(product);
+        return ResponseEntity.ok(updatedProd);
+    }
+
     @PostMapping("/admin/products")
     public Product createProduct(@Valid @RequestBody Product product) {
+        Product last = productRepository.findTopByOrderByIdDesc();
+        if (last != null) {
+            product.setId(last.getId()+1);
+        }else{
+            product.setId(1);
+        }
+
         Product p = productRepository.save(product);
         updateScriptGeneratorService.addProduct(product);
         return p;
@@ -109,6 +141,17 @@ public class ProductController {
             throws ResourceNotFoundException {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found for this id: " + productId));
+
+        List<CartProduct> cps = cartProductRepository.findByProduct(product);
+        List<TransactionProduct> tps = transactionProductRepository.findByProduct(product);
+
+        for(CartProduct cp: cps){
+            cartProductRepository.delete(cp);
+        }
+
+        for(TransactionProduct tp: tps){
+            transactionProductRepository.delete(tp);
+        }
 
         productRepository.delete(product);
         updateScriptGeneratorService.deleteProduct(product);

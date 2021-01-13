@@ -5,31 +5,15 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import {
-	makeStyles
-} from '@material-ui/core';
 
 import {
 	Map as MapIcon,
 } from "react-feather";
 
-import ReceiptIcon from "@material-ui/icons/Receipt";
-
-const useStyles = makeStyles((theme) => ({
-	icon: {
-		marginRight: theme.spacing(1)
-	},
-	title: {
-		marginRight: 'auto'
-	},
-
-}));
-
 export default function Bill(props) {
 	const [open, setOpen] = React.useState(false);
-	const [maxWidth, setMaxWidth] = React.useState("sm");
-	const [fullWidth, setFullWidth] = React.useState(true);
-	const classes = useStyles();
+	const [maxWidth] = React.useState("sm");
+	const [fullWidth] = React.useState(true);
 
 	const task = props.task;
 
@@ -67,7 +51,7 @@ export default function Bill(props) {
 					>
 						{task.place}
 					</DialogContentText>
-					<img src="/static/images/maps/store.png" />
+					<img alt="Store" src="/static/images/maps/store.png" />
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose} color="primary" autoFocus>

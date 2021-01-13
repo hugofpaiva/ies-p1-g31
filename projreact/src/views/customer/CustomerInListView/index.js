@@ -7,15 +7,8 @@ import {
 	makeStyles,
 	LinearProgress,
 } from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
 import Page from "src/components/Page";
-import Toolbar from "./Toolbar";
 import CustomerCard from "./CustomerCard";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import MuiDialogContent from "@material-ui/core/DialogContent";
-import MuiDialogActions from "@material-ui/core/DialogActions";
-import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -39,15 +32,6 @@ const CustomerList = () => {
 	const classes = useStyles();
 	const [customers, setCustomers] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const [searchName, setSearchName] = useState("");
-	const [noOfPages, setnoOfPages] = useState(3);
-	const [products, setProducts] = useState([]);
-	const itemsPerPage = 12;
-	const [page, setPage] = React.useState(1);
-
-	const handleChange = (event, value) => {
-		setPage(value);
-	};
 
 	useEffect(() => {
 		setLoading(true);
@@ -62,7 +46,7 @@ const CustomerList = () => {
 				setCustomers(response.data.sort((a,b) => new Date(a['last_visit']) - new Date(b['last_visit'])));
 				setLoading(false);
 			});
-		setInterval(function() {
+		const loop = setInterval(function() {
 			axios
 				.get("http://localhost:8080/api/work/persons_in_store/", {
 					headers: {
@@ -74,6 +58,7 @@ const CustomerList = () => {
 					setCustomers(response.data.sort((a,b) => new Date(a['last_visit']) - new Date(b['last_visit'])));
 				});
 		}, 1000);
+		return () => clearInterval(loop);
 	}, []);
 
 	return (
@@ -89,8 +74,8 @@ const CustomerList = () => {
 							<Grid container spacing={3}>
 								{customers.map((customer) => (
 									<Grid
-										item
 										key={customer.id}
+										item
 										lg={3}
 										md={4}
 										xs={12}

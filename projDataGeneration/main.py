@@ -23,8 +23,7 @@ def readMessages(generator):
     while consumer is None:
         try:
             consumer = KafkaConsumer('storego-update', bootstrap_servers=['kafka:29092'],
-                                     auto_offset_reset='earliest',
-                                     enable_auto_commit=True, value_deserializer=lambda x: json.loads(x.decode('utf-8')))
+                                    auto_offset_reset='latest', enable_auto_commit=True, value_deserializer=lambda x: (x.decode('utf-8')))
         except:
             print('\033[95m' + "[Consumer] Kafka Broker is not available!"+ '\033[0m')
             time.sleep(5)
@@ -32,7 +31,7 @@ def readMessages(generator):
     for msg in consumer:
         try:    
             msg = json.loads(msg.value)
-            print("New message received: " + msg)
+            print("New message received: " + str(msg))
             if msg["type"] == "new-limit":
                 value = msg["qty"]
                 generator.setPeopleLimit(value)
@@ -55,6 +54,7 @@ def readMessages(generator):
                 nif = msg["nif"]
                 generator.wasHelped(nif)    
         except:
+            print("Error on message: "+str(msg))
             continue
 
 def main():
@@ -83,8 +83,10 @@ def main():
     isInitializer = True
     for record in people_consumer:
         try:    
+            print(record.value)
             msg = json.loads(record.value)
         except:
+            print("Error on message: "+str(record))
             continue 
         if msg["type"] == "initialize-people-response":
             if 'data' in msg:
@@ -103,18 +105,18 @@ def main():
                     411383247: ["Filomena Malato", "f.malato@ua.pt", "abc"],
                     630114163: ["José Matos", "jose.m@ua.pt", "abc"],
                     111900377: ["Catarina Paiva", "cat@ua.pt", "abc"],
-                    732421123: ["Mateus Taveiro", "mat@ua.pt", "abc"],
-                    261546474: ["Catarina Carvalho", "carvalho.catarina@ua.pt", "abc"],
-                    390615322: ["Bruna Miranda", "bruna.mir@ua.pt", "abc"],
-                    877039422: ["Joana Coimbra", "coimbra@ua.pt", "abc"],
-                    335851952: ["Mariana Lima", "mari.ana@ua.pt", "abc"],
-                    639918632: ["Luís Magalhães", "lulu.m1999@ua.pt", "abc"],
-                    818386478: ["Rita Branco", "br.rita@ua.pt", "abc"],
-                    411383247: ["Hugo Matos", "m.hugo@ua.pt", "abc"],
-                    630114163: ["Maria Santos", "maria.s@ua.pt", "abc"],
-                    111900377: ["Gonçalo Gomes", "gg@ua.pt", "abc"]}
+                    732441123: ["Mateus Taveiro", "mat@ua.pt", "abc"],
+                    262546474: ["Catarina Carvalho", "carvalho.catarina@ua.pt", "abc"],
+                    392615322: ["Bruna Miranda", "bruna.mir@ua.pt", "abc"],
+                    872039422: ["Joana Coimbra", "coimbra@ua.pt", "abc"],
+                    332851952: ["Mariana Lima", "mari.ana@ua.pt", "abc"],
+                    632918632: ["Luís Magalhães", "lulu.m1999@ua.pt", "abc"],
+                    812386478: ["Rita Branco", "br.rita@ua.pt", "abc"],
+                    412383247: ["Hugo Matos", "m.hugo@ua.pt", "abc"],
+                    632114163: ["Maria Santos", "maria.s@ua.pt", "abc"],
+                    112900377: ["Gonçalo Gomes", "gg@ua.pt", "abc"]}
 
-    
+        print(len(people_to_send))
         for nifs in people_to_send:
             people[nifs] = (0, {})
 
@@ -130,7 +132,7 @@ def main():
                             "type": "initialize-categories",
                             "data": category_to_send
                             }
-
+        print(len(category_to_send))
         sendMessage(producer, "storego-new", message_category)
 
         product_to_send = {1402: [3.00, "Prosperity Sandwich", "A beautiful sandwich with three tiers of meat and tomatoes and mushrooms for that extra savoury flavour, topped with a creamy cheese souce that will make you cry for more!", 10000, 5, 1],
@@ -153,12 +155,12 @@ def main():
                         6475: [3.20, "Sour Cream And Onion Chips", "These thick chips are cooked slowly and the result is a flavorful chip that tastes fresh and has a very good texture.", 10000, 5, 1],
                         2281: [6.10, "Pack Of 5 Limes", "Our limes are sour, round, and bright green citrus fruits. They’re nutritional powerhouses — high in vitamin C, antioxidants, and other nutrients.", 10000, 5, 6],
                         6203: [25.92, "Hefeweizen Beer", "Arguably one of the most recognizable beer styles, the German-style hefeweizen offers a striking beer experience thanks to the use of distinctive wheat malt, unique yeast and uncharateristic appearance.", 10000, 5, 5],
-                        3626: [21.53, "Hahn Pinot Noir", "Pinot Noir is the world’s most popular light-bodied red wine. It’s loved for its red fruit, flower, and spice aromas that are accentuated by a long, smooth finish.", 10000, 5, 1]}   
+                        3626: [21.53, "Hahn Pinot Noir", "Pinot Noir is the world’s most popular light-bodied red wine. It’s loved for its red fruit, flower, and spice aromas that are accentuated by a long, smooth finish.", 50, 5, 1]}   
 
         # starting our product representation
         for pid in product_to_send:
             products[pid] = product_to_send.get(pid)[3]
-
+        print(len(product_to_send))
         message_product = {
                             "type": "initialize-products",
                             "data": product_to_send
@@ -173,8 +175,10 @@ def main():
 
         for record in people_consumer:
             try:    
+                print(record.value)
                 msg = json.loads(record.value)
             except:
+                print("Error on message: "+str(record))
                 continue 
             if msg["type"] == "initialize-done-people":
                 people_done = True
@@ -205,6 +209,7 @@ def main():
             try:
                 msg = json.loads(record.value)
             except:
+                print("Error on message: "+str(record))
                 continue
             if msg["type"] == "initialize-products-response":
                 prod_dictionary = msg["data"]

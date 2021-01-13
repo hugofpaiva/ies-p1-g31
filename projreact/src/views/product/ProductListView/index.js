@@ -4,7 +4,6 @@ import { Pagination } from "@material-ui/lab";
 import Page from "src/components/Page";
 import Toolbar from "./Toolbar";
 import ProductCard from "./ProductCard";
-import data from "./data";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -31,14 +30,23 @@ const ProductList = (props) => {
 	);
 
 	const handleChange = (event, value) => {
-		setPage(value, updateProducts());
+		setPage(value);
 	};
 
 	// Fazer chamada à API para obter produtos
-	useEffect(async() => {
-		updateProducts();
+	useEffect(() => {
 		updateCategories();
 	}, []);
+	// Fazer chamada à API para obter produtos
+	// Ao início e sempre que page e size sejam alterados
+	// Repetir todos os segundos para manter stock atualizado
+	useEffect(() => {
+		updateProducts();
+		const loop = setInterval(() => {
+			updateProducts()
+		}, 1000);
+		return () => clearInterval(loop);
+	}, [page, search]);
 
 	async function updateProducts() {
 		const requestOptions = {
@@ -48,23 +56,21 @@ const ProductList = (props) => {
 				'Authorization': 'Bearer ' + localStorage.getItem('token')
 			}
 		};
-		let pageN = page - 1;
-		let url = "http://127.0.0.1:8080/api/work/products?page=" + pageN + "&size=" + itemsPerPage;
-		if (search.trim() != "") {
+		let url = "http://127.0.0.1:8080/api/work/products?page=" + (page - 1) + "&size=" + itemsPerPage;
+		if (search.trim() !== "") {
 			url += "&name=" + search;
 		}
 		const response = await fetch(url, requestOptions);
 		const data = await response.json();
 
-		console.log("GOT DATA");
-		console.log(data);
-
 		// Update products 
 		setProducts(data['products']);
 		// Update number of pages
 		setNPages(data['totalPages']);
-		// Update page
-		setPage(data['currentPage']+1);
+		// If number of pages is less than the selected, reset to first
+		if (data['totalPages'] < page) {
+			setPage(1);
+		}
 	}
 
 	async function updateCategories() {
@@ -78,14 +84,8 @@ const ProductList = (props) => {
 		let url = "http://127.0.0.1:8080/api/work/productscategories";
 		const response = await fetch(url, requestOptions);
 		const data = await response.json();
-		console.log("GOT CATEGORIES");
-		console.log(data);
 		// Update categories 
 		setCategories(data);
-	}
-
-	function searchFunc(keyword) {
-		setSearch(keyword, updateProducts());
 	}
 
 	return (
@@ -93,13 +93,13 @@ const ProductList = (props) => {
 			<Container maxWidth={false}>
 				<Toolbar 
 					persona={props.persona} 
-					search={searchFunc}
+					search={setSearch}
 					categories={categories}
 					update={updateProducts}
 				/>
 				<Box mt={3}>
 					<Grid container spacing={3}>
-						{products.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((product) => (
+						{products.map((product) => (
 							<Grid item key={product.id} lg={4} md={6} xs={12}>
 								<ProductCard
 									className={classes.productCard}

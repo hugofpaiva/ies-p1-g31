@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import {
 	Box,
 	Button,
 	Container,
-	Link,
 	TextField,
 	Typography,
 	makeStyles,
@@ -24,13 +22,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LoginView = () => {
-	// When openned, delete local storage if not already
-	localStorage.removeItem("notifications");
-	localStorage.removeItem("token");
-	localStorage.removeItem("authority");
+	// When openned, if token already exists, redirect
+	// Otherwise, clear local storage
+	if (localStorage.getItem("token") != null) {
+		redirectUser();
+	} else {
+		localStorage.removeItem("notifications");
+		localStorage.removeItem("token");
+		localStorage.removeItem("authority");
+		localStorage.removeItem("name");
+	}
 
 	const classes = useStyles();
-	const navigate = useNavigate();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -38,12 +41,12 @@ const LoginView = () => {
 	
 	function redirectUser() {
 		// Validate that token was created 
-		if (localStorage.getItem('token') != null) {
+		if (localStorage.getItem('token') !== null) {
 			// If so, redirect
-			if (localStorage.getItem('authority') == 'MANAGER') {
+			if (localStorage.getItem('authority') === 'MANAGER') {
 				window.location.href = "/admin";
 				return false;
-			} else if (localStorage.getItem('authority') == 'EMPLOYEE') {
+			} else if (localStorage.getItem('authority') === 'EMPLOYEE') {
 				window.location.href = "/employee";
 				return false;
 			} 
@@ -61,10 +64,11 @@ const LoginView = () => {
 		};
 		const response = await fetch('http://127.0.0.1:8080/api/login', requestOptions);
 		const data = await response.json();
+		console.log(data);
 		
 		// Process response
 		// If error, show error warning
-		if ('status' in data && data['status'] != 200) {
+		if ('status' in data && data['status'] !== 200) {
 			setLoginError(true);
 			return false;
 		}
@@ -72,6 +76,7 @@ const LoginView = () => {
 		if ('token' in data) {
 			localStorage.setItem('token', data['token']);
 			localStorage.setItem('authority', data['type']['authority']);
+			localStorage.setItem('name', data['name']);
 			// Redirect user to dashboard main page
 			redirectUser();
 		}
