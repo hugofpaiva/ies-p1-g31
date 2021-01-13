@@ -5,7 +5,6 @@ import com.storego.storegoservice.exception.EtAuthException;
 import com.storego.storegoservice.exception.ResourceNotFoundException;
 import com.storego.storegoservice.model.*;
 import com.storego.storegoservice.repository.PersonRepository;
-import com.storego.storegoservice.services.JwtUserDetailsService;
 import com.storego.storegoservice.services.UpdateScriptGeneratorService;
 import com.storego.storegoservice.services.StoreServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +23,6 @@ import java.util.*;
 
 @RestController
 public class PersonController {
-    @Autowired
-    private JwtUserDetailsService userDetailsService;
-
     @Autowired
     private PersonRepository personRepository;
 
@@ -95,41 +90,21 @@ public class PersonController {
         return response;
     }
 
-    @GetMapping("/work/person/")
-    public ResponseEntity<Person> getPersonDetails(HttpServletRequest request) throws ResourceNotFoundException {
-        String requestTokenHeader = request.getHeader("Authorization");
-        String jwtToken = requestTokenHeader.substring(7);
-        String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
 
-        Person person = personRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Person not found for this email: " + email));
-        return ResponseEntity.ok(person);
-    }
 
     @PutMapping("/work/person/")
     public ResponseEntity<?> updatePerson(HttpServletRequest request, @Valid @RequestBody Person p) throws ResourceNotFoundException {
         String requestTokenHeader = request.getHeader("Authorization");
         String jwtToken = requestTokenHeader.substring(7);
         String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
-
         Person person = personRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Person not found for this email: " + email));
 
         if (p.getName() != null) {
             person.setName(p.getName());
         }
-
-        if (p.getPassword() != null) {
-            System.out.println(p.getPassword());
-            person.setPassword(bcryptEncoder.encode(p.getPassword()));
-        }
-
         if (p.getEmail() != null) {
             person.setEmail(p.getEmail());
-            final UserDetails userDetails = userDetailsService
-                    .loadUserByUsername(p.getEmail());
-            final String token = jwtTokenUtil.generateToken(userDetails);
-            ResponseEntity.ok(new JwtResponse(token, userDetails.getAuthorities().iterator().next(), person.getName(), person.getNif()));
         }
 
         Person updatedPer = personRepository.save(person);
@@ -141,11 +116,7 @@ public class PersonController {
         String requestTokenHeader = request.getHeader("Authorization");
         String jwtToken = requestTokenHeader.substring(7);
         String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
-
-        System.out.println(pw.getEmail());
-        System.out.println(email);
-
-        if (pw.getEmail().equals(email)){
+        if (!pw.getEmail().equals(email)){
             throw new EtAuthException("Emails don't match!");
         }
 
@@ -161,6 +132,16 @@ public class PersonController {
         return ResponseEntity.ok(updatedPer);
     }
 
+    @GetMapping("/work/person/")
+    public ResponseEntity<Person> getPersonDetails(HttpServletRequest request) throws ResourceNotFoundException {
+        String requestTokenHeader = request.getHeader("Authorization");
+        String jwtToken = requestTokenHeader.substring(7);
+        String email = jwtTokenUtil.getUsernameFromToken(jwtToken);
+
+        Person person = personRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Person not found for this email: " + email));
+        return ResponseEntity.ok(person);
+    }
 
     @GetMapping("/work/last_persons_in_store")
     public Set<Person> getLastPersonsInStore() {
@@ -173,6 +154,11 @@ public class PersonController {
         Person person = personRepository.findById(personNif)
                 .orElseThrow(() -> new ResourceNotFoundException("Person not found for this id :: " + personNif));
         return ResponseEntity.ok().body(person);
+    }
+
+    @GetMapping("/work/max_persons")
+    public Integer getMaxPersons(){
+        return service.getMaxClients();
     }
 
 

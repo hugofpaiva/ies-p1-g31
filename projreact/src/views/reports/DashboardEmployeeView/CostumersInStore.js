@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const CostumersInStore = ({ className, ...rest }) => {
+const CostumersInStore = ({ className, persons_in_store, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -50,7 +50,7 @@ const CostumersInStore = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              600
+              {persons_in_store}
             </Typography>
           </Grid>
           <Grid item>

@@ -16,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class NotificationController {
@@ -33,7 +30,7 @@ public class NotificationController {
     @GetMapping("/work/notifications_help")
     public ResponseEntity<Map<String, Object>> getHelpNotifications(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size){
+            @RequestParam(defaultValue = "10") int size) {
         try {
             List<Notification> notifications = new ArrayList<>();
             Pageable paging = PageRequest.of(page, size);
@@ -60,7 +57,7 @@ public class NotificationController {
     @GetMapping("/work/notifications_help_waiting")
     public ResponseEntity<Map<String, Object>> getHelpWaitingNotifications(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size){
+            @RequestParam(defaultValue = "10") int size) {
         try {
             List<Notification> notifications = new ArrayList<>();
             Pageable paging = PageRequest.of(page, size);
@@ -87,7 +84,7 @@ public class NotificationController {
     @GetMapping("/admin/notifications_entered_left")
     public ResponseEntity<Map<String, Object>> getEnteredExitedNotifications(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size){
+            @RequestParam(defaultValue = "10") int size) {
         try {
             List<Notification> notifications = new ArrayList<>();
             Pageable paging = PageRequest.of(page, size);
@@ -114,14 +111,14 @@ public class NotificationController {
     @GetMapping("/admin/notifications_full_store")
     public ResponseEntity<Map<String, Object>> getFullStoreNotifications(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size){
+            @RequestParam(defaultValue = "10") int size) {
         try {
             List<Notification> notifications = new ArrayList<>();
             Pageable paging = PageRequest.of(page, size);
 
             Page<Notification> pageNots;
 
-            pageNots = notificationRepository.findAllByTypeOrderByDateDesc(NotificationType.STORE_FULL,paging);
+            pageNots = notificationRepository.findAllByTypeOrderByDateDesc(NotificationType.STORE_FULL, paging);
 
             notifications = pageNots.getContent();
 
@@ -141,14 +138,14 @@ public class NotificationController {
     @GetMapping("/admin/notifications_restock")
     public ResponseEntity<Map<String, Object>> getRestockNotifications(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size){
+            @RequestParam(defaultValue = "10") int size) {
         try {
             List<Notification> notifications = new ArrayList<>();
             Pageable paging = PageRequest.of(page, size);
 
             Page<Notification> pageNots;
 
-            pageNots = notificationRepository.findAllByTypeOrderByDateDesc(NotificationType.RESTOCK,paging);
+            pageNots = notificationRepository.findAllByTypeOrderByDateDesc(NotificationType.RESTOCK, paging);
 
             notifications = pageNots.getContent();
 
@@ -168,17 +165,17 @@ public class NotificationController {
     //Use for edit state of help notifications
     @PutMapping("/work/notifications_help/{id}")
     public ResponseEntity<Notification> updateHelpNotification(@PathVariable(value = "id") String notificationId,
-                                                 @Valid @RequestBody Notification notificationDetails) throws ResourceNotFoundException {
+                                                               @Valid @RequestBody Notification notificationDetails) throws ResourceNotFoundException {
 
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Notification not found for this id: " + notificationId));
 
         Notification updatedNot = notification;
-        if (notificationDetails.getState() != null && notification.getType() == NotificationType.HELP) {
+        if (notification.getType() == NotificationType.HELP && notification.getState() == HelpNeededState.PENDING) {
             notification.setState(notificationDetails.getState());
 
             updatedNot = notificationRepository.save(notification);
-            if(notificationDetails.getState() == HelpNeededState.RESOLVED){
+            if (notificationDetails.getState() == HelpNeededState.RESOLVED) {
                 updateScriptGeneratorService.helpGiven(notification.getNif());
             }
         }
@@ -186,14 +183,47 @@ public class NotificationController {
         return ResponseEntity.ok(updatedNot);
     }
 
-    @GetMapping("/work/notifications_help/{id}")
-    public ResponseEntity<Notification> updateHelpNotification(@PathVariable(value = "id") String notificationId) throws ResourceNotFoundException {
 
-        Notification notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Notification not found for this id: " + notificationId));
+    @GetMapping("/work/monthly_help_requests_stats")
+    public Map<String, Integer> getMonthlyHelpRequests() {
+        Map<String, Integer> help_stats = new HashMap<>();
+        double total = 0;
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        Date result = cal.getTime();
+        List<Notification> notifications = notificationRepository.findByDateIsGreaterThanEqualAndType(result, NotificationType.HELP);
+        for (HelpNeededState state : HelpNeededState.values()) {
+            help_stats.put(state.name(), 0);
+        }
 
-        return ResponseEntity.ok(notification);
+        for (Notification notif : notifications) {
+            total = total + 1;
+            String notif_state = notif.getState().name();
+            Integer value = help_stats.get(notif_state);
+            help_stats.put(notif_state, value + 1);
+        }
+
+        for (String type : help_stats.keySet()) {
+            Integer value = help_stats.get(type);
+            help_stats.put(type, (int) Math.round(value * 100 / total));
+        }
+        return help_stats;
     }
 
+    @GetMapping("/work/todays_attended_requests")
+    public Integer getTodaysAttendedRequests() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        Date result = cal.getTime();
+        List<Notification> notifications = notificationRepository.findByDateIsGreaterThanEqualAndType(result, NotificationType.HELP);
+        Integer total = 0;
+        for (Notification notif : notifications) {
+            if (notif.getState().name().equals("RESOLVED"))
+                total = total + 1;
+        }
+        return total;
+    }
 
 }
+
+

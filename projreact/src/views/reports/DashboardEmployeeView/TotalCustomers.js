@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const TotalCustomers = ({ className, ...rest }) => {
+const TotalCustomers = ({ className, maxValue, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -56,7 +56,7 @@ const TotalCustomers = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              600
+              {maxValue}
             </Typography>
           </Grid>
           <Grid item>

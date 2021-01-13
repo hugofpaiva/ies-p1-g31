@@ -24,8 +24,8 @@ public class Consumer {
     @KafkaListener(topics="storego-new")
     public void consume(String message) throws IOException {
         JSONObject obj = new JSONObject(message);
-        System.out.println(obj.getString("type"));
-        switch ((String) obj.get("type")){
+        System.out.println(message);
+        switch (obj.getString("type")){
             case "entering-store":
                 try{
                 service.enterStore(obj.getLong("nif"));

@@ -127,6 +127,18 @@ const ProductCard = ({categories, update, persona, className, product, ...rest }
               display="inline"
               variant="body2"
             >
+              Identifier: {product.id} 
+            </Typography>
+          </Grid>
+          <Grid
+            className={classes.statsItem}
+            item
+          >
+            <Typography
+              color="textSecondary"
+              display="inline"
+              variant="body2"
+            >
               {product.stock_current}
               {' '}
               in Stock

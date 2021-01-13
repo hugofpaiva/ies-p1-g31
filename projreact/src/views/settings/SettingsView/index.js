@@ -21,7 +21,7 @@ const SettingsView = (props) => {
 		<Page className={classes.root} title="Settings">
 			<Container maxWidth="lg">
 				<Box mt={3}>
-					<ProfileDetails persona={props.persona} />
+					<ProfileDetails persona={props.persona}/>
 				</Box>
 				<Box mt={3}>
 					<Password />

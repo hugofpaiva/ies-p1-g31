@@ -1,6 +1,5 @@
 package com.storego.storegoservice.model;
 
-
 import java.io.Serializable;
 
 public class PwChangeRequest implements Serializable {
@@ -35,4 +34,3 @@ public class PwChangeRequest implements Serializable {
         this.password = password;
     }
 }
-
