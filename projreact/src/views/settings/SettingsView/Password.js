@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import {Url} from "src/ApiConsts";
 import {
   Box,
   Button,
@@ -12,7 +13,6 @@ import {
   makeStyles,
   Typography
 } from '@material-ui/core';
-import { ErrorSharp } from '@material-ui/icons';
 
 const useStyles = makeStyles(({
   root: {}
@@ -80,7 +80,7 @@ const Password = ({ className, ...rest }) => {
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     body: JSON.stringify({email: person.email, password: values.password })
 		};
-    await fetch('http://127.0.0.1:8080/api/work/change_pw/', requestOptions).then(function(response) {
+    await fetch(Url + '/api/work/change_pw/', requestOptions).then(function(response) {
       if (!response.ok) {
           alert("There was a problem with the request!")
       } else {
@@ -101,7 +101,7 @@ const Password = ({ className, ...rest }) => {
             'Authorization': 'Bearer ' + localStorage.getItem('token')
         }
       };
-      const response = await fetch('http://127.0.0.1:8080/api/work/person/', requestOptions);
+      const response = await fetch(Url + '/api/work/person/', requestOptions);
       const data = await response.json();
       setPerson(data);
     }

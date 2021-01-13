@@ -4,6 +4,7 @@ import { Pagination } from "@material-ui/lab";
 import Page from "src/components/Page";
 import Toolbar from "./Toolbar";
 import ProductCard from "./ProductCard";
+import {Url} from "src/ApiConsts";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -56,7 +57,7 @@ const ProductList = (props) => {
 				'Authorization': 'Bearer ' + localStorage.getItem('token')
 			}
 		};
-		let url = "http://127.0.0.1:8080/api/work/products?page=" + (page - 1) + "&size=" + itemsPerPage;
+		let url = Url + "/api/work/products?page=" + (page - 1) + "&size=" + itemsPerPage;
 		if (search.trim() !== "") {
 			url += "&name=" + search;
 		}

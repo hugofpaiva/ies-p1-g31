@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { Link as RouterLink } from "react-router-dom";
 import moment from "moment";
 import PerfectScrollbar from "react-perfect-scrollbar";
+import {Url} from "src/ApiConsts";
 import {
 	Box,
 	Card,
@@ -75,7 +76,7 @@ const Results = ({ className, loading, ...rest }) => {
 			},
 		};
 		let url =
-			"http://127.0.0.1:8080/api/admin/persons?page=" +
+			Url + "/api/admin/persons?page=" +
 			page +
 			"&size=" +
 			size;

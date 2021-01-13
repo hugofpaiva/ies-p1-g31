@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import {Url} from "src/ApiConsts";
 import {
   Box,
   Button,
@@ -82,7 +83,7 @@ const ProfileDetails = ({ persona, className, ...rest }) => {
 			headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token')},
 			body: JSON.stringify({...person, name: values.firstName + " " + values.lastName, email: values.email})
 		};
-		const response = await fetch('http://127.0.0.1:8080/api/work/person/', requestOptions).then(function(response) {
+		const response = await fetch(Url + '/api/work/person/', requestOptions).then(function(response) {
       if (!response.ok) {
           alert("There was a problem with the request!")
       } else {
@@ -110,7 +111,7 @@ const ProfileDetails = ({ persona, className, ...rest }) => {
             'Authorization': 'Bearer ' + localStorage.getItem('token')
         }
       };
-      const response = await fetch('http://127.0.0.1:8080/api/work/person/', requestOptions);
+      const response = await fetch(Url + '/api/work/person/', requestOptions);
       const data = await response.json();
       console.log(data);
       if(data["type"] === "MANAGER"){

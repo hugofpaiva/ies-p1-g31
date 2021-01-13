@@ -4,6 +4,7 @@ import moment from "moment";
 import PropTypes from "prop-types";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
+import {Url} from "src/ApiConsts";
 import {
 	Box,
 	Card,
@@ -83,7 +84,7 @@ const Help = ({ className, ...rest }) => {
 				.map(async (notification) => {
 					// Update status
 					const url =
-						"http://127.0.0.1:8080/api/work/notifications_help/" +
+						Url + "/api/work/notifications_help/" +
 						notification["id"];
 					const response = await fetch(url, requestOptions);
 					const data = await response.json();
@@ -102,7 +103,7 @@ const Help = ({ className, ...rest }) => {
 			},
 		};
 		const response = await fetch(
-			"http://127.0.0.1:8080/api/work/notifications_help",
+			Url + "/api/work/notifications_help",
 			requestOptions
 		);
 		const data = await response.json();

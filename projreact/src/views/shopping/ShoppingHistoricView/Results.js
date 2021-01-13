@@ -3,6 +3,7 @@ import clsx from "clsx";
 import PropTypes from "prop-types";
 import moment from "moment";
 import PerfectScrollbar from "react-perfect-scrollbar";
+import {Url} from "src/ApiConsts";
 import {
 	Avatar,
 	Box,
@@ -99,14 +100,14 @@ const Results = ({ className, ...props }) => {
 			},
 		};
 		let url =
-			"http://127.0.0.1:8080/api/admin/purchases/?page=" +
+			Url + "/api/admin/purchases/?page=" +
 			page +
 			"&size=" +
 			size;
 		const nif = new URLSearchParams(window.location.search).get("nif");
 		if (nif != null) {
 			url =
-				"http://127.0.0.1:8080/api/admin/purchases/" +
+				Url + "/api/admin/purchases/" +
 				nif +
 				"?page=" +
 				page +

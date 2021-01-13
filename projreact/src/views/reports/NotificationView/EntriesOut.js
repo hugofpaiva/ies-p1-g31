@@ -4,6 +4,7 @@ import moment from "moment";
 import PropTypes from "prop-types";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
+import {Url} from "src/ApiConsts";
 import {
 	Box,
 	Card,
@@ -81,7 +82,7 @@ const EntriesOut = ({ className, ...rest }) => {
 			},
 		};
 		const response = await fetch(
-			"http://127.0.0.1:8080/api/admin/notifications_entered_left",
+			Url + "/api/admin/notifications_entered_left",
 			requestOptions
 		);
 		const data = await response.json();

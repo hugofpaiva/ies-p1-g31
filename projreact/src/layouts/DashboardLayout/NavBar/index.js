@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
+import {Url} from "src/ApiConsts";
 import {
 	Avatar,
 	Box,
@@ -57,7 +58,7 @@ const NavBar = ({ onMobileClose, openMobile, persona }) => {
 				'Authorization': 'Bearer ' + localStorage.getItem('token')
 			}
 		};
-		const response = await fetch('http://127.0.0.1:8080/api/work/person/', requestOptions);
+		const response = await fetch(Url + '/api/work/person/', requestOptions);
 		// If bad response, log user out
 		if (response.status !== 200) {
 			localStorage.removeItem("token");

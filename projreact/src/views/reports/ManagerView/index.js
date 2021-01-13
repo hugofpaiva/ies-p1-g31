@@ -62,7 +62,7 @@ const Dashboard = () => {
     data = await response.json();
     setInStore(data['persons_in_store']);
     // Update max customers in store
-		url = "http://127.0.0.1:8080/api/work/num_limit";
+		url = Url + "/api/work/num_limit";
 		response = await fetch(url, requestOptions);
     data = await response.json();
     setMaxCustomers(data['limit_persons_in_store']);
