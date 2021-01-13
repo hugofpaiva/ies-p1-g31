@@ -32,6 +32,14 @@ Dento do diretório do projeto, correr o seguinte:
 
 Foi preparado um ficheiro _Dockerfile_, de acordo com as referências, com a informação necessária para o _deploy_ desta aplicação _React_ através do ficheiro _Docker Compose_ na raiz do repositório.
 
+> **Referências**
+>
+> [Use Docker With React](https://medium.com/better-programming/heres-how-you-can-use-docker-with-create-react-app-3ee3a972b04e)
+>
+> [React Request Examples](https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples)
+>
+
+
 
 ## Utilização da API do _Spring_
 
@@ -63,10 +71,11 @@ useEffect(async() => {
 }, []);
 ```
 
-> **Referências**
->
-> [Use Docker With React](https://medium.com/better-programming/heres-how-you-can-use-docker-with-create-react-app-3ee3a972b04e)
->
-> [React Request Examples](https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples)
->
+Para converter de _timestamps_ para _strings_ legíveis, foi usada a _package_ _moment_.
+
+```react
+import moment from "moment";
+moment(customer.last_visit).format('DD/MM/YYYY, HH:mm:ss')
+// Example output: 01/12/2021, 19:35:21
+```
 

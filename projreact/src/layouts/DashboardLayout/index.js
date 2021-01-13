@@ -39,9 +39,9 @@ const DashboardLayout = (props) => {
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   
   let valid = false;
-  if (props.persona == "admin") {
+  if (props.persona === "admin") {
     valid = auth('MANAGER');
-  } else if (props.persona == "employee") {
+  } else if (props.persona === "employee") {
     valid = auth('EMPLOYEE');
   }
 

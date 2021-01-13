@@ -1,40 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Button from '@material-ui/core/Button';
-import { 
+import {
     TextField,
     Typography,
+    Grid
 } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {Url} from "src/ApiConsts";
-
-import {
-    RefreshCcw
-} from "react-feather";
-
-/*
-{
-    "id": 1170,
-    "price": 10,
-    "name": "Produto9",
-    "description": "Descrição",
-    "stock_current": 0,
-    "stock_minimum": 5,
-    "category": {
-        "id": 4,
-        "name": "Categoria4"
-    }
-}
-*/
 
 export default function FormDialog(props) {
     const [open, setOpen] = React.useState(false);
-    const [error, setError] = React.useState(null);
-    const [product] = React.useState(props.product);
-    const [units, setUnits] = React.useState(0);
+    const [error, setError] = React.useState("");
+    const [maxCustomers, setMaxCustomers] = React.useState(0);
+
+    useEffect(() => {
+        setMaxCustomers(props.maxCustomers);
+    }, [props.maxCustomers]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -45,64 +29,75 @@ export default function FormDialog(props) {
     };
 
     const handleSubmit = () => {
-        updateProduct();
+        updateValue();
     }
 
-    async function updateProduct() {
-        if (units <= 0) {
-            setError("The number of units must be greater than zero!");
-            return;
+    async function updateValue() {
+        // Remove error
+        setError("");
+        // Validate number
+        if (maxCustomers <= 0) {
+            setError("The number must be an integer greater than zero!");
+            return null;
         }
-        // Make request 
+        // Make request
         const requestOptions = {
-            method: 'PUT',
+            method: 'GET',
             headers: { 
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
-            },
-            body: JSON.stringify({...product, stock_current:units})
+            }
         };
-        const url = 'http://127.0.0.1:8080/api/work/restock_product/' + product.id;
+        const url = 'http://127.0.0.1:8080/api/admin/new-limit?limit=' + maxCustomers;
         const response = await fetch(url, requestOptions);
         if (response.status === 200) {
-            props.update();
-            setError(null);
+            // Close form  
             setOpen(false);
+            // Update dashbard values
+            props.update();
         } else {
+            // Show error
             setError("There was an error! :/ Please, try again.");
         }
     }
 
     return (
-        <div>
-            <Button variant="contained" onClick={handleClickOpen}>
-                <RefreshCcw size="20" />
-                <span>Restock</span>
+        <Grid
+            alignContent={"flex-end"}
+        >
+            <Button
+                color="primary"
+                variant="contained"
+                onClick={handleClickOpen}
+            >
+                Change max customers
             </Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Restock product</DialogTitle>
+                <DialogTitle id="form-dialog-title">
+                    Change max customers number
+                </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        How many units are you going to restock?
+                        Fill this form to edit the max number.
                     </DialogContentText>
                     {
-                        error && 
+                        error &&
                         <Typography
                             color="error"
                             display="inline"
                             variant="body2"
-                            >
+                        >
                             {error}
                         </Typography>
                     }
                     <TextField
                         autoFocus
                         margin="dense"
-                        id="stock"
-                        label="Additional units"
+                        id="max"
+                        label="Max number of customers in store"
                         type="number"
-                        value={units}
-                        onChange={val => setUnits(val.target.value)}
+                        value={maxCustomers}
+                        onChange={val => setMaxCustomers(val.target.value)}
                         fullWidth
                     />
                 </DialogContent>
@@ -111,10 +106,10 @@ export default function FormDialog(props) {
                         Cancel
           </Button>
                     <Button onClick={handleSubmit} color="primary">
-                        Restock
-          </Button>
+                        Save
+                    </Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </Grid>
     );
 }

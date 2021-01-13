@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { colors } from '@material-ui/core';
 import {
-  Avatar,
   Box,
   Card,
   CardContent,
@@ -11,12 +9,7 @@ import {
   Grid,
   Typography,
   makeStyles,
-  Button
 } from '@material-ui/core';
-import {
-  XCircle,
-  RefreshCcw
-} from "react-feather";
 import ProductEdit from './ProductEdit';
 import ProductDelete from './ProductDelete';
 import ProductRestock from './ProductRestock';
@@ -75,7 +68,7 @@ const ProductCard = ({categories, update, persona, className, product, ...rest }
           justifyContent="space-around"
           mb={1}>
           {
-            persona == "admin" &&
+            persona === "admin" &&
             <Box
               display="flex"
               justifyContent="space-around"
@@ -97,11 +90,11 @@ const ProductCard = ({categories, update, persona, className, product, ...rest }
             </Box>
           }
           {
-            persona == "employee" &&
-            <Button color={colors.common.yellow} variant="contained">
-              <RefreshCcw className={classes.icon} size="20" />
-              <span className={classes.title}>Restock</span>
-            </Button>
+            persona === "employee" &&
+            <ProductRestock 
+              product={product} 
+              update={update} 
+            />
           }
         </Box>
       </CardContent>
@@ -123,6 +116,18 @@ const ProductCard = ({categories, update, persona, className, product, ...rest }
               variant="body2"
             >
               {product.category.name}
+            </Typography>
+          </Grid>
+          <Grid
+            className={classes.statsItem}
+            item
+          >
+            <Typography
+              color="textSecondary"
+              display="inline"
+              variant="body2"
+            >
+              Identifier: {product.id} 
             </Typography>
           </Grid>
           <Grid

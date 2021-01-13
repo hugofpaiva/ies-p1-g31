@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { v4 as uuid } from 'uuid';
 import moment from 'moment';
 import {
   Box,
@@ -10,14 +9,11 @@ import {
   Card,
   CardHeader,
   Divider,
-  IconButton,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemText,
   makeStyles
 } from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 const useStyles = makeStyles(({
@@ -40,11 +36,9 @@ const LatestProducts = ({ productsList, className, ...rest }) => {
     return {
       'id': counter,
       'name': name,
-      'updatedAt': moment(obj[name]).format('DD/MM/YYYY, h:mm:ss')
+      'updatedAt': moment(obj[name]).format('DD/MM/YYYY, HH:mm:ss')
     }
   })
-  console.log(productsList);
-  console.log(products);
 
   return (
     <Card
@@ -53,7 +47,7 @@ const LatestProducts = ({ productsList, className, ...rest }) => {
     >
       <CardHeader
         subtitle={`${products.length} in total`}
-        title="Latest Products"
+        title="Last Bought Products"
       />
       <Divider />
       <List>
@@ -66,12 +60,7 @@ const LatestProducts = ({ productsList, className, ...rest }) => {
               primary={product.name}
               secondary={`Bought ${product.updatedAt}`}
             />
-            <IconButton
-              edge="end"
-              size="small"
-            >
-              <MoreVertIcon />
-            </IconButton>
+
           </ListItem>
         ))}
       </List>

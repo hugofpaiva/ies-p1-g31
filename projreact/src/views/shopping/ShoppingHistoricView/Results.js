@@ -1,23 +1,24 @@
-import React, { useState } from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import React, { useState, useEffect } from "react";
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import moment from "moment";
+import PerfectScrollbar from "react-perfect-scrollbar";
 import {
-  Avatar,
-  Box,
-  Card,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Typography,
-  makeStyles
-} from '@material-ui/core';
-import getInitials from 'src/utils/getInitials';
-import Bill from './Bill';
+	Avatar,
+	Box,
+	Card,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TablePagination,
+	TableRow,
+	Typography,
+	TableSortLabel,
+	makeStyles,
+} from "@material-ui/core";
+import getInitials from "src/utils/getInitials";
+import Bill from "./Bill";
 
 /*
 {
@@ -54,113 +55,151 @@ import Bill from './Bill';
 }
 */
 
-
 const useStyles = makeStyles((theme) => ({
-  root: {},
-  avatar: {
-    marginRight: theme.spacing(2)
-  }
+	root: {},
+	avatar: {
+		marginRight: theme.spacing(2),
+	},
 }));
 
-const Results = ({ className, transactions, ...rest }) => {
-  const classes = useStyles();
-  const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(0);
+const Results = ({ className, ...props }) => {
+	const classes = useStyles();
 
-  const handleLimitChange = (event) => {
-    setLimit(event.target.value);
-  };
+	const [transactions, setTransactions] = useState([]);
 
-  const handlePageChange = (event, newPage) => {
-    setPage(newPage);
-  };
+	// Pagination stuff
+	const [page, setPage] = useState(0);
+	const [size, setSize] = useState(10);
+	const [count, setCount] = useState(0);
+	const handleLimitChange = (event) => {
+		setSize(event.target.value);
+	};
+	const handlePageChange = (event, newPage) => {
+		setPage(newPage);
+	};
+	// -- Pagination stuff
 
-  return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <PerfectScrollbar>
-        <Box minWidth={1050}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  Total
-                </TableCell>
-                <TableCell>
-                  Products
-                </TableCell>
-                <TableCell>
-                  Date
-                </TableCell>
-                <TableCell>
-                  Customer
-                </TableCell>
-                <TableCell>
-                  Operations
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {transactions.slice(page*limit, page*limit+limit).map((transaction) => (
-                <TableRow
-                  hover
-                  key={transaction.transaction.id}
-                >
-                  <TableCell>
-                    {transaction.total}€
-                  </TableCell>
-                  <TableCell>
-                    {transaction.products.length}
-                  </TableCell>
-                  <TableCell>
-                    {moment(transaction.transaction.date).format('DD/MM/YYYY, h:mm:ss')}
-                  </TableCell>
-                  <TableCell>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                    >
-                      <Avatar
-                        className={classes.avatar}
-                        
-                      >
-                        {getInitials(transaction.transaction.client.name)}
-                      </Avatar>
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
-                        {transaction.transaction.client.name}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    <Bill transaction={transaction} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
-      </PerfectScrollbar>
-      <TablePagination
-        component="div"
-        count={transactions.length}
-        onChangePage={handlePageChange}
-        onChangeRowsPerPage={handleLimitChange}
-        page={page}
-        rowsPerPage={limit}
-        rowsPerPageOptions={[5, 10, 25]}
-      />
-    </Card>
-  );
+	// Fazer chamada à API para obter produtos
+	// Ao início e sempre que page e size sejam alterados
+	// Update list every second to always have last transactions
+	useEffect(() => {
+		updateTransactions();
+		const loop = setInterval(() => {
+			updateTransactions();
+		}, 1000);
+		return () => clearInterval(loop);
+	}, [page, size]);
+
+	async function updateTransactions() {
+		const requestOptions = {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + localStorage.getItem("token"),
+			},
+		};
+		let url =
+			"http://127.0.0.1:8080/api/admin/purchases/?page=" +
+			page +
+			"&size=" +
+			size;
+		const nif = new URLSearchParams(window.location.search).get("nif");
+		if (nif != null) {
+			url =
+				"http://127.0.0.1:8080/api/admin/purchases/" +
+				nif +
+				"?page=" +
+				page +
+				"&size=" +
+				size;
+		}
+		const response = await fetch(url, requestOptions);
+		const data = await response.json();
+
+		// Update transactions
+		setTransactions(data["transactions"]);
+		setCount(data["totalItems"]);
+	}
+
+	return (
+		<Card className={clsx(classes.root, className)}>
+			<PerfectScrollbar>
+				<Box minWidth={1050}>
+					<Table>
+						<TableHead>
+							<TableRow>
+								<TableCell>Total</TableCell>
+								<TableCell>Products</TableCell>
+								<TableCell>
+									<TableSortLabel active direction="desc">
+										Date
+									</TableSortLabel>
+								</TableCell>
+								<TableCell>Customer</TableCell>
+								<TableCell>Operations</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{transactions.map((transaction) => (
+								<TableRow
+									hover
+									key={transaction.transaction.id}
+								>
+									<TableCell>
+										{transaction.total.toFixed(2)}€
+									</TableCell>
+									<TableCell>
+										{transaction.products.length}
+									</TableCell>
+									<TableCell>
+										{moment(
+											transaction.transaction.date
+										).format("DD/MM/YYYY, HH:mm:ss")}
+									</TableCell>
+									<TableCell>
+										<Box alignItems="center" display="flex">
+											<Avatar className={classes.avatar}>
+												{getInitials(
+													transaction.transaction
+														.client.name
+												)}
+											</Avatar>
+											<Typography
+												color="textPrimary"
+												variant="body1"
+											>
+												{
+													transaction.transaction
+														.client.name
+												}
+											</Typography>
+										</Box>
+									</TableCell>
+									<TableCell>
+										<Bill transaction={transaction} />
+									</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</Box>
+			</PerfectScrollbar>
+			<TablePagination
+				component="div"
+				count={count}
+				onChangePage={handlePageChange}
+				onChangeRowsPerPage={handleLimitChange}
+				page={page}
+				rowsPerPage={size}
+				rowsPerPageOptions={[5, 10, 25]}
+			/>
+		</Card>
+	);
 };
 
 Results.propTypes = {
-  className: PropTypes.string,
-  transactions: PropTypes.array.isRequired
+	className: PropTypes.string,
+	transactions: PropTypes.array.isRequired,
 };
 
 export default Results;

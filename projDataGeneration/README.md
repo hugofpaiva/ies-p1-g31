@@ -1,5 +1,73 @@
+# Initializing generator's data sets:
 
-### Possible JSON messages published in topic 'storego-events'
+**Script sends the following message:**
+```json
+{
+    "type": "initialize-people-request" 
+}
+```
+
+**Then, Processing Layer will send the following message:**
+```json
+{
+    "type": "initialize-people-response",
+    "data": [ nif1, nif2, nif3,...]
+}
+```
+
+**If data list is returned empty, then BD is empty: script must initialize data!**
+
+**In that case, script sends the following three messages:**
+```json
+{
+    "type": "initialize-people",
+    "data": {
+                nif: [nome, email, pass],
+                nif: [nome, email, pass],
+                ...
+            }
+}
+```
+```json
+{
+    "type": "initialize-categories",
+    "data": [
+    { "id":1, "name": categoria1 }, 
+    { "id":2, "name": categoria2 },
+    ... 
+    ]
+}
+```
+```json
+{
+    "type": "initialize-products",
+    "data": {
+                id: [preço, nome, descrição, stock, min_stock, idcategoria],
+            }
+}
+```
+
+**If the data field returns a list with elements inside, then the last three messages would not be sent**
+
+**Instead, the script sends the following message**
+```json
+{
+    "type": "initialize-products-request"
+}
+```
+
+**Then, Processing Layer will respond with the following message**
+```json
+{
+    "type": "initialize-products-response",
+    "data": {
+                id (has to be a string!! in double quotes): stock, 
+                ...
+            }
+}
+```
+
+# Possible JSON messages published in topic 'storego-events':
 
 **When the manager updates the max number of people allowed in the store:**
 
@@ -35,7 +103,6 @@
 }
 ```
 
-
 **When the employee wants to confirm that they restocked a product:**
 
 ```json
@@ -60,10 +127,6 @@
 
   
 
-  
-
-
-### Possible JSON messages published in topic 'costumer-events'
 
 **When a costumer enters the store:**
 
@@ -121,6 +184,3 @@
     "nif": xxxxxxxxx 
 }
 ```
-
-
-

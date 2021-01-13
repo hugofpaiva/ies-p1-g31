@@ -3,8 +3,11 @@ package com.storego.storegoservice.controller;
 
 import com.storego.storegoservice.exception.ResourceNotFoundException;
 import com.storego.storegoservice.model.*;
+import com.storego.storegoservice.repository.CartProductRepository;
 import com.storego.storegoservice.repository.ProductCategoryRepository;
 import com.storego.storegoservice.repository.ProductRepository;
+import com.storego.storegoservice.repository.TransactionProductRepository;
+import com.storego.storegoservice.services.UpdateScriptGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +28,9 @@ public class ProductController {
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
 
+    @Autowired
+    private UpdateScriptGeneratorService updateScriptGeneratorService;
+
     @GetMapping("/work/products")
     public ResponseEntity<Map<String, Object>> getPurchaseByPersonNif(@RequestParam(required = false) String name,
                                                                       @RequestParam(defaultValue = "0") int page,
@@ -35,9 +41,9 @@ public class ProductController {
 
             Page<Product> pageProd;
             if (name == null)
-                pageProd = productRepository.findAll(paging);
+                pageProd = productRepository.findByDeletedFalse(paging);
             else
-                pageProd = productRepository.findByNameContaining(name, paging);
+                pageProd = productRepository.findByNameContainingAndDeletedFalse(name, paging);
 
             products = pageProd.getContent();
 
@@ -71,8 +77,11 @@ public class ProductController {
         if (productDetails.getStock_minimum() != null) {
             product.setStock_minimum(productDetails.getStock_minimum());
         }
+
+        //Used to send how many more products it is to add
         if (productDetails.getStock_current() != null) {
-            product.setStock_current(productDetails.getStock_current());
+            product.setStock_current(product.getStock_current() + productDetails.getStock_current());
+            updateScriptGeneratorService.restockProduct(productDetails.getStock_current(), product);
         }
         if (productDetails.getCategory() != null) {
             ProductCategory cat = productCategoryRepository.findById(productDetails.getCategory().getId())
@@ -90,9 +99,35 @@ public class ProductController {
         return ResponseEntity.ok(updatedProd);
     }
 
+    //Use for restock by Employee
+    @PutMapping("/work/restock_product/{id}")
+    public ResponseEntity<Product> restockProduct(@PathVariable(value = "id") long productId,
+                                                  @Valid @RequestBody Product productDetails) throws ResourceNotFoundException {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found for this id: " + productId));
+
+        //Used to send how many more products it is to add
+        if (productDetails.getStock_current() != null) {
+            product.setStock_current(product.getStock_current() + productDetails.getStock_current());
+            updateScriptGeneratorService.restockProduct(productDetails.getStock_current(), product);
+        }
+
+        Product updatedProd = productRepository.save(product);
+        return ResponseEntity.ok(updatedProd);
+    }
+
     @PostMapping("/admin/products")
     public Product createProduct(@Valid @RequestBody Product product) {
-        return productRepository.save(product);
+        Product last = productRepository.findTopByOrderByIdDesc();
+        if (last != null) {
+            product.setId(last.getId()+1);
+        }else{
+            product.setId(1);
+        }
+
+        Product p = productRepository.save(product);
+        updateScriptGeneratorService.addProduct(product);
+        return p;
     }
 
     @DeleteMapping("/admin/product/{id}")
@@ -101,8 +136,10 @@ public class ProductController {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found for this id: " + productId));
 
-        productRepository.delete(product);
-        //TODO Warn script
+        product.setDeleted(true);
+
+        productRepository.save(product);
+        updateScriptGeneratorService.deleteProduct(product);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return response;

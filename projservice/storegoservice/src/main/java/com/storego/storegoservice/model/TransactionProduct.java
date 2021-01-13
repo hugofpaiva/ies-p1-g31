@@ -23,7 +23,7 @@ public class TransactionProduct implements Serializable {
     @JoinColumn(name = "transaction_id", nullable = false)
     private Transaction transaction;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @MapsId("productId")
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

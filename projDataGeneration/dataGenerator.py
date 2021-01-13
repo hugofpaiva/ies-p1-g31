@@ -57,11 +57,11 @@ class dataGenerator:
         self.clients[client_nif] = (1, {})
         self.peopleInStore += 1
         msg = {"type": "entering-store", "nif": client_nif}
-        self.sendMessage('costumer-events', msg)
+        self.sendMessage('storego-new', msg)
 
     def leaveStore(self, client_nif):
         msg = {"type": "leaving-store", "nif": client_nif}
-        self.sendMessage('costumer-events', msg)
+        self.sendMessage('storego-new', msg)
         self.peopleInStore -= 1
         # setting status to 'outside' with empty cart
         self.clients[client_nif] = (0, {})
@@ -73,9 +73,11 @@ class dataGenerator:
             return
         elif self.products[product] == 1:
             qty = 1
-        else:
-            # choosing a random quantity that has to be less than the existing stock
+        elif self.products[product] < 5:
             qty = random.randint(1, self.products[product])
+        else:
+            # choosing a random quantity until 5
+            qty = random.randint(1, 5)
 
         client_cart = self.clients[client_nif][1]
         if product not in client_cart:                  # adding product + quantity to client cart
@@ -86,7 +88,7 @@ class dataGenerator:
 
         msg = {"type": "adding-product",
                "nif": client_nif, "idProduct": product, "qty": qty}
-        self.sendMessage('costumer-events', msg)
+        self.sendMessage('storego-new', msg)
 
     def removeProduct(self, client_nif):
         # choosing a random product from the cart
@@ -109,15 +111,15 @@ class dataGenerator:
         self.products[product] += qty
         msg = {"type": "removing-product",
                "nif": client_nif, "idProduct": product, "qty": qty}
-        self.sendMessage('costumer-events', msg)
+        self.sendMessage('storego-new', msg)
 
     def askForHelp(self, client_nif):
         client_cart = self.clients[client_nif][1]
         self.clients[client_nif] = (2, client_cart)
         msg = {"type": "help-needed", "nif": client_nif}
-        self.sendMessage('costumer-events', msg)
+        self.sendMessage('storego-new', msg)
         # clients wait for the employee for a few time
-        waiting_time = random.randint(5, 10)
+        waiting_time = random.randint(15, 60)
         time.sleep(waiting_time)
         # after that, if their request still hasn't been attended they leave the store without any product
         if self.clients[client_nif][0] == 2:
@@ -131,8 +133,8 @@ class dataGenerator:
         prods = list(client_cart.keys())
         for prod in prods:
             msg = {"type": "removing-product", "nif": client_nif,
-                   "id": prod, "qty": self.clients[client_nif][1][prod]}
-            self.sendMessage('costumer-events', msg)
+                   "idProduct": prod, "qty": self.clients[client_nif][1][prod]}
+            self.sendMessage('storego-new', msg)
             del client_cart[prod]
 
     def action(self, client_nif):

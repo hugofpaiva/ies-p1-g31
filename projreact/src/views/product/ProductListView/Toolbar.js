@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   Box,
-  Button,
   Card,
   CardContent,
   TextField,
@@ -37,7 +36,7 @@ const Toolbar = ({ update, categories, search, persona, className, ...rest }) =>
         justifyContent="flex-end"
       >
         {
-          persona == "admin" &&
+          persona === "admin" &&
           <ProductEdit
             product={null}
             categories={categories}

@@ -12,7 +12,7 @@ import java.util.Set;
 public class ProductCategory implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "name", nullable = false)
@@ -22,7 +22,8 @@ public class ProductCategory implements Serializable {
 
     }
 
-    public ProductCategory(String name) {
+    public ProductCategory(long id, String name) {
+        this.id=id;
         this.name = name;
     }
 

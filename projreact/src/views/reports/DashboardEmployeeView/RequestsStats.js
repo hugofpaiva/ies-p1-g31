@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Doughnut } from 'react-chartjs-2';
@@ -13,9 +13,6 @@ import {
   makeStyles,
   useTheme
 } from '@material-ui/core';
-import LaptopMacIcon from '@material-ui/icons/LaptopMac';
-import PhoneIcon from '@material-ui/icons/Phone';
-import TabletIcon from '@material-ui/icons/Tablet';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -23,26 +20,27 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const RequestsStats = ({ className, ...rest }) => {
+const RequestsStats = ({ className, stats,...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const data = {
+
+  const [data, updateData] = useState({
     datasets: [
       {
-        data: [2, 7, 91],
+        data: [91, 7, 2],
         backgroundColor: [
           colors.indigo[500],
-          colors.red[600],
-          colors.orange[600]
+          colors.orange[600],
+          colors.red[600]          
         ],
         borderWidth: 8,
         borderColor: colors.common.white,
         hoverBorderColor: colors.common.white
       }
     ],
-    labels: ['Costumer Left', 'Pending', 'Resolved']
-  };
+    labels: ['Resolved', 'Pending', 'Customer Left']
+  });
 
   const options = {
     animation: false,
@@ -66,24 +64,75 @@ const RequestsStats = ({ className, ...rest }) => {
     }
   };
 
-  const devices = [
+  const [devices, updateDevices] = useState([
     {
-      title: 'Costumer Left',
-      value: 2,
+      title: 'Resolved',
+      value: 0,
       color: colors.indigo[500]
     },
     {
       title: 'Pending',
-      value: 7,
-      color: colors.red[600]
+      value: 0,
+      color: colors.orange[600]
     },
     {
-      title: 'Resolved',
-      value: 91,
-      color: colors.orange[600]
+      title: 'Customer Left',
+      value: 0,
+      color: colors.red[600]
     }
-  ];
+  ]);
 
+  useEffect(() => {
+    async function fetchData() {
+
+      const requestOptions = {
+        method: 'GET',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+      };
+      const response = await fetch('http://127.0.0.1:8080/api/work/monthly_help_requests_stats', requestOptions);
+      const new_data = await response.json();
+      console.log("GOT STATS DATA");
+      console.log(new_data);
+      updateData({
+        datasets: [
+          {
+            data: [new_data['RESOLVED'], new_data['PENDING'], new_data['CUSTOMER_LEFT']],
+            backgroundColor: [
+              colors.indigo[500],
+              colors.orange[600],
+              colors.red[600]          
+            ],
+            borderWidth: 8,
+            borderColor: colors.common.white,
+            hoverBorderColor: colors.common.white
+          }
+        ],
+        labels: ['Resolved', 'Pending', 'Customer Left']
+      });
+      updateDevices([
+        {
+          title: 'Resolved',
+          value: new_data['RESOLVED'],
+          color: colors.indigo[500]
+        },
+        {
+          title: 'Pending',
+          value: new_data['PENDING'],
+          color: colors.orange[600]
+        },
+        {
+          title: 'Client Left',
+          value: new_data['CUSTOMER_LEFT'],
+          color: colors.red[600]
+        }
+      ]);
+    }
+    fetchData();
+  }, []);
+  
   return (
     <Card
       className={clsx(classes.root, className)}

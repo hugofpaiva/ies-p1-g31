@@ -1,5 +1,6 @@
 package com.storego.storegoservice.services;
 
+import com.storego.storegoservice.exception.ResourceNotFoundException;
 import com.storego.storegoservice.model.*;
 import com.storego.storegoservice.repository.CartProductRepository;
 import com.storego.storegoservice.repository.CartRepository;
@@ -45,21 +46,18 @@ public class StoreServices {
     private int maxClients;
 
     public StoreServices() {
-        this.maxClients = 5;
+        this.maxClients = 10;
+    }
+
+    public Integer getMaxClients(){return this.maxClients;}
+    public void setMaxClients(int maxClients) {
+        this.maxClients = maxClients;
     }
 
     public void enterStore(Long nif) throws Exception{
         // Get person
-        Person p = personRepository.findByNif(nif);
+        Person p = personRepository.findById(nif).orElseThrow(() -> new ResourceNotFoundException("Person not found for this id :: " + nif));
         String format = "Entered the store!";
-
-        // Check if max number of clients has been reached
-        if (cartRepository.count() > this.maxClients) {
-            System.out.println("MAX NUMBER OF CLIENTS HAS BEEN REACHED!");
-            Notification n = new Notification(NotificationType.STORE_FULL);
-            notificationRepository.save(n);
-            notificationSocketsService.sendStoreFull(n);
-        }
 
         // Create cart on database
         if (cartRepository.findByPersonNif(nif) == null) {
@@ -69,6 +67,18 @@ public class StoreServices {
             personRepository.save(p);
         } else {
             format += "\nERROR! Entered but was already in store!";
+        }
+
+        Notification n = new Notification(NotificationType.ENTERED_STORE, nif);
+        notificationRepository.save(n);
+        notificationSocketsService.sendEnteredStore(n);
+
+        // Check if max number of clients has been reached
+        if (cartRepository.countDistinctPerson() >= this.maxClients) {
+            System.out.println("MAX NUMBER OF CLIENTS HAS BEEN REACHED!");
+            Notification n_store_full = new Notification(NotificationType.STORE_FULL);
+            notificationRepository.save(n_store_full);
+            notificationSocketsService.sendStoreFull(n_store_full);
         }
 
         // Output fedback
@@ -112,6 +122,21 @@ public class StoreServices {
         } else {
             format += "\nERROR! Left but was not in store!";
         }
+
+        List<Notification> help_notifications_last_visit = notificationRepository.findByDateIsGreaterThanEqualAndTypeAndNifOrderByDateDesc(p.getLastVisit(), NotificationType.HELP, p.getNif());
+
+        if (!help_notifications_last_visit.isEmpty()){
+            Notification n_help = help_notifications_last_visit.get(0);
+            if (n_help.getState() == HelpNeededState.PENDING){
+                n_help.setState(HelpNeededState.CUSTOMER_LEFT);
+                notificationRepository.save(n_help);
+            }
+
+        }
+
+        Notification n = new Notification(NotificationType.EXITED_STORE, nif);
+        notificationRepository.save(n);
+        notificationSocketsService.sendExitedStore(n);
 
         // Output feedback
         System.out.println(String.format("%d (%s) " + format, nif, p.getName()));
@@ -180,7 +205,7 @@ public class StoreServices {
         }
     }
 
-    public void notifyHelpNeeded(Long nif, NotificationType type) throws Exception{
+    public void notifyHelpNeeded(Long nif, NotificationType type){
         Person p = personRepository.findByNif(nif);
         Notification n = new Notification(p.getNif(), type);
         notificationRepository.save(n);
