@@ -70,9 +70,9 @@ const Results = ({ className, tasks, page, size, count, setSize, setPage, ...res
 										<Chip
 											color={
 												task.state === "PENDING"
-													? "primary"
-													: task.state === "RESOLVED" 
 													? "secondary"
+													: task.state === "RESOLVED" 
+													? "primary"
 													: '#bbdefb'
 											}
 											label={task.state}
