@@ -16,6 +16,7 @@ import {
   TableSortLabel,
 	Chip,
 	Grid,
+	colors,
 } from "@material-ui/core";
 
 import ResolveRequest from "./ResolveRequest";
@@ -70,7 +71,9 @@ const Results = ({ className, tasks, page, size, count, setSize, setPage, ...res
 											color={
 												task.state === "PENDING"
 													? "primary"
-													: "secondary"
+													: task.state === "RESOLVED" 
+													? "secondary"
+													: '#bbdefb'
 											}
 											label={task.state}
 											size="small"
