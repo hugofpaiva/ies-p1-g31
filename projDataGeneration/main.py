@@ -1,10 +1,22 @@
-from kafka import KafkaConsumer
+from kafka import KafkaConsumer, KafkaProducer
+from kafka.structs import TopicPartition
 from dataGenerator import dataGenerator
 import threading
 import random
 import time
 import json
+import argparse
+import concurrent.futures
 
+
+def sendMessage(producer, topic, msg):
+    try:
+        producer.send(topic, msg)
+    except Exception as e:
+        print(e)
+        print('\033[95m' + "[Producer] Failed to send message!" + '\033[0m')
+        time.sleep(5)
+        sendMessage(topic, msg)
 
 def readMessages(generator):
     consumer = None
@@ -15,7 +27,7 @@ def readMessages(generator):
         except:
             print('\033[95m' + "[Consumer] Kafka Broker is not available!"+ '\033[0m')
             time.sleep(5)
-
+    
     for msg in consumer:
         try:    
             msg = json.loads(msg.value)
@@ -210,13 +222,11 @@ def main():
     generator = dataGenerator(people, products, 10)
     th = threading.Thread(target=readMessages, args=(generator,))
     th.start()
-
     while True:
         t = random.randint(0, 1)
         time.sleep(t)
         person = generator.getRandomClient()[0]
         generator.action(person)
-
 
 if __name__ == "__main__":
     main()
