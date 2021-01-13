@@ -63,12 +63,6 @@ const LatestProducts = ({ className, latest_products, ...rest }) => {
                 primary={product.name}
                 secondary={`Bought ${product.updatedAt}`}
               />
-              <IconButton
-                edge="end"
-                size="small"
-              >
-                <MoreVertIcon />
-              </IconButton>
             </ListItem>
            
         ))}

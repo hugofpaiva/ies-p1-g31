@@ -119,7 +119,7 @@ class dataGenerator:
         msg = {"type": "help-needed", "nif": client_nif}
         self.sendMessage('storego-new', msg)
         # clients wait for the employee for a few time
-        waiting_time = random.randint(5, 10)
+        waiting_time = random.randint(15, 60)
         time.sleep(waiting_time)
         # after that, if their request still hasn't been attended they leave the store without any product
         if self.clients[client_nif][0] == 2:

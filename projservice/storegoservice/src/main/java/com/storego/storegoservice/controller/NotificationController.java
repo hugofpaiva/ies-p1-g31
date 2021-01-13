@@ -171,7 +171,7 @@ public class NotificationController {
                 .orElseThrow(() -> new ResourceNotFoundException("Notification not found for this id: " + notificationId));
 
         Notification updatedNot = notification;
-        if (notification.getType() == NotificationType.HELP && notificationDetails.getState() == HelpNeededState.PENDING) {
+        if (notification.getType() == NotificationType.HELP && notification.getState() == HelpNeededState.PENDING) {
             notification.setState(notificationDetails.getState());
 
             updatedNot = notificationRepository.save(notification);

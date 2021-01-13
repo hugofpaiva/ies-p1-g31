@@ -15,11 +15,10 @@ import {
 	TablePagination,
 	TableRow,
 	Typography,
+	TableSortLabel,
 	makeStyles,
 } from "@material-ui/core";
-import {
-	DollarSign
-} from "react-feather";
+import { DollarSign } from "react-feather";
 import Toolbar from "./Toolbar";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,10 +27,10 @@ const useStyles = makeStyles((theme) => ({
 		marginRight: theme.spacing(2),
 	},
 	icon: {
-		marginRight: theme.spacing(1)
+		marginRight: theme.spacing(1),
 	},
 	title: {
-		marginRight: 'auto'
+		marginRight: "auto",
 	},
 }));
 
@@ -69,13 +68,17 @@ const Results = ({ className, loading, ...rest }) => {
 
 	async function getCustomers() {
 		const requestOptions = {
-			method: 'GET',
+			method: "GET",
 			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + localStorage.getItem('token')
-			}
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + localStorage.getItem("token"),
+			},
 		};
-		let url = "http://127.0.0.1:8080/api/admin/persons?page=" + page + "&size=" + size;
+		let url =
+			"http://127.0.0.1:8080/api/admin/persons?page=" +
+			page +
+			"&size=" +
+			size;
 		if (search !== "") {
 			url += "&name=" + search;
 		}
@@ -83,7 +86,7 @@ const Results = ({ className, loading, ...rest }) => {
 		const data = await response.json();
 		// Update categories
 		// Only show clients
-		setCustomers(data['clients'].filter(c => c.type === "CLIENT"));
+		setCustomers(data["clients"].filter((c) => c.type === "CLIENT"));
 		setCount(data["totalItems"]);
 		// Remove loading
 		loading(false);
@@ -91,10 +94,7 @@ const Results = ({ className, loading, ...rest }) => {
 
 	return (
 		<div>
-			<Toolbar
-				search={search}
-				setSearch={setSearch}
-			/>
+			<Toolbar search={search} setSearch={setSearch} />
 			<Card className={clsx(classes.root, className)} {...rest}>
 				<PerfectScrollbar>
 					<Box minWidth={1050}>
@@ -104,7 +104,11 @@ const Results = ({ className, loading, ...rest }) => {
 									<TableCell>Name</TableCell>
 									<TableCell>NIF</TableCell>
 									<TableCell>Email</TableCell>
-									<TableCell>Last Visit</TableCell>
+									<TableCell>
+										<TableSortLabel active direction="desc">
+											Last Visit
+										</TableSortLabel>
+									</TableCell>
 									<TableCell>Latest Purchases</TableCell>
 								</TableRow>
 							</TableHead>
@@ -122,16 +126,26 @@ const Results = ({ className, loading, ...rest }) => {
 										<TableCell>{customer.nif}</TableCell>
 										<TableCell>{customer.email}</TableCell>
 										<TableCell>
-											{moment(customer.lastVisit).format('DD/MM/YYYY, HH:mm:ss')}
+											{moment(customer.lastVisit).format(
+												"DD/MM/YYYY, HH:mm:ss"
+											)}
 										</TableCell>
 										<TableCell>
 											<Button
 												variant="contained"
 												component={RouterLink}
-												to={'/admin/orders?nif=' + customer.nif}
+												to={
+													"/admin/orders?nif=" +
+													customer.nif
+												}
 											>
-												<DollarSign className={classes.icon} size="20" />
-												<span className={classes.title}>Purchases</span>
+												<DollarSign
+													className={classes.icon}
+													size="20"
+												/>
+												<span className={classes.title}>
+													Purchases
+												</span>
 											</Button>
 										</TableCell>
 									</TableRow>
