@@ -180,7 +180,7 @@ public class StoreServices {
                 product.setStock_current(stock - quantity);
                 productRepository.save(product);
                 if (product.getStock_minimum() >= product.getStock_current()){
-                    Notification n = new Notification(prod_id, quantity, NotificationType.RESTOCK);
+                    Notification n = new Notification(prod_id, product.getStock_current(), NotificationType.RESTOCK);
                     notificationRepository.save(n);
                     notificationSocketsService.sendRestock(n);
                 }
@@ -195,7 +195,7 @@ public class StoreServices {
                 product.setStock_current(stock - quantity);
                 productRepository.save(product);
                 if (product.getStock_minimum() >= product.getStock_current()){
-                    Notification n = new Notification(prod_id, quantity, NotificationType.RESTOCK);
+                    Notification n = new Notification(prod_id, product.getStock_current(), NotificationType.RESTOCK);
                     notificationRepository.save(n);
                     notificationSocketsService.sendRestock(n);
                 }
