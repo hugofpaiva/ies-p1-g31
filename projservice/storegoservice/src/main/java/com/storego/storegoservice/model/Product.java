@@ -30,6 +30,9 @@ public class Product implements Serializable {
     @Column(name = "stock_minimum", nullable = false)
     private Integer stock_minimum;
 
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted = false;
+
     @ManyToOne
     @JoinColumn(name = "category", nullable = false)
     private ProductCategory category;
