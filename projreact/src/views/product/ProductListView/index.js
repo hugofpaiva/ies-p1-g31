@@ -30,18 +30,25 @@ const ProductList = (props) => {
 	);
 
 	const handleChange = (event, value) => {
-		updateProducts(value);
 		setPage(value);
 	};
 
 	// Fazer chamada à API para obter produtos
 	useEffect(() => {
-		updateProducts(page);
 		updateCategories();
-
 	}, []);
+	// Fazer chamada à API para obter produtos
+	// Ao início e sempre que page e size sejam alterados
+	// Repetir todos os segundos para manter stock atualizado
+	useEffect(() => {
+		updateProducts();
+		const loop = setInterval(() => {
+			updateProducts()
+		}, 1000);
+		return () => clearInterval(loop);
+	}, [page, search]);
 
-	async function updateProducts(nextPage) {
+	async function updateProducts() {
 		const requestOptions = {
 			method: 'GET',
 			headers: { 
@@ -49,8 +56,7 @@ const ProductList = (props) => {
 				'Authorization': 'Bearer ' + localStorage.getItem('token')
 			}
 		};
-		let pageN = nextPage - 1;
-		let url = "http://127.0.0.1:8080/api/work/products?page=" + pageN + "&size=" + itemsPerPage;
+		let url = "http://127.0.0.1:8080/api/work/products?page=" + (page - 1) + "&size=" + itemsPerPage;
 		if (search.trim() !== "") {
 			url += "&name=" + search;
 		}
@@ -61,8 +67,10 @@ const ProductList = (props) => {
 		setProducts(data['products']);
 		// Update number of pages
 		setNPages(data['totalPages']);
-		// Update page
-		setPage(data['currentPage']+1);
+		// If number of pages is less than the selected, reset to first
+		if (data['totalPages'] < page) {
+			setPage(1);
+		}
 	}
 
 	async function updateCategories() {
@@ -80,22 +88,14 @@ const ProductList = (props) => {
 		setCategories(data);
 	}
 
-	function productHasChanged() {
-		updateProducts(page);
-	}
-
-	function searchFunc(keyword) {
-		setSearch(keyword, updateProducts(1));
-	}
-
 	return (
 		<Page className={classes.root} title="Products">
 			<Container maxWidth={false}>
 				<Toolbar 
 					persona={props.persona} 
-					search={searchFunc}
+					search={setSearch}
 					categories={categories}
-					update={productHasChanged}
+					update={updateProducts}
 				/>
 				<Box mt={3}>
 					<Grid container spacing={3}>
@@ -105,7 +105,7 @@ const ProductList = (props) => {
 									className={classes.productCard}
 									product={product}
 									persona={props.persona}
-									update={productHasChanged}
+									update={updateProducts}
 									categories={categories}
 								/>
 							</Grid>

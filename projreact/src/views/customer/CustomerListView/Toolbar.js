@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Toolbar = ({ className, ...rest }) => {
+const Toolbar = ({ className, search, setSearch, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -48,8 +48,10 @@ const Toolbar = ({ className, ...rest }) => {
                     </InputAdornment>
                   )
                 }}
-                placeholder="Search customer"
+                placeholder="Search customer name"
                 variant="outlined"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
               />
             </Box>
           </CardContent>

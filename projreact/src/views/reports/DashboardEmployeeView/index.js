@@ -5,7 +5,6 @@ import {
   makeStyles
 } from '@material-ui/core';
 import Page from 'src/components/Page';
-import CostumersInLine from './CostumersInLine';
 import LatestProducts from './LatestProducts';
 import HelpRequests from './HelpRequests';
 import CostumersInStore from './CostumersInStore';

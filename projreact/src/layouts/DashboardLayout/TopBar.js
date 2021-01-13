@@ -23,28 +23,6 @@ import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import InputIcon from '@material-ui/icons/Input';
 import GroupIcon from '@material-ui/icons/Group';
 
-/*
-{
-  "id": "5ff5de724b3bb169f3a9b6fd",
-  "type": "HELP",
-  "date": null,
-  "idProduct": 0,
-  "qty": 0,
-  "nif": 111900377,
-  "state": "PENDING"
-}
-
-{
-  "id": "5ff5e01b4b3bb169f3a9b798",
-  "type": "STORE_FULL",
-  "date": null,
-  "idProduct": 0,
-  "qty": 0,
-  "nif": 0,
-  "state": null
-}
-*/
-
 const useStyles = makeStyles(() => ({
   root: {},
   avatar: {
@@ -79,7 +57,7 @@ const TopBar = ({
     let counter = 0;
     setNotifications(oldArray => {
       const newArray = oldArray.map((not, i) => {
-        if (!not['seen'] && counter < 10) {
+        if (!not['seen']) {
           not['seen'] = true;
           counter += 1;
         }

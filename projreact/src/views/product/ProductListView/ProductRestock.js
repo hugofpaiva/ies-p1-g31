@@ -61,7 +61,7 @@ export default function FormDialog(props) {
             },
             body: JSON.stringify({...product, stock_current:units})
         };
-        const url = 'http://127.0.0.1:8080/api/admin/product/' + product.id;
+        const url = 'http://127.0.0.1:8080/api/work/restock_product/' + product.id;
         const response = await fetch(url, requestOptions);
         if (response.status === 200) {
             props.update();

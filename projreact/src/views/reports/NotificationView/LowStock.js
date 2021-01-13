@@ -60,7 +60,7 @@ const LowStock = ({ className, ...rest }) => {
             ...not,
             "date": Date.now(),
           }];
-          return newArray.sort(not => not['date']);
+          return newArray;
         })
       });
     });
@@ -83,7 +83,7 @@ const LowStock = ({ className, ...rest }) => {
         newNotifications.push(notification);
       })
       // Return sorted version
-      return newNotifications.sort(not => not['date']);
+      return newNotifications;
     });
   }
 
@@ -92,38 +92,33 @@ const LowStock = ({ className, ...rest }) => {
       className={clsx(classes.root, className)}
       {...rest}
     >
-      <CardHeader title="Low Stock notifications" />
+      <CardHeader title="Low Stock Notifications" />
       <Divider />
 
-      <Box minWidth={800}>
+      <Box minWidth={500}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell style={{ width: '50%' }}>
-                Product
+              <TableCell style={{ width: '30%' }}>
+                Product ID
                 </TableCell>
 
-              <TableCell sortDirection="desc" style={{ width: '25%' }}>
-                <Tooltip
-                  enterDelay={300}
-                  title="Sort"
-                >
+              <TableCell style={{ width: '40%' }}>
                   <TableSortLabel
                     active
                     direction="desc"
                   >
                     Date
                     </TableSortLabel>
-                </Tooltip>
               </TableCell>
-              <TableCell style={{ width: '25%' }}>
-                Stock now
+              <TableCell style={{ width: '30%' }}>
+                Stock at moment
                 </TableCell>
 
             </TableRow>
           </TableHead>
           <TableBody>
-            {notifications.slice(page * limit, page * limit + limit).map(stock => (
+            {notifications.sort(not => -1*not['date']).slice(page * limit, page * limit + limit).map(stock => (
               <TableRow
                 hover
                 key={stock.id}

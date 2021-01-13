@@ -20,11 +20,15 @@ const useStyles = makeStyles((theme) => ({
 const CustomerListView = () => {
   const classes = useStyles();
   const [tasks, setTasks ] = useState(data);
+  const [page, setPage] = useState(0);
+	const [size, setSize] = useState(10);
+	const [count, setCount] = useState(0);
 
-  useEffect(async() => {
+  useEffect(() => {
+    updateNotifications();
     const loop = setInterval(updateNotifications, 1000);
     return () => clearInterval(loop);
-  }, []);
+  }, [page, size]);
 
   async function updateNotifications() {
     const requestOptions = {
@@ -34,11 +38,17 @@ const CustomerListView = () => {
             'Authorization': 'Bearer ' + localStorage.getItem('token')
         }
     };
-    const response = await fetch('http://127.0.0.1:8080/api/work/notifications_help', requestOptions);
-    const data = await response.json();
-    console.log("GOT DATA");
-    console.log(data);
-    setTasks(data['notifications']);
+
+    let url =
+			"http://127.0.0.1:8080/api/work/notifications_help?page=" +
+			page +
+			"&size=" +
+			size;
+	
+		const response = await fetch(url, requestOptions);
+		const data = await response.json();
+		setTasks(data['notifications']);
+		setCount(data["totalItems"]);
   };
 
   return (
@@ -48,7 +58,7 @@ const CustomerListView = () => {
     >
       <Container maxWidth={false}>
         <Box mt={3}>
-          <Results tasks={tasks} />
+          <Results tasks={tasks} page={page} size={size} count={count} setPage={setPage} setSize={setSize}/>
         </Box>
       </Container>
     </Page>
