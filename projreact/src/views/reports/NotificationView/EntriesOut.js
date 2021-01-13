@@ -49,7 +49,7 @@ const EntriesOut = ({ className, ...rest }) => {
 		getLastNotifications();
 
 		// Subscribe to socket for updates
-		const socket = new SockJS("http://localhost:8080/api/ws");
+		const socket = new SockJS(Url + "/api/ws");
 		const stompClient = Stomp.over(socket);
 		const headers = {};
 
@@ -89,7 +89,7 @@ const EntriesOut = ({ className, ...rest }) => {
 		// Update value with notifications from server
 		setNotifications((not) => {
 			const newNotifications = [...not];
-			data["notifications"].forEach((notification) => {
+			data["notifications"].reverse().forEach((notification) => {
 				newNotifications.push(notification);
 			});
 			// Return sorted version

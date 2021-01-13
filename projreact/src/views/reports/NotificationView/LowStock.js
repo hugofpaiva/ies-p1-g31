@@ -49,7 +49,7 @@ const LowStock = ({ className, ...rest }) => {
     getLastNotifications();
 
     // Subscribe to socket for updates
-    const socket = new SockJS('http://localhost:8080/api/ws');
+    const socket = new SockJS(Url + '/api/ws');
     const stompClient = Stomp.over(socket);
     const headers = {};
 
@@ -75,12 +75,12 @@ const LowStock = ({ className, ...rest }) => {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       }
     };
-    const response = await fetch('http://127.0.0.1:8080/api/admin/notifications_restock', requestOptions);
+    const response = await fetch(Url + '/api/admin/notifications_restock', requestOptions);
     const data = await response.json();
     // Update value with notifications from server
     setNotifications(not => {
       const newNotifications = [...not];
-      data['notifications'].forEach(notification => {
+      data['notifications'].reverse().forEach(notification => {
         newNotifications.push(notification);
       })
       // Return sorted version
