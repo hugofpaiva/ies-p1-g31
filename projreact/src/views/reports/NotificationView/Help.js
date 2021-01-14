@@ -40,8 +40,6 @@ const Help = ({ className, ...rest }) => {
 	};
 	const handlePageChange = (event, newPage) => {
 		setPage(newPage);
-		// Make new request
-		getLastNotifications();
 	};
 	// -- Pagination stuff
 

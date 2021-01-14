@@ -40,8 +40,6 @@ const EntriesOut = ({ className, ...rest }) => {
 	};
 	const handlePageChange = (event, newPage) => {
 		setPage(newPage);
-		// Make new request
-		getLastNotifications();
 	};
 	// -- Pagination stuff
 
