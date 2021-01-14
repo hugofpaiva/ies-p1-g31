@@ -107,8 +107,10 @@ class dataGenerator:
             del client_cart[product]
         else:                               # if we only chose to remove a few items of the product, update its quantity in the cart
             client_cart[product] -= qty
-
-        self.products[product] += qty
+        
+        if product in self.products:
+            self.products[product] += qty
+        
         msg = {"type": "removing-product",
                "nif": client_nif, "idProduct": product, "qty": qty}
         self.sendMessage('storego-new', msg)
