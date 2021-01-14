@@ -83,11 +83,13 @@ A **aplicação Web** ficará disponível em: [localhost](http://localhost)
 
 A disponibilização do sistema foi feita através da _Google Cloud Platform_ e de acordo com [este guião](https://cloud.google.com/community/tutorials/docker-compose-on-container-optimized-os), utilizando o _free tier_. Resumidamente, foi criada uma _VM_, clonado o repositório e executado o _Docker Compose_ de acordo com o guião e com a versão _1.27.4_ para suportar a versão _3.8_ do ficheiro _Compose_. Por fim, nas definições de _Firewall_, foram abertas as portas 80 e 8080 para permitir o acesso à aplicação _web_ e serviço, respetivamente.
 
-A informação relativa ao _deploy_ de cada componente do sistema encontra-se na sua pasta sendo que foi utilizado um [ficheiro](./docker-compose.yml) _Docker Compose_ para definir e correr os múltiplos _Docker Containers_ dos componentes do sistema.
+A informação relativa ao _deploy_ de cada componente do sistema encontra-se na sua pasta sendo que foi utilizado um [ficheiro](./docker-compose.yml) _Docker Compose_ para definir e correr os múltiplos _Docker Containers_ dos componentes do sistema, da mesma forma descrita anteriormente.
 
 Tendo em conta que as configurações de _CORS_ e o endereço da _API_ à qual o _React_ acede são diferentes do `localhost`, na branch `deploy` encontra-se o sistema pronto para deploy na nossa máquina virtual.
 
-**Aplicação Web disponível em:** [35.246.117.113](http://35.246.117.113)
+**Aplicação Web disponível em:** [35.246.117.113](http://35.246.117.113) (o máximo de clientes da loja está definido como apenas um para evitar esgotar o armazenamento, sendo possível alterar)
+
+
 
 ## Detalhes
 
