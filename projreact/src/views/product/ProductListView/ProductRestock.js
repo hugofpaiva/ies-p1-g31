@@ -9,6 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import {Url} from "src/ApiConsts";
 
 import {
     RefreshCcw
@@ -61,7 +62,7 @@ export default function FormDialog(props) {
             },
             body: JSON.stringify({...product, stock_current:units})
         };
-        const url = 'http://127.0.0.1:8080/api/work/restock_product/' + product.id;
+        const url = Url + '/api/work/restock_product/' + product.id;
         const response = await fetch(url, requestOptions);
         if (response.status === 200) {
             props.update();

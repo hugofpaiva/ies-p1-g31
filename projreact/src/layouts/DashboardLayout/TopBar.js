@@ -3,6 +3,7 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import {Url} from 'src/ApiConsts';
 import {
   AppBar,
   Badge,
@@ -94,7 +95,7 @@ const TopBar = ({
     );
 
     // Sockets
-    const socket = new SockJS('http://localhost:8080/api/ws');
+    const socket = new SockJS(Url + '/api/ws');
     const stompClient = Stomp.over(socket);
     const headers = {};
 

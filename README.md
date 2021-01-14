@@ -1,30 +1,43 @@
-# StoreGO
+# [StoreGO](http://35.246.117.113)
 
-**Group:** G31
+**Grupo:** G31
 
-The application has the purpose of managing an automated store, that is, an establishment that provides a shopping experience without payment boxes, by recognizing the products that a customer removed from the shelf and charging the moment he leaves the store.
+O sistema tem a finalidade de simular a gestão de uma loja automatizada, ou seja, um estabelecimento que proporciona uma experiência de compras sem caixas de pagamento, ao reconhecer os produtos que um cliente retirou da prateleira e efetuar a cobrança no momento em que ele deixa a loja.
 
-Upon arriving at the supermarket, your entry into the store is detected and through the sensors distributed throughout the space, products are added to your virtual cart or removed if it lands again. After shopping is finished, there is nothing to do: just leave the store. Once outside the store the purchase is finalized.
+Ao chegar ao supermercado é detetada a sua entrada na loja e, através dos sensores distribuídos pelo espaço, são adicionados produtos ao seu carrinho virtual ou removidos se este os voltar a pousar. Terminadas as compras, não é preciso fazer nada: apenas sair da loja. Uma vez do lado de fora da loja a compra é finalizada.
 
-This application is similar to Amazon's smart supermarket with the “Just Walk Out“ concept, with no queues and no checkouts.
-All of this will be viewed through the web application for Employees and Managers, each with different permissions and possible actions.
+> Todos os dados referidos anteriormente, no contexto da disciplina de IES, são simulados e gerados automaticamente.
+
+Esta aplicação é similar ao supermercado inteligente da Amazon com o conceito “Just Walk Out“, sem filas e sem ​checkouts​.
 
 
 ## Backlog 
-We are using Jira to plan and document our project. You can find it at the links below.
+Está a ser utilizado o _Jira_ para planear e documentar o projeto. É possível encontrar informação nos links abaixo:
 
-`Jira` (for planning) https://hugofpaiva.atlassian.net/browse/IES
+`Jira` (planeamento) https://hugofpaiva.atlassian.net/browse/IES
 
-`Confluence` (for documenting) https://hugofpaiva.atlassian.net/wiki/spaces
+`Confluence` (documentação) https://hugofpaiva.atlassian.net/wiki/spaces
 
-> [`/Project: IES`](https://hugofpaiva.atlassian.net/wiki/spaces/IES) The project folder
+> [`/Project: IES`](https://hugofpaiva.atlassian.net/wiki/spaces/IES) Pasta do projeto
 >
-> [`/Iteration 1`](https://hugofpaiva.atlassian.net/wiki/spaces/I1/overview) Docs related with iteration 1 
+> [`/Iteration 1`](https://hugofpaiva.atlassian.net/wiki/spaces/I1/overview) Documentos relacionados com a iteração 1 
 
-## Architecture
+## Aquitetura
 
 ![architecture](./reports/images/architecture.png)
 
-### Components
+### Componentes
 
-- [**Web Application**](./projreact)
+- [**Aplicação Web**](./projreact)
+- [**Serviço**](./projservice)
+- [**Geração de Dados**](./projDataGeneration)
+- [**Message Broker (Kafka)**](./projKafkaBroker) - Informação de pesquisa e exemplos
+- [**Base de Dados (MySQL e MongoDB)**](./projDB) - Informação de pesquisa e exemplos
+
+## _Deploy_ do sistema
+
+A disponibilização do sistema foi feita através da _Google Cloud Platform_ e de acordo com [este guião](https://cloud.google.com/community/tutorials/docker-compose-on-container-optimized-os), utilizando o _free tier_. Resumidamente, foi criada uma _VM_, clonado o repositório e executado o _Docker Compose_ de acordo com o guião e com a versão _1.27.4_ para suportar a versão _3.8_ do ficheiro _Compose_. Por fim, nas definições de _Firewall_, foram abertas as portas 80 e 8080 para permitir o acesso à aplicação _web_ e serviço, respetivamente.
+
+A informação relativa ao _deploy_ de cada componente do sistema encontra-se na sua pasta sendo que foi utilizado um [ficheiro](./docker-compose.yml) _Docker Compose_ para definir e correr os múltiplos _Docker Containers_ dos componentes do sistema.
+
+**Aplicação Web disponível em:** [35.246.117.113](http://35.246.117.113)

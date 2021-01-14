@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import {Url} from "src/ApiConsts";
 import {
 	Box,
 	Container,
@@ -36,7 +37,7 @@ const CustomerList = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get("http://localhost:8080/api/work/persons_in_store/",{
+			.get(Url + "/api/work/persons_in_store/",{
 				headers: {
 				  'Authorization': `Bearer ${localStorage.getItem('token')}`
 				}
@@ -48,7 +49,7 @@ const CustomerList = () => {
 			});
 		const loop = setInterval(function() {
 			axios
-				.get("http://localhost:8080/api/work/persons_in_store/", {
+				.get(Url + "/api/work/persons_in_store/", {
 					headers: {
 					  'Authorization': `Bearer ${localStorage.getItem('token')}`
 					}

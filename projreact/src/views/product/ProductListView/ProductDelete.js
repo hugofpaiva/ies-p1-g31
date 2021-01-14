@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import {Url} from "src/ApiConsts";
 import {
     XCircle,
 } from "react-feather";
@@ -38,7 +39,7 @@ export default function AlertDialog(props) {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         };
-        const url = 'http://127.0.0.1:8080/api/admin/product/' + product.id;
+        const url = Url + '/api/admin/product/' + product.id;
         const response = await fetch(url, requestOptions);
         if (response.status === 200) {
             props.update();

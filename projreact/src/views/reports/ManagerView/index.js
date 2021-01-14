@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {Url} from "src/ApiConsts";
 import {
   Container,
   Grid,
@@ -51,32 +52,32 @@ const Dashboard = () => {
 
 	async function updateValues() {
     // Update month profit
-		let url = "http://127.0.0.1:8080/api/admin/monthly_profit";
+		let url = Url + "/api/admin/monthly_profit";
 		let response = await fetch(url, requestOptions);
 		let data = await response.json();
     setProfit(data['last_month_total']); 
     // Update costumers in store
-		url = "http://127.0.0.1:8080/api/work/num_persons_in_store";
+		url = Url + "/api/work/num_persons_in_store";
 		response = await fetch(url, requestOptions);
     data = await response.json();
     setInStore(data['persons_in_store']);
     // Update max customers in store
-		url = "http://127.0.0.1:8080/api/work/num_limit";
+		url = Url + "/api/work/num_limit";
 		response = await fetch(url, requestOptions);
     data = await response.json();
     setMaxCustomers(data['limit_persons_in_store']);
     // Update sales by type
-		url = "http://127.0.0.1:8080/api/admin/monthly_sale_by_category";
+		url = Url + "/api/admin/monthly_sale_by_category";
 		response = await fetch(url, requestOptions);
     data = await response.json();
     setSales(data);
     // Update last persons in store
-    url = "http://127.0.0.1:8080/api/work/last_persons_in_store";
+    url = Url + "/api/work/last_persons_in_store";
 		response = await fetch(url, requestOptions);
     data = await response.json();
     setLastPersons(data);
     // Update last bought products
-    url = "http://127.0.0.1:8080/api/work/last_bought_products";
+    url = Url + "/api/work/last_bought_products";
 		response = await fetch(url, requestOptions);
     data = await response.json();
     setLastProducts(data);

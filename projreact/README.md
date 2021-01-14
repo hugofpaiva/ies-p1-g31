@@ -1,45 +1,51 @@
-# StoreGO Web Application
+# StoreGO Aplicação Web
 
-### An automated store monitoring and control application.
+Aplicação React baseada em [Devias Kit Template](https://material-ui.com/store/items/devias-kit/)
 
-React application based on [Devias Kit Template](https://material-ui.com/store/items/devias-kit/)
+## Como executar  
 
+**node.js** é necessário para correr uma aplicação _React_. O guia de instalação pode ser encontrado [aqui](https://nodejs.org/en/).
 
-
-
-## How to Install  
-
-**node.js** is required to run a React app. The instalation guide for it can be found [here](https://nodejs.org/en/).
-
-  When installing node.js, npm should also installed on your computer. If you prefer to use *yarn* instead, also [install it](https://classic.yarnpkg.com/en/docs/install/).
+  Ao instalar o _node.js_, o _npm_ também deve estar instalado no computador. Se preferir utilizar *yarn*, é necessário [instalar](https://classic.yarnpkg.com/en/docs/install/).
 
   
 
-### Install dependencies
+### Instalar dependências
 
-1. Clone the repository
+1. Clonar o repositório
 
 2. ```cd projreact```
 
-3. Install packages using ```npm install``` **or** ```yarn install```
+3. Instalar as dependências utilizando ```npm install``` **ou** ```yarn install```
 
   
 
-## How to Run Web Application
+## Como executar a aplicação _web_
 
-Inside the project directory, run the following built-in commands:
+Dento do diretório do projeto, correr o seguinte:
 
-1. ```npm start``` **or** ```yarn start```
+1. ```npm start``` **ou** ```yarn start```
 
-2. The app should be running in [http://localhost:3000](http://localhost:3000) 
+2. A aplicação deve estar a correr em [http://localhost:3000](http://localhost:3000) 
+
+## _Docker_
+
+Foi preparado um ficheiro _Dockerfile_, de acordo com as referências, com a informação necessária para o _deploy_ desta aplicação _React_ através do ficheiro _Docker Compose_ na raiz do repositório.
+
+> **Referências**
+>
+> [Use Docker With React](https://medium.com/better-programming/heres-how-you-can-use-docker-with-create-react-app-3ee3a972b04e)
+>
+> [React Request Examples](https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples)
+>
 
 
 
-## Spring API Usage
+## Utilização da API do _Spring_
 
-When the user is authenticated, his authentication token is stored at the local storage with key `token`. His role (MANAGER or EMPLOYEE) is also stored there, with key `authority`. 
+Quando o utilizador é autenticado, o seu token de autenticação é armazenado em armazenamento local com a chave `token`. O seu tipo (MANAGER ou EMPLOYEE) também é armazenado lá, com a `authority` chave.
 
-To use the Spring API every request must send the authentication token in the header.  
+Para usar a API _Spring_, cada solicitação deve enviar o token de autenticação no cabeçalho.
 
 ```react
 const requestOptions = {
@@ -54,9 +60,8 @@ const response = await fetch('http://127.0.0.1:8080/api/...', requestOptions);
 const data = await response.json();
 ```
 
-> Based on https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples
 
-This request must be done when the component renders. To do so, use the `useEffect` method.
+Este pedido tem de ser feito quando o componente é gerado. Para isto, é utilizado o método `useEffect`.
 
 ```react
 import React, { useState, useEffect } from "react";
@@ -66,7 +71,7 @@ useEffect(async() => {
 }, []);
 ```
 
-To convert the timestamps to legible strings, the moment package.
+Para converter de _timestamps_ para _strings_ legíveis, foi usada a _package_ _moment_.
 
 ```react
 import moment from "moment";

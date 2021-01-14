@@ -7,6 +7,7 @@ import {
 import Page from 'src/components/Page';
 import Results from './Results';
 import data from './data';
+import {Url} from "src/ApiConsts";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,7 +41,7 @@ const CustomerListView = () => {
     };
 
     let url =
-			"http://127.0.0.1:8080/api/work/notifications_help?page=" +
+			Url + "/api/work/notifications_help?page=" +
 			page +
 			"&size=" +
 			size;

@@ -4,6 +4,7 @@ import moment from "moment";
 import PropTypes from "prop-types";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
+import {Url} from "src/ApiConsts";
 import {
 	Box,
 	Card,
@@ -49,7 +50,7 @@ const Help = ({ className, ...rest }) => {
 		getLastNotifications();
 
 		// Subscribe to socket for updates
-		const socket = new SockJS("http://localhost:8080/api/ws");
+		const socket = new SockJS(Url + "/api/ws");
 		const stompClient = Stomp.over(socket);
 		const headers = {};
 
@@ -75,7 +76,7 @@ const Help = ({ className, ...rest }) => {
 				Authorization: "Bearer " + localStorage.getItem("token"),
 			},
 		};
-		const url = "http://127.0.0.1:8080/api/work/notifications_help?page=" + page + "&size=" + size;
+		const url = Url + "/api/work/notifications_help?page=" + page + "&size=" + size;
 		const response = await fetch(
 			url,
 			requestOptions

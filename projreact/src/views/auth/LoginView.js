@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import * as Yup from "yup";
 import { Formik } from "formik";
+import {Url} from "src/ApiConsts";
 import {
 	Box,
 	Button,
@@ -62,7 +63,7 @@ const LoginView = () => {
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ username: email, password: password })
 		};
-		const response = await fetch('http://127.0.0.1:8080/api/login', requestOptions);
+		const response = await fetch(Url + '/api/login', requestOptions);
 		const data = await response.json();
 		
 		// Process response

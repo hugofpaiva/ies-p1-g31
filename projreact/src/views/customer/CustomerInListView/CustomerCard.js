@@ -5,6 +5,7 @@ import MuiDialogActions from "@material-ui/core/DialogActions";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import moment from "moment";
+import {Url} from "src/ApiConsts";
 import { Button, colors } from "@material-ui/core";
 import {
 	Avatar,
@@ -90,7 +91,7 @@ const CustomerCard = ({ className, customer, ...rest }) => {
 				'Authorization': 'Bearer ' + localStorage.getItem('token')
 			}
 		};
-		let url = 'http://127.0.0.1:8080/api/admin/cart/' + customer.nif;
+		let url = Url + '/api/admin/cart/' + customer.nif;
 		const response = await fetch(url, requestOptions);
 		const data = await response.json();
 		setCart(data);

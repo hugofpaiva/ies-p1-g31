@@ -13,6 +13,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import {Url} from "src/ApiConsts";
 
 import {
     Edit
@@ -79,7 +80,7 @@ export default function FormDialog(props) {
             },
             body: JSON.stringify(product)
         };
-        const url = props.edit ? 'http://127.0.0.1:8080/api/admin/product/' + product.id : 'http://127.0.0.1:8080/api/admin/products';
+        const url = props.edit ? Url + '/api/admin/product/' + product.id : Url + '/api/admin/products';
         const response = await fetch(url, requestOptions);
         if (response.status === 200) {
             props.update();

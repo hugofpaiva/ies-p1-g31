@@ -11,6 +11,7 @@ import CostumersInStore from './CostumersInStore';
 import TotalCustomers from './TotalCustomers';
 import RequestsAttended from './RequestsAttended';
 import RequestsStats from './RequestsStats';
+import {Url} from "src/ApiConsts";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,32 +44,32 @@ const Dashboard = () => {
 			}
 		};
     // Update costumers in store
-		let url = "http://127.0.0.1:8080/api/work/num_persons_in_store";
+		let url = Url + "/api/work/num_persons_in_store";
 		let response = await fetch(url, requestOptions);
     let data = await response.json();
     set_customers_in_store(data['persons_in_store']);
 
     // Update max numb of people
-    response = await fetch('http://127.0.0.1:8080/api/work/max_persons', requestOptions);
+    response = await fetch(Url + '/api/work/max_persons', requestOptions);
 		data = await response.json();
 		console.log("GOT MAX");
     console.log(data);
     set_max_value(data)
 
     // Update number of attended people
-		url = "http://127.0.0.1:8080/api/work/todays_attended_requests";
+		url = Url + "/api/work/todays_attended_requests";
 		response = await fetch(url, requestOptions);
     data = await response.json();
     set_todays_attended_requests(data);
 
     // Update last bought products
-    url = "http://127.0.0.1:8080/api/work/last_bought_products";
+    url = Url + "/api/work/last_bought_products";
 		response = await fetch(url, requestOptions);
     data = await response.json();
     set_latest_products(data);
 
     // Update persons waiting for help
-    url = "http://127.0.0.1:8080/api/work/notifications_help_waiting";
+    url = Url + "/api/work/notifications_help_waiting";
 		response = await fetch(url, requestOptions);
     data = await response.json();
     set_waiting_for_help(data["notifications"]);
@@ -77,22 +78,22 @@ const Dashboard = () => {
     // Refresh the most dynamic every second
     return setInterval(async function() {
       // Update costumers in store
-      url = "http://127.0.0.1:8080/api/work/num_persons_in_store";
+      url = Url + "/api/work/num_persons_in_store";
       response = await fetch(url, requestOptions);
       data = await response.json();
       set_customers_in_store(data['persons_in_store']);
       // Update last bought products
-      url = "http://127.0.0.1:8080/api/work/last_bought_products";
+      url = Url + "/api/work/last_bought_products";
       response = await fetch(url, requestOptions);
       data = await response.json();
       set_latest_products(data);
       // Update number of attended people
-      url = "http://127.0.0.1:8080/api/work/todays_attended_requests";
+      url = Url + "/api/work/todays_attended_requests";
       response = await fetch(url, requestOptions);
       data = await response.json();
       set_todays_attended_requests(data);
       // Update persons waiting for help
-      url = "http://127.0.0.1:8080/api/work/notifications_help_waiting";
+      url = Url + "/api/work/notifications_help_waiting";
       response = await fetch(url, requestOptions);
       data = await response.json();
       set_waiting_for_help(data["notifications"]);

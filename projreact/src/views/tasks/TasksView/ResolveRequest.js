@@ -2,9 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Container, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
+import {Url} from "src/ApiConsts";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 
@@ -34,7 +32,7 @@ function SimpleDialog(props) {
 			}),
 		};
 		await fetch(
-			"http://127.0.0.1:8080/api/work/notifications_help/" + task.id,
+			Url + "/api/work/notifications_help/" + task.id,
 			requestOptions
 		);
 		return false;

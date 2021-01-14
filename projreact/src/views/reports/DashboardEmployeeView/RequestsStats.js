@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Doughnut } from 'react-chartjs-2';
+import {Url} from "src/ApiConsts";
 import {
   Box,
   Card,
@@ -92,7 +93,7 @@ const RequestsStats = ({ className, stats,...rest }) => {
           'Authorization': 'Bearer ' + localStorage.getItem('token')
         },
       };
-      const response = await fetch('http://127.0.0.1:8080/api/work/monthly_help_requests_stats', requestOptions);
+      const response = await fetch(Url + '/api/work/monthly_help_requests_stats', requestOptions);
       const new_data = await response.json();
       console.log("GOT STATS DATA");
       console.log(new_data);

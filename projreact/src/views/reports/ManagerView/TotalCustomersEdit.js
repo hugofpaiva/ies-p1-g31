@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import Button from '@material-ui/core/Button';
+import {Url} from "src/ApiConsts";
 import {
     TextField,
     Typography,
@@ -48,7 +49,7 @@ export default function FormDialog(props) {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         };
-        const url = 'http://127.0.0.1:8080/api/admin/new-limit?limit=' + maxCustomers;
+        const url = Url + '/api/admin/new-limit?limit=' + maxCustomers;
         const response = await fetch(url, requestOptions);
         if (response.status === 200) {
             // Close form  

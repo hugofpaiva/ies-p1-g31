@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+
+  mysql_db:
+    image: mysql:5.7
+    restart: unless-stopped
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 'rootpass'
+      MYSQL_USER: 'spring'
+      MYSQL_PASSWORD: 'springpass'
+      MYSQL_DATABASE: 'ies'
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+
+  mongodb_db:
+    image: mongo
+    restart: unless-stopped
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 'root'
+      MONGO_INITDB_ROOT_PASSWORD: 'rootpass'
+      MONGO_INITDB_DATABASE: 'ies'
+    volumes:
+      - ./projDB/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./docker/mongodb:/data/db
+    depends_on:
+      - mysql_db
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:6.0.1
+    container_name: zookeeper
+    restart: unless-stopped
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:6.0.1
+    depends_on:
+      - zookeeper
+    restart: unless-stopped
+    container_name: kafka
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: ["CMD", "nc", "-vz", "localhost", "9092"]
+      interval: 30s
+      timeout: 10s
+      retries: 4
+
+  generator:
+    build: ./projDataGeneration
+    container_name: data_generator
+    restart: unless-stopped
+    image: python-generator
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+  spring:
+    build: ./projservice
+    container_name: spring_service
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    image: storego-service
+    depends_on:
+      kafka:
+          condition: service_healthy
+
+  react:
+    build: ./projreact
+    container_name: react
+    stdin_open: true
+    ports:
+      - 80:3000
+    restart: unless-stopped
+    image: storego-frontend
