@@ -14,8 +14,8 @@ import {
 	TableBody,
 	TableCell,
 	TableHead,
-  TableRow,
-  TableSortLabel,
+	TableRow,
+	TableSortLabel,
 	TablePagination,
 	makeStyles,
 } from "@material-ui/core";
@@ -32,15 +32,16 @@ const EntriesOut = ({ className, ...rest }) => {
 	const [notifications, setNotifications] = useState([]);
 
 	// Pagination stuff
-	const [limit, setLimit] = useState(10);
 	const [page, setPage] = useState(0);
+	const [size, setSize] = useState(10);
+	const [count, setCount] = useState(0);
 	const handleLimitChange = (event) => {
-		setLimit(event.target.value);
+		setSize(event.target.value);
 	};
 	const handlePageChange = (event, newPage) => {
 		setPage(newPage);
 	};
-	// /Pagination stuff
+	// -- Pagination stuff
 
 	// Initialize and update every time props change
 	useEffect(() => {
@@ -53,7 +54,7 @@ const EntriesOut = ({ className, ...rest }) => {
 		const headers = {};
 
 		stompClient.connect(headers, () => {
-			stompClient.subscribe("/topic/enter_store", function(
+			stompClient.subscribe("/topic/enter_store", function (
 				messageOutput
 			) {
 				const not = JSON.parse(messageOutput.body);
@@ -62,15 +63,18 @@ const EntriesOut = ({ className, ...rest }) => {
 					return newArray;
 				});
 			});
-			stompClient.subscribe("/topic/exit_store", function(messageOutput) {
+			stompClient.subscribe("/topic/exit_store", function (messageOutput) {
 				const not = JSON.parse(messageOutput.body);
-				setNotifications((oldArray) => {
-					const newArray = [...oldArray, not];
-					return newArray;
-				});
+				// Only add notifications on first page
+				if (page == 0) {
+					setNotifications((oldArray) => [not, ...oldArray.slice(0, size - 1)]);
+				}
+				setCount(lastCount => lastCount + 1);
 			});
 		});
-	}, []);
+
+		return () => stompClient && stompClient.disconnect();
+	}, [page, size]);
 
 	async function getLastNotifications() {
 		const requestOptions = {
@@ -80,20 +84,16 @@ const EntriesOut = ({ className, ...rest }) => {
 				Authorization: "Bearer " + localStorage.getItem("token"),
 			},
 		};
+		const url = "http://127.0.0.1:8080/api/admin/notifications_entered_left?page=" + page + "&size=" + size;
 		const response = await fetch(
-			"http://127.0.0.1:8080/api/admin/notifications_entered_left",
+			url,
 			requestOptions
 		);
 		const data = await response.json();
 		// Update value with notifications from server
-		setNotifications((not) => {
-			const newNotifications = [...not];
-			data["notifications"].forEach((notification) => {
-				newNotifications.push(notification);
-			});
-			// Return sorted version
-			return newNotifications;
-		});
+		setNotifications(data["notifications"]);
+		// Update count
+		setCount(data["totalItems"]);
 	}
 
 	return (
@@ -114,41 +114,38 @@ const EntriesOut = ({ className, ...rest }) => {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{notifications
-							.sort((not) => -1 * not["date"])
-							.slice(page * limit, page * limit + limit)
-							.map((notification) => (
-								<TableRow hover key={notification.id}>
-									<TableCell>{notification.nif}</TableCell>
-									<TableCell>
-										{moment(notification.date).format(
-											"DD/MM/YYYY, HH:mm:ss"
-										)}
-									</TableCell>
-									<TableCell>
-										<Chip
-											color={notification.type === "ENTERED_STORE" ? "primary": "secondary"}
-											label={
-												notification.type ===
+						{notifications.map((notification) => (
+							<TableRow hover key={notification.id}>
+								<TableCell>{notification.nif}</TableCell>
+								<TableCell>
+									{moment(notification.date).format(
+										"DD/MM/YYYY, HH:mm:ss"
+									)}
+								</TableCell>
+								<TableCell>
+									<Chip
+										color={notification.type === "ENTERED_STORE" ? "primary" : "secondary"}
+										label={
+											notification.type ===
 												"ENTERED_STORE"
-													? "Entered Store"
-													: "Exited Store"
-											}
-											size="small"
-										/>
-									</TableCell>
-								</TableRow>
-							))}
+												? "Entered Store"
+												: "Exited Store"
+										}
+										size="small"
+									/>
+								</TableCell>
+							</TableRow>
+						))}
 					</TableBody>
 				</Table>
 				<TablePagination
 					component="div"
-					count={notifications.length}
+					count={count}
 					onChangePage={handlePageChange}
 					onChangeRowsPerPage={handleLimitChange}
 					page={page}
-					rowsPerPage={limit}
-					rowsPerPageOptions={[5, 10]}
+					rowsPerPage={size}
+					rowsPerPageOptions={[5, 10, 25]}
 				/>
 			</Box>
 		</Card>

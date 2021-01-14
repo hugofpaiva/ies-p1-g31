@@ -45,7 +45,7 @@ const Dashboard = () => {
     // Refresh the most dynamic every second
     const loop = setInterval(async function() {
       updateValues();
-    }, 1000);
+    }, 3000);
     return () => clearInterval(loop);
 	}, []);
 
