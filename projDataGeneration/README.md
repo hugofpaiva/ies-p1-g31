@@ -1,4 +1,4 @@
-# Inicizalização de dados do gerador:
+# Inicialização de dados do gerador:
 
 **_Script_ envia a seguinte mensagem:**
 
