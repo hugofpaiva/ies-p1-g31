@@ -123,15 +123,11 @@ public class StoreServices {
             format += "\nERROR! Left but was not in store!";
         }
 
-        List<Notification> help_notifications_last_visit = notificationRepository.findByDateIsGreaterThanEqualAndTypeAndNifOrderByDateDesc(p.getLastVisit(), NotificationType.HELP, p.getNif());
+        List<Notification> help_notifications_last_visit = notificationRepository.findByDateIsGreaterThanEqualAndTypeAndNifAndStateOrderByDateDesc(p.getLastVisit(), NotificationType.HELP, p.getNif(), HelpNeededState.PENDING);
 
-        if (!help_notifications_last_visit.isEmpty()){
-            Notification n_help = help_notifications_last_visit.get(0);
-            if (n_help.getState() == HelpNeededState.PENDING){
-                n_help.setState(HelpNeededState.CUSTOMER_LEFT);
-                notificationRepository.save(n_help);
-            }
-
+        for(Notification n_help: help_notifications_last_visit){
+            n_help.setState(HelpNeededState.CUSTOMER_LEFT);
+            notificationRepository.save(n_help);
         }
 
         Notification n = new Notification(NotificationType.EXITED_STORE, nif);

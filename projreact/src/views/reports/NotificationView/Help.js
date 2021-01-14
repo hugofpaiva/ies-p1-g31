@@ -149,7 +149,7 @@ const Help = ({ className, ...rest }) => {
 									</TableCell>
 									<TableCell>
 										<Chip
-											color="primary"
+											color={notification.state === "PENDING"? "secondary" : "primary"}
 											label={
 												notification.state[0] +
 												notification.state
