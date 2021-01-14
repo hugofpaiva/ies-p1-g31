@@ -145,7 +145,7 @@ const Help = ({ className, ...rest }) => {
 					onChangeRowsPerPage={handleLimitChange}
 					page={page}
 					rowsPerPage={size}
-					rowsPerPageOptions={[5, 10, 25]}
+					rowsPerPageOptions={[10]}
 				/>
 			</Box>
 		</Card>
