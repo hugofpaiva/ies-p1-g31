@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, makeStyles, Grid } from "@material-ui/core";
+import { Box, Container, makeStyles } from "@material-ui/core";
 import Page from "src/components/Page";
 import Notifications from "./Notifications";
 import Password from "./Password";
@@ -21,7 +21,7 @@ const SettingsView = (props) => {
 		<Page className={classes.root} title="Settings">
 			<Container maxWidth="lg">
 				<Box mt={3}>
-					<ProfileDetails persona={props.persona} />
+					<ProfileDetails persona={props.persona}/>
 				</Box>
 				<Box mt={3}>
 					<Password />

@@ -4,19 +4,22 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Date;
 
 @Entity
 @Data
 @Table(name = "transaction")
-public class Transaction {
+public class Transaction implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "nif_cliente", nullable = false)
     private Person client;
 
@@ -24,16 +27,24 @@ public class Transaction {
     @CreationTimestamp
     private Date date;
 
-    @OneToMany(mappedBy="transaction")
-    Set<TransactionProduct> products;
-
     public Transaction() {
 
     }
 
-    public Transaction(Person client, Date date) {
+    public Transaction(Person client) {
         this.client = client;
-        this.date = date;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

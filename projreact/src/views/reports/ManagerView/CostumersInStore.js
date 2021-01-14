@@ -3,11 +3,9 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
   Avatar,
-  Box,
   Card,
   CardContent,
   Grid,
-  LinearProgress,
   Typography,
   makeStyles,
   colors
@@ -26,7 +24,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const CostumersInStore = ({ className, ...rest }) => {
+const CostumersInStore = ({ value, className, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -52,7 +50,7 @@ const CostumersInStore = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              600
+              {value}
             </Typography>
           </Grid>
           <Grid item>

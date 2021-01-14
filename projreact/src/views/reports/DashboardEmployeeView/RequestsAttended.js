@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const RequestsAttended = ({ className, ...rest }) => {
+const RequestsAttended = ({ className, todays_attended_requests, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -49,7 +49,7 @@ const RequestsAttended = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              37
+              {todays_attended_requests}
             </Typography>
           </Grid>
           <Grid item>

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class Producer {
 
-    private static final String TOPIC = "update-data";
+    private static final String TOPIC = "storego-update";
 
     /*
     Supressed Warning as advised in:
@@ -18,6 +18,8 @@ public class Producer {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     public void sendMessage(String message){
+        System.out.println("SENDING MESSAGE HOME");
         this.kafkaTemplate.send(TOPIC, message);
+        this.kafkaTemplate.flush();
     }
 }

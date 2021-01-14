@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Container, Grid, makeStyles } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import Page from "src/components/Page";
 import Toolbar from "./Toolbar";
 import ProductCard from "./ProductCard";
-import data from "./data";
+import {Url} from "src/ApiConsts";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -20,10 +20,13 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductList = (props) => {
 	const classes = useStyles();
-	const [products] = useState(data);
+	// Inicializar o estado products
+	const [products, setProducts] = useState([]);
+	const [categories, setCategories] = useState([]);
+	const [search, setSearch] = useState("");
 	const itemsPerPage = 6;
 	const [page, setPage] = React.useState(1);
-	const [noOfPages] = React.useState(
+	const [nPages, setNPages] = React.useState(
 		Math.ceil(products.length / itemsPerPage)
 	);
 
@@ -31,18 +34,80 @@ const ProductList = (props) => {
 		setPage(value);
 	};
 
+	// Fazer chamada à API para obter produtos
+	useEffect(() => {
+		updateCategories();
+	}, []);
+	// Fazer chamada à API para obter produtos
+	// Ao início e sempre que page e size sejam alterados
+	// Repetir todos os segundos para manter stock atualizado
+	useEffect(() => {
+		updateProducts();
+		const loop = setInterval(() => {
+			updateProducts()
+		}, 1000);
+		return () => clearInterval(loop);
+	}, [page, search]);
+
+	async function updateProducts() {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			}
+		};
+		let url = Url + "/api/work/products?page=" + (page - 1) + "&size=" + itemsPerPage;
+		if (search.trim() !== "") {
+			url += "&name=" + search;
+		}
+		const response = await fetch(url, requestOptions);
+		const data = await response.json();
+
+		// Update products 
+		setProducts(data['products']);
+		// Update number of pages
+		setNPages(data['totalPages']);
+		// If number of pages is less than the selected, reset to first
+		if (data['totalPages'] < page) {
+			setPage(1);
+		}
+	}
+
+	async function updateCategories() {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			}
+		};
+		let url = Url + "/api/work/productscategories";
+		const response = await fetch(url, requestOptions);
+		const data = await response.json();
+		// Update categories 
+		setCategories(data);
+	}
+
 	return (
 		<Page className={classes.root} title="Products">
 			<Container maxWidth={false}>
-				<Toolbar persona={props.persona} />
+				<Toolbar 
+					persona={props.persona} 
+					search={setSearch}
+					categories={categories}
+					update={updateProducts}
+				/>
 				<Box mt={3}>
 					<Grid container spacing={3}>
-						{products.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((product) => (
+						{products.map((product) => (
 							<Grid item key={product.id} lg={4} md={6} xs={12}>
 								<ProductCard
 									className={classes.productCard}
 									product={product}
 									persona={props.persona}
+									update={updateProducts}
+									categories={categories}
 								/>
 							</Grid>
 						))}
@@ -51,7 +116,7 @@ const ProductList = (props) => {
 				<Box mt={3} display="flex" justifyContent="center">
 					<Pagination
 						color="primary"
-						count={noOfPages}
+						count={nPages}
 						page={page}
 						defaultPage={1}
 						showFirstButton

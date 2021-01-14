@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { colors } from '@material-ui/core';
 import {
-  Avatar,
   Box,
   Card,
   CardContent,
@@ -11,13 +9,10 @@ import {
   Grid,
   Typography,
   makeStyles,
-  Button
 } from '@material-ui/core';
-import {
-  Edit,
-  XCircle,
-  RefreshCcw
-} from "react-feather";
+import ProductEdit from './ProductEdit';
+import ProductDelete from './ProductDelete';
+import ProductRestock from './ProductRestock';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ProductCard = ({ persona, className, product, ...rest }) => {
+const ProductCard = ({categories, update, persona, className, product, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -52,24 +47,13 @@ const ProductCard = ({ persona, className, product, ...rest }) => {
       {...rest}
     >
       <CardContent>
-        <Box
-          display="flex"
-          justifyContent="center"
-          mb={3}
-        >
-          <Avatar
-            alt="Product"
-            style={{ height: '75px', width: '75px' }}
-            src={product.media}
-          />
-        </Box>
         <Typography
           align="center"
           color="textPrimary"
           gutterBottom
           variant="h4"
         >
-          {product.title}
+          {product.name} | {product.price} €
         </Typography>
         <Typography
           align="center"
@@ -79,37 +63,38 @@ const ProductCard = ({ persona, className, product, ...rest }) => {
         >
           {product.description}
         </Typography>
-        <br></br>
         <Box
           display="flex"
           justifyContent="space-around"
           mb={1}>
           {
-            persona == "admin" &&
+            persona === "admin" &&
             <Box
               display="flex"
               justifyContent="space-around"
               mb={1}>
-              <Button color={colors.common.yellow} variant="contained">
-                <Edit className={classes.icon} size="20" />
-                <span className={classes.title}>Edit</span>
-              </Button>
-              <Button color={colors.common.red} variant="contained">
-                <XCircle className={classes.icon} size="20" />
-                <span className={classes.title}>Delete</span>
-              </Button>
-              <Button color={colors.common.yellow} variant="contained">
-                <RefreshCcw className={classes.icon} size="20" />
-                <span className={classes.title}>Restock</span>
-              </Button>
+              <ProductEdit 
+                product={product} 
+                update={update} 
+                categories={categories}
+                edit={true}
+              />
+              <ProductDelete
+                product={product} 
+                update={update} 
+              />
+              <ProductRestock 
+                product={product} 
+                update={update} 
+              />
             </Box>
           }
           {
-            persona == "employee" &&
-            <Button color={colors.common.yellow} variant="contained">
-              <RefreshCcw className={classes.icon} size="20" />
-              <span className={classes.title}>Restock</span>
-            </Button>
+            persona === "employee" &&
+            <ProductRestock 
+              product={product} 
+              update={update} 
+            />
           }
         </Box>
       </CardContent>
@@ -130,7 +115,7 @@ const ProductCard = ({ persona, className, product, ...rest }) => {
               display="inline"
               variant="body2"
             >
-              {product.category}
+              {product.category.name}
             </Typography>
           </Grid>
           <Grid
@@ -142,7 +127,19 @@ const ProductCard = ({ persona, className, product, ...rest }) => {
               display="inline"
               variant="body2"
             >
-              {product.stock}
+              Identifier: {product.id} 
+            </Typography>
+          </Grid>
+          <Grid
+            className={classes.statsItem}
+            item
+          >
+            <Typography
+              color="textSecondary"
+              display="inline"
+              variant="body2"
+            >
+              {product.stock_current}
               {' '}
               in Stock
             </Typography>

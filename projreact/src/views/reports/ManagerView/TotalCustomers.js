@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
   Avatar,
-  Box,
   Card,
   CardContent,
   Grid,
@@ -31,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const TotalCustomers = ({ className, ...rest }) => {
+const TotalCustomers = ({ value, className, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -57,7 +56,7 @@ const TotalCustomers = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              600
+              {value}
             </Typography>
           </Grid>
           <Grid item>

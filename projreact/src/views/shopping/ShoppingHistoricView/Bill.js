@@ -34,16 +34,15 @@ const useStyles = makeStyles((theme) => ({
 
   }));
 
-export default function Bill(shoppingobj) {
+export default function Bill(props) {
 	const [open, setOpen] = React.useState(false);
-	const [maxWidth, setMaxWidth] = React.useState("sm");
-    const [fullWidth, setFullWidth] = React.useState(true);
-    const classes = useStyles();
-
-	const shopping = shoppingobj.shopping;
+	const [maxWidth] = React.useState("sm");
+    const [fullWidth] = React.useState(true);
+	const classes = useStyles();
+	
+	console.log(props.transaction.products.units)
 
 	const handleClickOpen = () => {
-		console.log(shopping);
 		setOpen(true);
 	};
 
@@ -69,17 +68,14 @@ export default function Bill(shoppingobj) {
 				aria-describedby="alert-dialog-description"
 			>
 				<DialogTitle id="alert-dialog-title">
-					{moment(shopping.createdAt).format("DD/MM/YYYY H:M")}
-					{/*<br />
-                    Served by {shopping.bill.employee}
-                    */}
+					{moment(props.transaction.transaction.date).format("DD/MM/YYYY HH:mm")}
 				</DialogTitle>
 				<DialogContent>
 					<DialogContentText
 						id="alert-dialog-description"
 						color="primary"
 					>
-						Total: {shopping.bill.total}€
+						Total: {props.transaction.total}€
 					</DialogContentText>
 					<Table>
 						<TableHead>
@@ -93,35 +89,13 @@ export default function Bill(shoppingobj) {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{shopping.bill.products.map((product) => (
-								<TableRow>
-									<TableCell>{product.quantity}</TableCell>
-									<TableCell>{product.title}</TableCell>
-									{
-										//<TableCell>{product.vat}</TableCell>
-									}
+							{props.transaction.products.map((p) => (
+								<TableRow key={p.id}>
+									<TableCell>{p.units}</TableCell>
+									<TableCell>{p.product.name}</TableCell>
 									<TableCell>
 										<Grid container="true" direction="row">
-											{product.price * product.quantity}
-											{product.price * product.quantity !=
-												product.price && (
-												<Grid
-													style={{
-														marginLeft: "auto",
-													}}
-												>
-													<Tooltip
-														title={`${product.price} per unit`}
-													>
-														<Typography
-															color="textSecondary"
-															variant="caption"
-														>
-															<InfoIcon />
-														</Typography>
-													</Tooltip>
-												</Grid>
-											)}
+											{p.product.price}€
 										</Grid>
 									</TableCell>
 								</TableRow>

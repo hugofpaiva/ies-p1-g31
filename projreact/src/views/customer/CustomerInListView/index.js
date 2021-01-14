@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import {Url} from "src/ApiConsts";
 import {
 	Box,
 	Container,
@@ -7,17 +8,8 @@ import {
 	makeStyles,
 	LinearProgress,
 } from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
 import Page from "src/components/Page";
-import Toolbar from "./Toolbar";
 import CustomerCard from "./CustomerCard";
-import { withStyles } from "@material-ui/core/styles";
-import ProductCard from "./ProductCard";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import MuiDialogContent from "@material-ui/core/DialogContent";
-import MuiDialogActions from "@material-ui/core/DialogActions";
-import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -37,79 +29,42 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const DialogContent = withStyles((theme) => ({
-	root: {
-		maxHeight: "1000px",
-		paddingBottom: theme.spacing(2),
-	},
-}))(MuiDialogContent);
-
-const DialogActions = withStyles((theme) => ({
-	root: {
-		margin: 0,
-		padding: theme.spacing(1),
-	},
-}))(MuiDialogActions);
-
 const CustomerList = () => {
 	const classes = useStyles();
 	const [customers, setCustomers] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const [searchName, setSearchName] = useState("");
-	const [noOfPages, setnoOfPages] = useState(3);
-	const [products, setProducts] = useState([]);
-	const itemsPerPage = 12;
-	const [page, setPage] = React.useState(1);
-
-	const handleChange = (event, value) => {
-		setPage(value);
-	};
-	/*
-	useEffect(() => {
-		setLoading(true);
-		const apiUrl = "http://localhost:8080/api/persons_in_store/";
-		axios.get(apiUrl).then((response) => {
-			console.log(response.data)
-			setCustomers(response.data);
-			setLoading(false);
-		});
-	}, [page, searchName]);*/
 
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get("http://localhost:8080/api/persons_in_store/")
+			.get(Url + "/api/work/persons_in_store/",{
+				headers: {
+				  'Authorization': `Bearer ${localStorage.getItem('token')}`
+				}
+			  })
 			.then((response) => {
 				// Sort by enter time
 				setCustomers(response.data.sort((a,b) => new Date(a['last_visit']) - new Date(b['last_visit'])));
 				setLoading(false);
 			});
-		setInterval(function() {
+		const loop = setInterval(function() {
 			axios
-				.get("http://localhost:8080/api/persons_in_store/")
+				.get(Url + "/api/work/persons_in_store/", {
+					headers: {
+					  'Authorization': `Bearer ${localStorage.getItem('token')}`
+					}
+				  })
 				.then((response) => {
 					// Sort by enter time
 					setCustomers(response.data.sort((a,b) => new Date(a['last_visit']) - new Date(b['last_visit'])));
 				});
 		}, 1000);
+		return () => clearInterval(loop);
 	}, []);
-
-	const [open, setOpen] = React.useState(false);
-
-	const handleClickOpen = () => {
-		setOpen(true);
-	};
-	const handleClose = () => {
-		setOpen(false);
-	};
 
 	return (
 		<Page className={classes.root} title="Customers in Store">
 			<Container maxWidth={false}>
-				<Toolbar
-					setSearchName={setSearchName}
-					searchName={searchName}
-				/>
 				{loading || !customers ? (
 					<Box style={{ marginTop: "20%" }}>
 						<LinearProgress />
@@ -120,8 +75,8 @@ const CustomerList = () => {
 							<Grid container spacing={3}>
 								{customers.map((customer) => (
 									<Grid
-										item
 										key={customer.id}
+										item
 										lg={3}
 										md={4}
 										xs={12}
@@ -129,66 +84,14 @@ const CustomerList = () => {
 										<CustomerCard
 											className={classes.customerCard}
 											customer={customer}
-											onnclick={handleClickOpen}
 										/>
 									</Grid>
 								))}
 							</Grid>
 						</Box>
-						<Box mt={3} display="flex" justifyContent="center">
-							<Pagination
-								color="primary"
-								count={noOfPages}
-								page={page}
-								defaultPage={1}
-								showFirstButton
-								showLastButton
-								onChange={handleChange}
-								size="small"
-							/>
-						</Box>
 					</div>
 				)}
 			</Container>
-			<Dialog
-				onClose={handleClose}
-				aria-labelledby="customized-dialog-title"
-				open={open}
-			>
-				<DialogContent dividers>
-					<Box>
-						<Typography
-							variant="h1"
-							style={{ letterSpacing: "1px" }}
-						>
-							Cart
-						</Typography>
-					</Box>
-					<Box mt={3}>
-						<Grid container spacing={3}>
-							{products.map((product) => (
-								<Grid
-									item
-									key={product.id}
-									lg={12}
-									md={12}
-									xs={12}
-								>
-									<ProductCard
-										className={classes.productCard}
-										product={product}
-									/>
-								</Grid>
-							))}
-						</Grid>
-					</Box>
-				</DialogContent>
-				<DialogActions>
-					<Button autoFocus onClick={handleClose} color="primary">
-						Close
-					</Button>
-				</DialogActions>
-			</Dialog>
 		</Page>
 	);
 };

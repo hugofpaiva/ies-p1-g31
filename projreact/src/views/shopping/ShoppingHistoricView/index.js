@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Container,
@@ -6,8 +6,6 @@ import {
 } from '@material-ui/core';
 import Page from 'src/components/Page';
 import Results from './Results';
-import Toolbar from './Toolbar';
-import data from './data';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
 
 const CustomerListView = () => {
   const classes = useStyles();
-  const [shoppings] = useState(data);
 
   return (
     <Page
@@ -28,9 +25,8 @@ const CustomerListView = () => {
       title="Latest Purchases"
     >
       <Container maxWidth={false}>
-        <Toolbar />
         <Box mt={3}>
-          <Results shoppings={shoppings} />
+          <Results/>
         </Box>
       </Container>
     </Page>

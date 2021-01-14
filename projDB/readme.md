@@ -1,14 +1,14 @@
 # Base de dados
 
-Vamos utilizar dois tipos de bases de dados: MySQL e MongoDB. Ambas serão deployed em containers Docker. Para este efeito, criámos um ficheiro `docker-compose.yml` para podermos fazer *deploy* de ambos em simultâneo com recurso à ferramenta Docker Compose.
+São utilizados dois tipos de bases de dados: _MySQ_ e _MongoDB_. Ambas são _deployed_ em _containers Docker_. Para este efeito, criou-se um ficheiro `docker-compose.yml` para se poder fazer *deploy* de ambos em simultâneo com recurso à ferramenta _Docker Compose_.
 
-Este ficheiro cria um *container* para cada um dos tipos de base de dados criados, em ambos com a palavra-passe `password` para o administrador (utilizador `root`).
+Este ficheiro cria um *container* para cada um dos tipos de base de dados criados, em ambos com a palavra-passe `rootpass` para o administrador (utilizador `root`).
 
 
 
 ## 1. Inicializar o Docker
 
-Antes de avançar com qualquer configuração, o Docker deve ser inicializado sem permissões de utilizador.
+Antes de avançar com qualquer configuração, o _Docker_ deve ser inicializado sem permissões de utilizador.
 
 ```bash
 $ systemctl --user start docker.service
@@ -75,8 +75,10 @@ O restante simula a adição de dados caso a tabela de testes ainda não tenha s
 A base de dados deverá de ficar disponível na porta 27017 do localhost.
 
 ```bash
-# Exemplo para autenticação com o utilizador 'root' com palavra-passe 'password'
+# Autenticação com o utilizador 'root' com palavra-passe 'password'
 $ mongo --port 27017 --username root --password password --authenticationDatabase admin
+# Autenticação com dados de acesso do spring boot
+$ mongo ies --port 27017 --username spring --password springpass
 ```
 
 Para testar o seu funcionamento, pode ser feita a importação da coleção de amostra com restaurantes, disponível [aqui](https://github.com/ozlerhakan/mongodb-json-files/blob/master/datasets/restaurant.json).

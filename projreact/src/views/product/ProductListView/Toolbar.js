@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   Box,
-  Button,
   Card,
   CardContent,
   TextField,
@@ -12,6 +11,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 import { Search as SearchIcon } from 'react-feather';
+import ProductEdit from './ProductEdit';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Toolbar = ({ persona, className, ...rest }) => {
+const Toolbar = ({ update, categories, search, persona, className, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -36,13 +36,13 @@ const Toolbar = ({ persona, className, ...rest }) => {
         justifyContent="flex-end"
       >
         {
-          persona == "admin" &&
-          <Button
-            color="primary"
-            variant="contained"
-          >
-            Add product
-          </Button>
+          persona === "admin" &&
+          <ProductEdit
+            product={null}
+            categories={categories}
+            edit={false}
+            update={update}
+          />
         }
       </Box>
       <Box mt={3}>
@@ -65,6 +65,7 @@ const Toolbar = ({ persona, className, ...rest }) => {
                 }}
                 placeholder="Search product"
                 variant="outlined"
+                onChange={val => search(val.target.value)}
               />
             </Box>
           </CardContent>

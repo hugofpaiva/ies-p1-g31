@@ -1,25 +1,22 @@
-# Setting up Kafka (and Zookeeper) with Docker
-
-[Referência](https://medium.com/trainingcenter/apache-kafka-codificação-na-pratica-9c6a4142a08f)
-
+# Configuração de *Kafka* (e *Zookeeper*) com *Docker*
 
 **Pré-requisitos**
-- Docker CE
-- Docker Compose
-- git
+- _Docker CE_
+- _Docker Compose_
+- _git_
 
-## Instalando e iniciando o Kafka
+## Instalação e início do Kafka
 
-Para iniciar o Kafka utilizaremos um arquivo docker-compose criado e mantido pela Confluent, disponível no [DockerHub](https://hub.docker.com/u/confluentinc) 
+Para iniciar o _Kafka_ utilizaremos um ficheiro _docker-compose_ criado e mantido pela _Confluent_, disponível no [DockerHub](https://hub.docker.com/u/confluentinc) 
 
-O ficheiro *docker-compose.yml* tem declarado os serviços e ao corrê-lo irá instalar e inicializar os serviços *Zookeeper* e o *Kafka*.
+O ficheiro *docker-compose.yml* tem declarado os serviços e ao executar irá instalar e iniciar os serviços *Zookeeper* e o *Kafka*.
 
 Para executar o ficheiro **.yml** e correr os serviços em segundo plano:
 ```bash
 $ docker-compose up -d
 ```
 
-Para verificar se os serviços estão a execução corretamente (portas devem estar 'Up' e estado deve ser 'run'):
+Para verificar se os serviços estão em execução corretamente (portas devem estar 'Up' e estado deve ser 'run'):
 ```bash
 $ docker-compose ps
 
@@ -75,9 +72,9 @@ Processed a total of 53 messages
 ### Producer
 
 Pré-requisitos:
-- python
-- pip
-- venv
+- _python_
+- _pip_
+- _venv_
 
 1. Criar o *virtual enviroment*:
 ```bash
@@ -247,3 +244,8 @@ New Entry: Person{, firstName='Paulo', lastName='Loredo', email='loredo@mail.com
 New Entry: Person{, firstName='Joana', lastName='Paiva', email='paiva@mail.com'}
 New Entry: Person{, firstName='Jesus', lastName='Carvalho', email='carv@mail.com'}
 ```
+
+
+> **Referências**
+>
+> [Apache Kafka](https://medium.com/trainingcenter/apache-kafka-codificação-na-pratica-9c6a4142a08f)

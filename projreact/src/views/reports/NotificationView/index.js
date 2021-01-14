@@ -10,7 +10,6 @@ import LowStock from './LowStock';
 import EntriesOut from './EntriesOut';
 
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -33,7 +32,7 @@ const Dashboard = () => {
           container
           spacing={3}
         >
-          
+
           <Grid
             item
             lg={6}

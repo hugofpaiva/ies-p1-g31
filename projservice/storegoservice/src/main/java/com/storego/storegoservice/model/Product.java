@@ -3,19 +3,20 @@ package com.storego.storegoservice.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Data
 @Table(name = "product")
-public class Product {
+public class Product implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "price", nullable = false)
-    private double price;
+    private Double price;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -24,10 +25,13 @@ public class Product {
     private String description;
 
     @Column(name = "stock_current", nullable = false)
-    private int stock_current;
+    private Integer stock_current;
 
     @Column(name = "stock_minimum", nullable = false)
-    private int stock_minimum;
+    private Integer stock_minimum;
+
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted = false;
 
     @ManyToOne
     @JoinColumn(name = "category", nullable = false)
@@ -37,7 +41,8 @@ public class Product {
 
     public Product() { }
 
-    public Product(double price, String name, String description, int stock_current, int stock_minimum, ProductCategory category) {
+    public Product(Long id, Double price, String name, String description, Integer stock_current, Integer stock_minimum, ProductCategory category) {
+        this.id = id;
         this.price = price;
         this.name = name;
         this.description = description;
@@ -46,4 +51,9 @@ public class Product {
         this.category = category;
     }
 
+    @Override
+    public String toString() {
+        return id + ": [" + price + ",\"" + name + "\", \"" + description + "\", " + stock_current + "," + stock_minimum +
+                ", \"" + category.getName() +"\"]";
+    }
 }

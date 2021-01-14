@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -7,6 +7,7 @@ import {
 import Page from 'src/components/Page';
 import Results from './Results';
 import data from './data';
+import {Url} from "src/ApiConsts";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,7 +20,37 @@ const useStyles = makeStyles((theme) => ({
 
 const CustomerListView = () => {
   const classes = useStyles();
-  const [tasks] = useState(data);
+  const [tasks, setTasks ] = useState(data);
+  const [page, setPage] = useState(0);
+	const [size, setSize] = useState(10);
+	const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    updateNotifications();
+    const loop = setInterval(updateNotifications, 1000);
+    return () => clearInterval(loop);
+  }, [page, size]);
+
+  async function updateNotifications() {
+    const requestOptions = {
+        method: 'get',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+    };
+
+    let url =
+			Url + "/api/work/notifications_help?page=" +
+			page +
+			"&size=" +
+			size;
+	
+		const response = await fetch(url, requestOptions);
+		const data = await response.json();
+		setTasks(data['notifications']);
+		setCount(data["totalItems"]);
+  };
 
   return (
     <Page
@@ -28,7 +59,7 @@ const CustomerListView = () => {
     >
       <Container maxWidth={false}>
         <Box mt={3}>
-          <Results tasks={tasks} />
+          <Results tasks={tasks} page={page} size={size} count={count} setPage={setPage} setSize={setSize}/>
         </Box>
       </Container>
     </Page>

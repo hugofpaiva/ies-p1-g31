@@ -1,7 +1,11 @@
 import React from "react";
+import Dialog from "@material-ui/core/Dialog";
+import MuiDialogContent from "@material-ui/core/DialogContent";
+import MuiDialogActions from "@material-ui/core/DialogActions";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import moment from "moment";
+import {Url} from "src/ApiConsts";
 import { Button, colors } from "@material-ui/core";
 import {
 	Avatar,
@@ -14,6 +18,8 @@ import {
 } from "@material-ui/core";
 import getInitials from "src/utils/getInitials";
 import { ShoppingCart } from "react-feather";
+import { withStyles } from "@material-ui/core/styles";
+import ProductCard from "./ProductCard";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -39,8 +45,58 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const CustomerCard = ({ className, customer, onnclick, ...rest }) => {
+const DialogContent = withStyles((theme) => ({
+	root: {
+		maxHeight: "1000px",
+		paddingBottom: theme.spacing(2),
+	},
+}))(MuiDialogContent);
+
+const DialogActions = withStyles((theme) => ({
+	root: {
+		margin: 0,
+		padding: theme.spacing(1),
+	},
+}))(MuiDialogActions);
+
+const CustomerCard = ({ className, customer, ...rest }) => {
 	const classes = useStyles();
+	const [open, setOpen] = React.useState(false);
+	const [cart, setCart] = React.useState({
+		'id': 0,
+		'person': {
+			'nif': 0,
+			'name': 0,
+			'email': 0,
+			'lastVisit': 0,
+			'type': ''
+		},
+		'products': []
+	});
+
+	const openCart = (customer) => {
+		loadCart();
+		setOpen(true);
+	};
+
+	const handleClose = () => {
+		setOpen(false);
+	};
+
+	async function loadCart() {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + localStorage.getItem('token')
+			}
+		};
+		let url = Url + '/api/admin/cart/' + customer.nif;
+		const response = await fetch(url, requestOptions);
+		const data = await response.json();
+		setCart(data);
+	}
+
 
 	return (
 		<Card className={clsx(classes.root, className)} {...rest}>
@@ -63,15 +119,59 @@ const CustomerCard = ({ className, customer, onnclick, ...rest }) => {
 						gutterBottom
 						variant="h6"
 					>
-						Entered at: {moment(customer.last_visit).format('DD/MM/YYYY, h:mm:ss')}
+						Entered at: {moment(customer.last_visit).format('DD/MM/YYYY, HH:mm:ss')}
 					</Typography>
 				</Box>
 				<Grid container justify="center">
-					<Button color={colors.common.white} variant="contained" onClick={onnclick}>
+					<Button style={{backgroundColor: colors.common.white}} variant="contained" onClick={openCart}>
 						<ShoppingCart className={classes.icon} size="20" />
 						<span className={classes.title}>See Shopping Cart</span>
 					</Button>
 				</Grid>
+				<Dialog
+					onClose={handleClose}
+					aria-labelledby="customized-dialog-title"
+					open={open}
+				>
+					<DialogContent dividers>
+						<Box>
+							<Typography
+								variant="h1"
+								style={{ letterSpacing: "1px" }}
+							>
+								Cart
+							</Typography>
+						</Box>
+						<Box mt={3}>
+							<Grid container spacing={3}>
+								{
+									cart.products.length>0 
+									? cart.products.map(productsObj => (
+									<Grid
+										item
+										key={productsObj.products.product.id}
+										lg={12}
+										md={12}
+										xs={12}
+									>
+										<ProductCard
+											className={classes.productCard}
+											product={productsObj.products.product}
+										/>
+									</Grid>
+									)) 
+									: <Typography>
+										The cart is empty. :(
+									</Typography>								}
+							</Grid>
+						</Box>
+					</DialogContent>
+					<DialogActions>
+						<Button autoFocus onClick={handleClose} color="primary">
+							Close
+						</Button>
+					</DialogActions>
+				</Dialog>
 			</CardContent>
 		</Card>
 	);
