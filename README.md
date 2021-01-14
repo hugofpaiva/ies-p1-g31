@@ -1,13 +1,23 @@
-# [StoreGO](http://35.246.117.113)
+<p align="center">
+  <img  src="/reports/images/logo_transparent_resized.png">
+</p>
 
-<div style="display: flex; flex-direction: column; justify-content:center; align-items:center">
+<p align="center">
+Sistema de monitorização de clientes e produtos de uma loja física e automatização de compras
+</p>
 
-[![Watch the demo](./reports/images/logo_transparent_resized.png)](https://youtu.be/6S7CLQYnE50)
+<hr>
+
+<p align="center">
+
+<a href="https://youtu.be/6S7CLQYnE50">
+    <img src="/reports/images/demo.gif" alt="Demo">
+  </a>
 
 > Vídeo de uma demo disponível ao clicar na imagem
-</div>
+</p>
 
-**Grupo:** G31
+## Sobre o projeto
 
 O sistema tem a finalidade de simular a gestão de uma loja automatizada, ou seja, um estabelecimento que proporciona uma experiência de compras sem caixas de pagamento, ao reconhecer os produtos que um cliente retirou da prateleira e efetuar a cobrança no momento em que ele deixa a loja.
 
@@ -15,11 +25,11 @@ Ao chegar ao supermercado é detetada a sua entrada na loja e, através dos sens
 
 > Todos os dados referidos anteriormente, no contexto da disciplina de IES, são simulados e gerados automaticamente.
 
-Esta aplicação é similar ao supermercado inteligente da Amazon com o conceito “Just Walk Out“, sem filas e sem ​checkouts​.
+Esta aplicação é similar ao supermercado inteligente da _Amazon_ com o conceito “Just Walk Out“, sem filas e sem ​checkouts​.
 
 
 ## Backlog 
-Está a ser utilizado o _Jira_ para planear e documentar o projeto. É possível encontrar informação nos links abaixo:
+Foi utilizado o _Jira_ para planear e documentar o projeto. É possível encontrar informação nos links abaixo:
 
 `Jira` (planeamento) https://hugofpaiva.atlassian.net/browse/IES
 
@@ -31,15 +41,43 @@ Está a ser utilizado o _Jira_ para planear e documentar o projeto. É possível
 
 ## Aquitetura
 
-![architecture](./reports/images/architecture.png)
+<p align="center">
+  <img  src="/reports/images/architecture.png">
+</p>
 
 ### Componentes
 
-- [**Aplicação Web**](./projreact)
-- [**Serviço**](./projservice)
-- [**Geração de Dados**](./projDataGeneration)
+- [**Aplicação Web (React)**](./projreact)
+- [**Serviço (Spring Boot)**](./projservice)
+- [**Geração de Dados (Python)**](./projDataGeneration)
 - [**Message Broker (Kafka)**](./projKafkaBroker) - Informação de pesquisa e exemplos
 - [**Base de Dados (MySQL e MongoDB)**](./projDB) - Informação de pesquisa e exemplos
+
+## Como executar
+
+Para executar o sistema em `localhost` é necessário ter o _Docker Compose_ instalado e atualizado.
+
+Posto isto, os passos são os seguintes:
+
+1. Compilar o código do **serviço** em _Spring Boot_, tornando-o em um formato distribuível, executando dentro da pasta do projeto deste serviço o seguinte comando:
+   
+    ```
+    $ mvn -DskipTests clean package
+    ```
+    
+2. Compilar os serviços para a executação dos _containers Docker_ executando na raiz do repositório:
+   
+    ```
+    $ docker-compose build
+    ```
+    
+3. Iniciar os _containers_:
+    
+    ```
+    $ docker-compose up -d
+    ```
+    
+A **aplicação Web** ficará disponível em: [localhost](http://localhost)
 
 ## _Deploy_ do sistema
 
@@ -47,4 +85,10 @@ A disponibilização do sistema foi feita através da _Google Cloud Platform_ e 
 
 A informação relativa ao _deploy_ de cada componente do sistema encontra-se na sua pasta sendo que foi utilizado um [ficheiro](./docker-compose.yml) _Docker Compose_ para definir e correr os múltiplos _Docker Containers_ dos componentes do sistema.
 
+Tendo em conta que as configurações de _CORS_ e o endereço da _API_ à qual o _React_ acede são diferentes do `localhost`, na branch `deploy` encontra-se o sistema pronto para deploy na nossa máquina virtual.
+
 **Aplicação Web disponível em:** [35.246.117.113](http://35.246.117.113)
+
+## Detalhes
+
+É possível encontrar todos os detalhes no [Relatório do Trabalho](/reports/relatorio_final.pdf).
