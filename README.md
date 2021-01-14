@@ -1,6 +1,3 @@
-# [StoreGO](http://35.246.117.113)
-
-
 <p align="center">
   <img  src="/reports/images/logo_transparent_resized.png">
 </p>
@@ -11,6 +8,7 @@
 Sistema de monitorização de clientes e produtos de uma loja física e automatização de compras
 </p>
 
+<hr>
 
 <p align="center">
 
@@ -21,7 +19,7 @@ Sistema de monitorização de clientes e produtos de uma loja física e automati
 > Vídeo de uma demo disponível ao clicar na imagem
 </p>
 
-**Grupo:** G31
+## Sobre o projeto
 
 O sistema tem a finalidade de simular a gestão de uma loja automatizada, ou seja, um estabelecimento que proporciona uma experiência de compras sem caixas de pagamento, ao reconhecer os produtos que um cliente retirou da prateleira e efetuar a cobrança no momento em que ele deixa a loja.
 
