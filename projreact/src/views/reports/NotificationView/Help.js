@@ -49,9 +49,7 @@ const Help = ({ className, ...rest }) => {
 	useEffect(() => {
 		// Load last notitications from API
 		getLastNotifications();
-	}, [page, size]);
 
-	useEffect(() => {
 		// Subscribe to socket for updates
 		const socket = new SockJS("http://localhost:8080/api/ws");
 		const stompClient = Stomp.over(socket);
@@ -62,14 +60,14 @@ const Help = ({ className, ...rest }) => {
 				const not = JSON.parse(messageOutput.body);
 				// Only add notifications on first page
 				if (page == 0) {
-					setNotifications((oldArray) => [not, ...oldArray.slice(0, size-1)]);
+					setNotifications((oldArray) => [not, ...oldArray.slice(0, size - 1)]);
 				}
 				setCount(lastCount => lastCount + 1);
 			});
 		});
 
 		return () => stompClient && stompClient.disconnect();
-	}, []);
+	}, [page, size]);
 
 	async function getLastNotifications() {
 		const requestOptions = {
@@ -145,7 +143,7 @@ const Help = ({ className, ...rest }) => {
 					onChangeRowsPerPage={handleLimitChange}
 					page={page}
 					rowsPerPage={size}
-					rowsPerPageOptions={[10]}
+					rowsPerPageOptions={[5, 10, 25]}
 				/>
 			</Box>
 		</Card>
