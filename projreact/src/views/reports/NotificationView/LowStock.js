@@ -33,15 +33,16 @@ const LowStock = ({ className, ...rest }) => {
   const [notifications, setNotifications] = useState([]);
 
   // Pagination stuff
-  const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const [size, setSize] = useState(10);
+  const [count, setCount] = useState(0);
   const handleLimitChange = (event) => {
-    setLimit(event.target.value);
+    setSize(event.target.value);
   };
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
-  // /Pagination stuff
+  // -- Pagination stuff
 
   // Initialize and update every time props change
   useEffect(() => {
@@ -56,16 +57,16 @@ const LowStock = ({ className, ...rest }) => {
     stompClient.connect(headers, () => {
       stompClient.subscribe('/topic/restock', function (messageOutput) {
         const not = JSON.parse(messageOutput.body);
-        setNotifications(oldArray => {
-          const newArray = [...oldArray, {
-            ...not,
-            "date": Date.now(),
-          }];
-          return newArray;
-        })
+        // Only add notifications on first page
+        if (page == 0) {
+          setNotifications((oldArray) => [not, ...oldArray.slice(0, size - 1)]);
+        }
+        setCount(lastCount => lastCount + 1);
       });
     });
-  }, []);
+
+    return () => stompClient && stompClient.disconnect();
+  }, [page, size]);
 
   async function getLastNotifications() {
     const requestOptions = {
@@ -75,17 +76,13 @@ const LowStock = ({ className, ...rest }) => {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       }
     };
-    const response = await fetch(Url + '/api/admin/notifications_restock', requestOptions);
+    const url = Url + "/api/admin/notifications_restock?page=" + page + "&size=" + size;
+    const response = await fetch(url, requestOptions);
     const data = await response.json();
     // Update value with notifications from server
-    setNotifications(not => {
-      const newNotifications = [...not];
-      data['notifications'].reverse().forEach(notification => {
-        newNotifications.push(notification);
-      })
-      // Return sorted version
-      return newNotifications;
-    });
+    setNotifications(data["notifications"]);
+    // Update count
+    setCount(data["totalItems"]);
   }
 
   return (
@@ -105,11 +102,11 @@ const LowStock = ({ className, ...rest }) => {
                 </TableCell>
 
               <TableCell style={{ width: '40%' }}>
-                  <TableSortLabel
-                    active
-                    direction="desc"
-                  >
-                    Date
+                <TableSortLabel
+                  active
+                  direction="desc"
+                >
+                  Date
                     </TableSortLabel>
               </TableCell>
               <TableCell style={{ width: '30%' }}>
@@ -119,7 +116,7 @@ const LowStock = ({ className, ...rest }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {notifications.sort(not => -1*not['date']).slice(page * limit, page * limit + limit).map(stock => (
+            {notifications.map(stock => (
               <TableRow
                 hover
                 key={stock.id}
@@ -139,12 +136,12 @@ const LowStock = ({ className, ...rest }) => {
         </Table>
         <TablePagination
           component="div"
-          count={notifications.length}
+          count={count}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleLimitChange}
           page={page}
-          rowsPerPage={limit}
-          rowsPerPageOptions={[5, 10]}
+          rowsPerPage={size}
+          rowsPerPageOptions={[5, 10, 25]}
         />
       </Box>
 

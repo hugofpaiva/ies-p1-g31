@@ -33,19 +33,16 @@ const Help = ({ className, ...rest }) => {
 	const [notifications, setNotifications] = useState([]);
 
 	// Pagination stuff
-	const [limit, setLimit] = useState(10);
 	const [page, setPage] = useState(0);
+	const [size, setSize] = useState(10);
+	const [count, setCount] = useState(0);
 	const handleLimitChange = (event) => {
-		setLimit(event.target.value);
+		setSize(event.target.value);
 	};
 	const handlePageChange = (event, newPage) => {
 		setPage(newPage);
-		// When not first page, update state
-		if (newPage !== 0) {
-			updatePageStatus(newPage);
-		}
 	};
-	// /Pagination stuff
+	// -- Pagination stuff
 
 	// Initialize component
 	useEffect(() => {
@@ -58,41 +55,18 @@ const Help = ({ className, ...rest }) => {
 		const headers = {};
 
 		stompClient.connect(headers, () => {
-			stompClient.subscribe("/topic/help", function(messageOutput) {
+			stompClient.subscribe("/topic/help", function (messageOutput) {
 				const not = JSON.parse(messageOutput.body);
-				setNotifications((oldArray) => {
-					const newArray = [...oldArray, not];
-					return newArray;
-				});
+				// Only add notifications on first page
+				if (page == 0) {
+					setNotifications((oldArray) => [not, ...oldArray.slice(0, size - 1)]);
+				}
+				setCount(lastCount => lastCount + 1);
 			});
 		});
-	}, []);
 
-	// Update page status
-	async function updatePageStatus(newPage) {
-		const requestOptions = {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: "Bearer " + localStorage.getItem("token"),
-			},
-		};
-		// Foreach page notification
-		await Promise.all(
-			notifications
-				.slice(newPage * limit, newPage * limit + limit)
-				.map(async (notification) => {
-					// Update status
-					const url =
-						Url + "/api/work/notifications_help/" +
-						notification["id"];
-					const response = await fetch(url, requestOptions);
-					const data = await response.json();
-					notification["state"] = data["state"];
-				})
-		);
-		setNotifications(notifications);
-	}
+		return () => stompClient && stompClient.disconnect();
+	}, [page, size]);
 
 	async function getLastNotifications() {
 		const requestOptions = {
@@ -102,20 +76,16 @@ const Help = ({ className, ...rest }) => {
 				Authorization: "Bearer " + localStorage.getItem("token"),
 			},
 		};
+		const url = Url + "/api/work/notifications_help?page=" + page + "&size=" + size;
 		const response = await fetch(
-			Url + "/api/work/notifications_help",
+			url,
 			requestOptions
 		);
 		const data = await response.json();
 		// Update value with notifications from server
-		setNotifications((not) => {
-			const newNotifications = [...not];
-			data["notifications"].reverse().forEach((notification) => {
-				newNotifications.push(notification);
-			});
-			// Return sorted version
-			return newNotifications;
-		});
+		setNotifications(data["notifications"]);
+		// Update count
+		setCount(data["totalItems"]);
 	}
 
 	return (
@@ -136,46 +106,43 @@ const Help = ({ className, ...rest }) => {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{notifications
-							.sort((not) => -1 * not["date"])
-							.slice(page * limit, page * limit + limit)
-							.map((notification) => (
-								<TableRow hover key={notification.id}>
-									<TableCell>{notification.nif}</TableCell>
-									<TableCell>
-										{moment(notification.date).format(
-											"DD/MM/YYYY, HH:mm:ss"
-										)}
-									</TableCell>
-									<TableCell>
-										<Chip
-											color={notification.state === "PENDING"? "secondary" : "primary"}
-											label={
-												notification.state[0] +
-												notification.state
-													.substring(
-														1,
-														notification.state
-															.length
-													)
-													.toLowerCase()
-													.replace("_", " ")
-											}
-											size="small"
-										/>
-									</TableCell>
-								</TableRow>
-							))}
+						{notifications.map((notification) => (
+							<TableRow hover key={notification.id}>
+								<TableCell>{notification.nif}</TableCell>
+								<TableCell>
+									{moment(notification.date).format(
+										"DD/MM/YYYY, HH:mm:ss"
+									)}
+								</TableCell>
+								<TableCell>
+									<Chip
+										color={notification.state === "PENDING" ? "secondary" : "primary"}
+										label={
+											notification.state[0] +
+											notification.state
+												.substring(
+													1,
+													notification.state
+														.length
+												)
+												.toLowerCase()
+												.replace("_", " ")
+										}
+										size="small"
+									/>
+								</TableCell>
+							</TableRow>
+						))}
 					</TableBody>
 				</Table>
 				<TablePagination
 					component="div"
-					count={notifications.length}
+					count={count}
 					onChangePage={handlePageChange}
 					onChangeRowsPerPage={handleLimitChange}
 					page={page}
-					rowsPerPage={limit}
-					rowsPerPageOptions={[5, 10]}
+					rowsPerPage={size}
+					rowsPerPageOptions={[5, 10, 25]}
 				/>
 			</Box>
 		</Card>
