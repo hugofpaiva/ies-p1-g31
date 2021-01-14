@@ -59,19 +59,25 @@ Para executar o sistema em `localhost` é necessário ter o _Docker Compose_ ins
 
 Posto isto, os passos são os seguintes:
 
-1. Compilar o código do **serviço** em _Spring Boot_, tornando-o em um formato distribuível, executando dentro da pasta do projeto deste serviço seguinte comento:
+1. Compilar o código do **serviço** em _Spring Boot_, tornando-o em um formato distribuível, executando dentro da pasta do projeto deste serviço o seguinte comando:
+   
     ```
     $ mvn -DskipTests clean package
     ```
+    
 2. Compilar os serviços para a executação dos _containers Docker_ executando na raiz do repositório:
+   
     ```
     $ docker-compose build
     ```
+    
 3. Iniciar os _containers_:
+    
     ```
     $ docker-compose up -d
     ```
-**Aplicação Web** ficará disponível em: [localhost](http://localhost)
+    
+A **aplicação Web** ficará disponível em: [localhost](http://localhost)
 
 ## _Deploy_ do sistema
 
