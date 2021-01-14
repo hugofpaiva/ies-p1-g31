@@ -87,7 +87,9 @@ A informação relativa ao _deploy_ de cada componente do sistema encontra-se na
 
 Tendo em conta que as configurações de _CORS_ e o endereço da _API_ à qual o _React_ acede são diferentes do `localhost`, na branch `deploy` encontra-se o sistema pronto para deploy na nossa máquina virtual.
 
-**Aplicação Web disponível em:** [35.246.117.113](http://35.246.117.113)
+**Aplicação Web disponível em:** [35.246.117.113](http://35.246.117.113) (o máximo de clientes da loja está definido como apenas um para evitar esgotar o armazenamento, sendo possível alterar)
+
+
 
 ## Detalhes
 
