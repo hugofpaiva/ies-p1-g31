@@ -1,5 +1,12 @@
 # [StoreGO](http://35.246.117.113)
 
+<div style="display: flex; flex-direction: column; justify-content:center; align-items:center">
+
+[![Watch the demo](./reports/images/logo_transparent_resized.png)](https://youtu.be/6S7CLQYnE50)
+
+> Vídeo de uma demo disponível ao clicar na imagem
+</div>
+
 **Grupo:** G31
 
 O sistema tem a finalidade de simular a gestão de uma loja automatizada, ou seja, um estabelecimento que proporciona uma experiência de compras sem caixas de pagamento, ao reconhecer os produtos que um cliente retirou da prateleira e efetuar a cobrança no momento em que ele deixa a loja.
