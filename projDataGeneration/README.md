@@ -1,13 +1,14 @@
-# Initializing generator's data sets:
+# Inicialização de dados do gerador:
 
-**Script sends the following message:**
+**_Script_ envia a seguinte mensagem:**
+
 ```json
 {
     "type": "initialize-people-request" 
 }
 ```
 
-**Then, Processing Layer will send the following message:**
+**Posteriomente, o Serviço envia a seguinte mensagem:**
 ```json
 {
     "type": "initialize-people-response",
@@ -15,9 +16,10 @@
 }
 ```
 
-**If data list is returned empty, then BD is empty: script must initialize data!**
+**Se a lista de dados for retornada vazia, então a BD está vazia: o _script_ deve inicializar os dados!**
 
-**In that case, script sends the following three messages:**
+**Nesse caso, o _script_ envia as três mensagens seguintes:**
+
 ```json
 {
     "type": "initialize-people",
@@ -28,6 +30,7 @@
             }
 }
 ```
+
 ```json
 {
     "type": "initialize-categories",
@@ -38,6 +41,7 @@
     ]
 }
 ```
+
 ```json
 {
     "type": "initialize-products",
@@ -47,16 +51,15 @@
 }
 ```
 
-**If the data field returns a list with elements inside, then the last three messages would not be sent**
-
-**Instead, the script sends the following message**
+**Se a lista de dados retornada estiver vazia, as últimas três mensagens não serão enviadas**
+**Em vez disso, o _script_ envia a seguinte mensagem:**
 ```json
 {
     "type": "initialize-products-request"
 }
 ```
 
-**Then, Processing Layer will respond with the following message**
+**Então, o Serviço responderá com a seguinte mensagem:**
 ```json
 {
     "type": "initialize-products-response",
@@ -67,9 +70,9 @@
 }
 ```
 
-# Possible JSON messages published in topic 'storego-events':
+# Possíveis mensagens JSON publicadas no tópico 'storego-update':
 
-**When the manager updates the max number of people allowed in the store:**
+**Quando o gerente atualiza o número máximo de pessoas permitidas na loja:**
 ```json
 {
     "type": "new-limit",
@@ -77,7 +80,7 @@
 }
 ```
 
-**When the manager starts selling a new product and adds it to the platform:**
+**Quando o gerente adiciona um novo produto à plataforma:**
 ```json
 {
     "type": "add-product",
@@ -86,7 +89,7 @@
 }
 ```
 
-**When the manager stops selling a product and removes it from the platform:**
+**Quando o gerente deixa de vender um produto e o remove da plataforma:**
 ```json
 {
     "type": "remove-product",
@@ -94,7 +97,7 @@
 }
 ```
 
-**When the employee wants to confirm that they restocked a product:**
+**Quando o é feito _restock_ de um produto:**
 ```json
 {
     "type": "restock",
@@ -103,7 +106,7 @@
 }
 ```
 
-**When the emplyee accepts a "help-needed" notification:**
+**Quando um funcionário resolve um pedido de ajuda:**
 ```json
 {
     "type": "help-given",
@@ -111,9 +114,9 @@
 }
 ```
 
-# Possible JSON messages published in topic 'costumer-events':
+# Possíveis mensagens JSON publicadas no tópico 'storego-new':
 
-**When a costumer enters the store:**
+**Quando um cliente entra na loja:**
 ```json
 {
     "type": "entering-store",
@@ -121,38 +124,38 @@
 }
 ```
 
-**When a costumer leaves the store:**
+**Quando um cliente sai da loja:**
 ```json
 {
-​	"type": "leaving-store",
-​	"nif": xxxxxxxxx
+	"type": "leaving-store",
+	"nif": xxxxxxxxx
 }
 ```
-**When a costumer adds a product to their cart:**
+**Quando um cliente adiciona um produto ao carrinho:**
 ```json
 {
 
-​	"type": "adding-product",
-​	"nif": xxxxxxxxx,
-​	"id": yyyy,
-​	"qty": zz
-
-}
-```
-
-**When a costumer removes a product of their cart:**
-```json
-{
-
-​	"type": "removing-product",
-​	"nif": xxxxxxxxx,
-​	"id": yyyy,
-​	"qty": zz
+	"type": "adding-product",
+	"nif": xxxxxxxxx,
+	"id": yyyy,
+	"qty": zz
 
 }
 ```
 
-**When the costumer asks for help:**
+**Quando um cliente remove um produto do seu carrinho:**
+```json
+{
+
+    "type": "removing-product",
+	"nif": xxxxxxxxx,
+	"id": yyyy,
+	"qty": zz
+
+}
+```
+
+**Quando um cliente pede ajuda:**
 ```json
 {
     "type": "help-needed",
