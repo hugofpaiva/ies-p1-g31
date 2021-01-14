@@ -155,7 +155,7 @@ const TopBar = ({
             })
           });
         }
-        if (notPreferences['stock']) {
+        if (notPreferences['full']) {
           stompClient.subscribe('/topic/store_full', function (messageOutput) {
             const not = JSON.parse(messageOutput.body);
             setNotifications(oldArray => {
