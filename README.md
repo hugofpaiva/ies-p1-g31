@@ -1,11 +1,25 @@
 # [StoreGO](http://35.246.117.113)
 
-<div style="display: flex; flex-direction: column; justify-content:center; align-items:center">
 
-[![Watch the demo](./reports/images/logo_transparent_resized.png)](https://youtu.be/6S7CLQYnE50)
+<p align="center">
+  <img  src="/reports/images/logo_transparent_resized.png">
+</p>
+
+<h3 align="center">StoreGO</h3>
+
+<p align="center">
+Sistema de monitorização de clientes e produtos de uma loja física e automatização de compras
+</p>
+
+
+<p align="center">
+
+<a href="https://youtu.be/6S7CLQYnE50">
+    <img src="/reports/images/demo.gif" alt="Demo">
+  </a>
 
 > Vídeo de uma demo disponível ao clicar na imagem
-</div>
+</p>
 
 **Grupo:** G31
 
