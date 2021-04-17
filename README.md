@@ -94,3 +94,7 @@ Tendo em conta que as configurações de _CORS_ e o endereço da _API_ à qual o
 ## Detalhes
 
 É possível encontrar todos os detalhes no [Relatório do Trabalho](/reports/relatorio_final.pdf).
+
+ ## Nota
+
+Classificação individual referente ao trabalho de grupo de **20** valores em 20.
